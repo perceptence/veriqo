@@ -65,7 +65,7 @@ export function AcctDeleteAccount({ back, onDelete }) {
         <div className="fu1" style={{ display: "flex", justifyContent: "center", marginBottom: 18 }}>
           <div style={{ width: 72, height: 72, borderRadius: 20, background: C.ink, display: "flex", alignItems: "center", justifyContent: "center", position: "relative", overflow: "hidden" }}>
             <Grain o={0.07} />
-            <Ic n="alert" s={32} c="#E08469" sw={1.6} />
+            <Ic n="alert" s={32} c="#E08469" />
           </div>
         </div>
         <p className="fu2" style={{ fontFamily: DISP, fontSize: 13.5, fontWeight: 500, color: C.sub, marginBottom: 16, lineHeight: 1.5, textAlign: "center" }}>
@@ -76,7 +76,7 @@ export function AcctDeleteAccount({ back, onDelete }) {
         </Group></div>
         <button onClick={() => setOk((o) => !o)} className="fu3" style={{ display: "flex", alignItems: "center", gap: 11, marginTop: 16, background: "none", border: "none", cursor: "pointer", padding: 0, width: "100%", textAlign: "left" }}>
           <div style={{ width: 22, height: 22, borderRadius: 7, flexShrink: 0, border: `1.5px solid ${ok ? "#D9583F" : C.line}`, background: ok ? "#D9583F" : "transparent", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            {ok && <Ic n="check" s={13} c="#fff" sw={3} />}
+            {ok && <Ic n="check" s={13} c="#fff" />}
           </div>
           <span style={{ fontFamily: DISP, fontSize: 13, fontWeight: 600, color: C.ink }}>I understand this action is permanent</span>
         </button>

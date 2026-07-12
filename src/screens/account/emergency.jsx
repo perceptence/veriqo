@@ -159,7 +159,7 @@ export function EmergencyID({ back, data, onSave }) {
       <div style={{ flex: 1, minHeight: 0, overflowY: "auto", marginTop: 20 }}>
         <div style={{ background: "#1A1A1F", borderRadius: 18, overflow: "hidden", boxShadow: "0 8px 32px rgba(20,18,16,.2)" }}>
           <div style={{ background: "#D93025", padding: "12px 16px", display: "flex", alignItems: "center", gap: 8 }}>
-            <Ic n="alert" s={14} c="#fff" sw={2} />
+            <Ic n="alert" s={14} c="#fff" />
             <span style={{ fontFamily: MONO, fontSize: 10, fontWeight: 700, color: "#fff", letterSpacing: ".06em" }}>EMERGENCY MEDICAL ID</span>
           </div>
           <div style={{ padding: "14px 16px" }}>

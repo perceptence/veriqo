@@ -126,7 +126,7 @@ export function OnbDetails({ back, onDone }) {
         <Notice className="fu3" type="success" icon="shield" title="Encrypted on your device" sub="Never sold or transmitted to anyone." style={{ marginBottom: 16 }} />
         <button onClick={() => setAgreed((a) => !a)} className="fu3" style={{ display: "flex", alignItems: "flex-start", gap: 10, width: "100%", background: "none", border: "none", cursor: "pointer", padding: 0, textAlign: "left" }}>
           <div style={{ width: 20, height: 20, borderRadius: 6, flexShrink: 0, marginTop: 1, border: `2px solid ${agreed ? C.acc : C.line}`, background: agreed ? C.acc : "transparent", display: "flex", alignItems: "center", justifyContent: "center", transition: "all .2s" }}>
-            {agreed && <Ic n="check" s={12} c="#fff" sw={3} />}
+            {agreed && <Ic n="check" s={12} c="#fff" />}
           </div>
           <p style={{ fontFamily: DISP, fontSize: 12.5, fontWeight: 500, color: C.sub, lineHeight: 1.5 }}>
             I agree to Veriqo's{" "}
@@ -282,7 +282,7 @@ export function Auth({ back, onDone, email, phone }) {
         <div className="fu2" style={{ display: "flex", justifyContent: "center", marginBottom: 18 }}>
           <div style={{ width: 90, height: 90, borderRadius: 24, background: C.ink, position: "relative", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 14px 30px rgba(20,18,16,.25)" }}>
             <Grain o={0.07} />
-            <Ic n="faceid" s={40} c={faceIdState === "failed" ? "#D93025" : faceIdState === "trying" ? C.acc : C.glow} sw={1.6} />
+            <Ic n="faceid" s={40} c={faceIdState === "failed" ? "#D93025" : faceIdState === "trying" ? C.acc : C.glow} />
           </div>
         </div>
         {faceIdState === "failed" && !showOTP && (

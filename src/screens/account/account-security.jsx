@@ -19,7 +19,7 @@ export function AcctRecoveryKey({ back }) {
           This key restores your wallet on a new device if you ever lose access to Face ID. Keep it somewhere safe — Veriqo can't recover it for you.
         </p>
         <div className="fu1" style={{ display: "flex", alignItems: "center", gap: 8, padding: "11px 14px", background: C.accSoft, borderRadius: 13, marginBottom: 16 }}>
-          <Ic n="check" s={15} c={C.acc} sw={2.4} />
+          <Ic n="check" s={15} c={C.acc} />
           <span style={{ fontFamily: DISP, fontSize: 12.5, fontWeight: 600, color: C.accDeep }}>Backed up to iCloud Keychain</span>
         </div>
         <div className="fu2" style={{ background: C.ink, borderRadius: 16, padding: "20px 18px", position: "relative", overflow: "hidden", marginBottom: 12 }}>
@@ -72,7 +72,7 @@ export function AcctAutoLock({ back }) {
         </p>
         <div className="fu2"><Group>
           {opts.map((o) => (
-            <Row key={o.l} ic="clock" title={o.l} sub={o.d} onClick={() => setSel(o.l)} right={sel === o.l ? <Ic n="check" s={17} c={C.acc} sw={2.8} /> : null} />
+            <Row key={o.l} ic="clock" title={o.l} sub={o.d} onClick={() => setSel(o.l)} right={sel === o.l ? <Ic n="check" s={17} c={C.acc} /> : null} />
           ))}
         </Group></div>
       </div>

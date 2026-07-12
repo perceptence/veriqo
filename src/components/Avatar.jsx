@@ -17,7 +17,7 @@ export function BadgedAvatar({ size = 62 }) {
       <div style={{ marginTop: -10, background: C.acc, borderRadius: 20, padding: "3px 9px",
         display: "flex", alignItems: "center", gap: 4, whiteSpace: "nowrap",
         border: `1.5px solid ${C.paper}`, zIndex: 1 }}>
-        <Ic n="shield" s={10} c="#fff" sw={2.5} />
+        <Ic n="shield" s={10} c="#fff" />
         <span style={{ fontFamily: MONO, fontSize: 8.5, fontWeight: 700, color: "#fff", letterSpacing: ".06em" }}>VERIFIED</span>
       </div>
     </div>

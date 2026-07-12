@@ -34,7 +34,7 @@ export function IslandShowcase({ fire }) {
           ))}
         </div>
         <div style={{ display: "flex", alignItems: "flex-start", gap: 8, padding: "13px 15px", background: C.accSoft, borderRadius: 13, marginTop: 18 }}>
-          <Ic n="spark" s={16} c={C.acc} sw={2} />
+          <Ic n="spark" s={16} c={C.acc} />
           <p style={{ fontFamily: DISP, fontSize: 12, fontWeight: 500, color: C.accDeep, lineHeight: 1.45 }}>
             On a real device these become Live Activities on the Lock Screen too.
           </p>
@@ -71,7 +71,7 @@ export function LogoStudio() {
           ))}
         </div>
         <div style={{ display: "flex", alignItems: "flex-start", gap: 8, padding: "13px 15px", background: C.accSoft, borderRadius: 13, marginTop: 14 }}>
-          <Ic n="spark" s={16} c={C.acc} sw={2} />
+          <Ic n="spark" s={16} c={C.acc} />
           <p style={{ fontFamily: DISP, fontSize: 12, fontWeight: 500, color: C.accDeep, lineHeight: 1.45 }}>
             Prism Seal is live. It borrows the one thing every passport and license shares — the shifting holographic seal that proves it's genuine — so it means "verified identity" without drawing a card.
           </p>

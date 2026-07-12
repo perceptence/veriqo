@@ -112,7 +112,7 @@ User identity state:
     if (consentStep === "done") return (
       <div style={{ padding: "14px", animation: "popIn .3s ease both" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 10, background: C.accSoft, borderRadius: 12, padding: "12px 14px", marginBottom: 12 }}>
-          <Ic n="checkcirc" s={20} c={C.acc} sw={1.5} />
+          <Ic n="checkcirc" s={20} c={C.acc} />
           <div>
             <div style={{ fontFamily: DISP, fontSize: 13.5, fontWeight: 700, color: C.accDeep }}>{fieldChoice === "decline" ? "Request declined" : "Sharing updated"}</div>
             <div style={{ fontFamily: DISP, fontSize: 12, fontWeight: 500, color: C.acc, marginTop: 1 }}>
@@ -129,7 +129,7 @@ User identity state:
       <div style={{ padding: "20px 14px", display: "flex", flexDirection: "column", alignItems: "center", animation: "popIn .25s ease both" }}>
         <div style={{ fontFamily: MONO, fontSize: 10, color: C.faint, fontWeight: 700, letterSpacing: ".08em", marginBottom: 16 }}>CONFIRM WITH FACE ID</div>
         <div style={{ width: 72, height: 72, borderRadius: "50%", border: `2.5px solid ${C.acc}`, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 16, boxShadow: `0 0 0 6px ${C.accSoft}, 0 0 0 12px rgba(21,160,106,.12)`, animation: "ovalDone 1.8s ease infinite" }}>
-          <Ic n="faceid" s={32} c={C.acc} sw={1.2} />
+          <Ic n="faceid" s={32} c={C.acc} />
         </div>
         <div style={{ fontFamily: DISP, fontSize: 13, fontWeight: 500, color: C.sub, marginBottom: 20 }}>
           Sharing {fieldChoice === "decline" ? "nothing" : FIELD_OPTS.find((f) => f.k === fieldChoice)?.l.toLowerCase()} with Coinbase
@@ -191,7 +191,7 @@ User identity state:
               return (
                 <div key={ii} style={{ display: "flex", alignItems: "flex-start", gap: 12, padding: "12px 14px", borderTop: ii ? `1px solid ${C.line}` : "none" }}>
                   <div style={{ width: 28, height: 28, borderRadius: 8, background: bg, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                    <Ic n={it.kind === "alert" ? "alert" : cr.ic} s={14} c={tone} sw={2} />
+                    <Ic n={it.kind === "alert" ? "alert" : cr.ic} s={14} c={tone} />
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontFamily: DISP, fontSize: 13.5, fontWeight: 700, color: C.ink }}>{it.who}</div>
@@ -289,7 +289,7 @@ User identity state:
             {active.length === 0 && (
               <div style={{ textAlign: "center", padding: "48px 0" }}>
                 <div style={{ width: 52, height: 52, borderRadius: 16, background: C.accSoft, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 14px" }}>
-                  <Ic n="checkcirc" s={26} c={C.acc} sw={1.5} />
+                  <Ic n="checkcirc" s={26} c={C.acc} />
                 </div>
                 <p style={{ fontFamily: DISP, fontSize: 15, fontWeight: 700, color: C.ink, margin: "0 0 4px" }}>All clear</p>
                 <p style={{ fontFamily: DISP, fontSize: 13, color: C.faint, margin: 0 }}>Nothing needs your attention.</p>
@@ -321,7 +321,7 @@ User identity state:
                   onPointerMove={(e) => { if (e.currentTarget._sy === undefined) return; if (e.clientY - e.currentTarget._sy > 50) { closeTray(); delete e.currentTarget._sy; e.currentTarget.releasePointerCapture(e.pointerId); } }}
                   onPointerUp={(e) => { delete e.currentTarget._sy; }} onPointerCancel={(e) => { delete e.currentTarget._sy; }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                    <Ic n={ei.icon} s={13} c={m.col} sw={2} />
+                    <Ic n={ei.icon} s={13} c={m.col} />
                     <span style={{ fontFamily: MONO, fontSize: 9.5, fontWeight: 700, color: m.col, letterSpacing: ".06em" }}>{es.label.toUpperCase()}</span>
                   </div>
                 </div>

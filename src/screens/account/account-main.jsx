@@ -46,7 +46,7 @@ export function Account({ onSignOut, profile, go, services, pending, back, emerg
             {confirmOff && (
               <div style={{ marginTop: 14, paddingTop: 14, borderTop: `1px solid ${C.line}`, animation: "chipIn .25s ease both" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 7 }}>
-                  <Ic n="alert" s={15} c="#D9583F" sw={2} />
+                  <Ic n="alert" s={15} c="#D9583F" />
                   <span style={{ fontFamily: DISP, fontSize: 13, fontWeight: 700, color: C.ink }}>Turn off Face ID?</span>
                 </div>
                 <p style={{ fontFamily: DISP, fontSize: 13, fontWeight: 500, color: C.sub, lineHeight: 1.5, marginBottom: 13 }}>
@@ -136,7 +136,7 @@ export function AcctEditProfile({ back, profile, onSave, onReverify }) {
   const ConfirmPanel = ({ onAuth, onCancel, description }) => (
     <div style={{ marginTop: 10, background: C.paper, border: `1px solid ${C.line}`, borderRadius: 14, padding: "14px 15px", animation: "chipIn .25s ease both" }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 7 }}>
-        <Ic n="faceid" s={15} c={C.ink} sw={2} />
+        <Ic n="faceid" s={15} c={C.ink} />
         <span style={{ fontFamily: DISP, fontSize: 13, fontWeight: 700, color: C.ink }}>Verify it's you</span>
       </div>
       <p style={{ fontFamily: DISP, fontSize: 12, fontWeight: 500, color: C.sub, lineHeight: 1.5, marginBottom: 13 }}>{description}</p>
@@ -181,7 +181,7 @@ export function AcctEditProfile({ back, profile, onSave, onReverify }) {
           ))}
           <Notice className="fu2" type="info" icon="shield" title="From your verified ID" sub="To update these details, re-verify with a current document." style={{ marginBottom: 10 }} />
           <button onClick={onReverify} className="fu2" style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 8, width: "100%", padding: "13px", background: "transparent", border: `1.5px solid ${C.line}`, borderRadius: 13, cursor: "pointer", marginBottom: 13 }}>
-            <Ic n="scan" s={15} c={C.ink} sw={2.2} />
+            <Ic n="scan" s={15} c={C.ink} />
             <span style={{ fontFamily: DISP, fontSize: 13, fontWeight: 700, color: C.ink }}>Re-verify identity</span>
           </button>
         </div>
@@ -196,7 +196,7 @@ export function AcctEditProfile({ back, profile, onSave, onReverify }) {
         <div style={dim}>
           <div className="fu3" style={{ marginTop: 4 }}>
             <Group>
-              <Row ic="shield" title="Verified Identity" sub="Confirmed Jun 2026" right={<Ic n="check" s={16} c={C.acc} sw={2.8} />} />
+              <Row ic="shield" title="Verified Identity" sub="Confirmed Jun 2026" right={<Ic n="check" s={16} c={C.acc} />} />
             </Group>
           </div>
         </div>

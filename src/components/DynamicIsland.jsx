@@ -65,7 +65,7 @@ export function DynamicIsland({ island, onDismiss, onOpenRequest }) {
             </>}
             {island.mode === "added" && <>
               <div style={{ width: 26, height: 26, borderRadius: "50%", background: C.acc, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                <Ic n="check" s={15} c="#fff" sw={3} />
+                <Ic n="check" s={15} c="#fff" />
               </div>
               <div style={{ flex: 1, fontFamily: DISP, fontSize: 13.5, fontWeight: 700, color: "#fff" }}>Added to Apple Wallet</div>
             </>}

@@ -39,6 +39,14 @@ export const DISP = FONT.display;
 export const MONO = FONT.mono;
 export const NUM = FONT.numeric;
 
+/* ---- Icon strokes ----
+   One optical rule for all icons: stroke width is derived from render size
+   (strokeWidth is in viewBox units, so small icons need thicker strokes to
+   hold the same perceived weight). Components should NOT pass per-site
+   stroke widths — let Ic derive it via strokeFor(size). */
+export const STROKE = { bold: 2.2, base: 1.8, light: 1.4 };
+export const strokeFor = (s) => (s <= 14 ? STROKE.bold : s <= 24 ? STROKE.base : STROKE.light);
+
 /* ---- Radii ---- */
 export const RADIUS = {
   xs: 6,

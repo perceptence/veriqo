@@ -97,7 +97,7 @@ export function IDSelect({ go, back, sel, setSel, owned = [], onViewExisting }) 
                 <div style={{ flex: 1 }}>
                   <div style={{ fontFamily: DISP, fontSize: 15, fontWeight: 700, color: C.sub, letterSpacing: "-.01em" }}>{c.type}</div>
                   <div style={{ display: "flex", alignItems: "center", gap: 4, marginTop: 3 }}>
-                    <Ic n="check" s={10} c={C.acc} sw={3} />
+                    <Ic n="check" s={10} c={C.acc} />
                     <span style={{ fontFamily: MONO, fontSize: 9.5, color: C.accDeep, letterSpacing: ".02em" }}>ALREADY ADDED</span>
                   </div>
                 </div>
@@ -122,14 +122,14 @@ export function IDSelect({ go, back, sel, setSel, owned = [], onViewExisting }) 
               <div style={{ width: 24, height: 24, borderRadius: "50%", flexShrink: 0, background: a ? C.acc : "transparent",
                 border: `2px solid ${a ? C.acc : "rgba(20,18,16,.18)"}`, display: "flex", alignItems: "center", justifyContent: "center",
                 transition: "all .2s", animation: a ? "rise .3s cubic-bezier(.16,1,.3,1)" : "none" }}>
-                {a && <Ic n="check" s={13} c="#fff" sw={2.6} />}
+                {a && <Ic n="check" s={13} c="#fff" />}
               </div>
             </button>
           );
         })}
 
         <button onClick={() => setShowMore((s) => !s)} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 7, width: "100%", padding: "14px", background: "transparent", border: "none", cursor: "pointer", marginTop: 2 }}>
-          <Ic n={showMore ? "x" : "plus"} s={14} c={C.sub} sw={2.2} />
+          <Ic n={showMore ? "x" : "plus"} s={14} c={C.sub} />
           <span style={{ fontFamily: DISP, fontSize: 13, fontWeight: 700, color: C.sub }}>{showMore ? "Hide document types" : "More document types"}</span>
         </button>
 
@@ -139,7 +139,7 @@ export function IDSelect({ go, back, sel, setSel, owned = [], onViewExisting }) 
               <input value={query} onChange={(e) => setQuery(e.target.value)} autoFocus placeholder="Search document types"
                 style={{ width: "100%", padding: "12px 16px 12px 40px", background: C.paper, border: `1.5px solid ${C.line}`, borderRadius: 13, fontFamily: DISP, fontSize: 14, fontWeight: 600, color: C.ink, outline: "none" }} />
               <div style={{ position: "absolute", left: 14, top: "50%", transform: "translateY(-50%)" }}>
-                <Ic n="search" s={15} c={C.faint} sw={2.2} />
+                <Ic n="search" s={15} c={C.faint} />
               </div>
             </div>
 
@@ -148,12 +148,12 @@ export function IDSelect({ go, back, sel, setSel, owned = [], onViewExisting }) 
                 <p style={{ fontFamily: DISP, fontSize: 13, fontWeight: 500, color: C.faint, marginBottom: 13, lineHeight: 1.5 }}>No document types match "{query}".</p>
                 {requested.includes(q) ? (
                   <div style={{ display: "inline-flex", alignItems: "center", gap: 7, padding: "10px 17px", background: C.accSoft, borderRadius: 12 }}>
-                    <Ic n="check" s={13} c={C.acc} sw={2.8} />
+                    <Ic n="check" s={13} c={C.acc} />
                     <span style={{ fontFamily: DISP, fontSize: 12.5, fontWeight: 700, color: C.accDeep }}>We'll notify you when it's added</span>
                   </div>
                 ) : (
                   <button onClick={() => setRequested((r) => [...r, q])} style={{ display: "inline-flex", alignItems: "center", gap: 7, padding: "10px 18px", background: C.ink, border: "none", borderRadius: 12, cursor: "pointer" }}>
-                    <Ic n="bell" s={13} c="#fff" sw={2.4} />
+                    <Ic n="bell" s={13} c="#fff" />
                     <span style={{ fontFamily: DISP, fontSize: 12.5, fontWeight: 700, color: "#fff" }}>Notify me when added</span>
                   </button>
                 )}
@@ -281,7 +281,7 @@ export function IDReview({ go, retake, vsel }) {
         <div className="fu2" style={{ display: "flex", justifyContent: "center", position: "relative", marginBottom: 18 }}>
           <IDCard w={196} h={124} photo={40} credKey={credKey} />
           <div style={{ position: "absolute", top: -9, right: 28, background: C.acc, borderRadius: 11, padding: "5px 12px", display: "flex", alignItems: "center", gap: 5, animation: "rise .4s cubic-bezier(.16,1,.3,1) .25s both", boxShadow: `0 6px 14px ${C.acc}55` }}>
-            <Ic n="check" s={11} c="#fff" sw={3} />
+            <Ic n="check" s={11} c="#fff" />
             <span style={{ fontFamily: DISP, fontSize: 11, color: "#fff", fontWeight: 800 }}>CLEAR</span>
           </div>
         </div>

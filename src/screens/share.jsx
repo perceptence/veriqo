@@ -127,7 +127,7 @@ export function Share({ c, back, claim, defaults = {}, docOverride, onSaveOverri
                         </div>
                       )}
                     </div>
-                    {shared && <Ic n="check" s={14} c={C.acc} sw={2.5} />}
+                    {shared && <Ic n="check" s={14} c={C.acc} />}
                   </div>
                 );
               })}
@@ -160,7 +160,7 @@ export function Share({ c, back, claim, defaults = {}, docOverride, onSaveOverri
                         <div style={{ fontFamily: NUM, fontSize: 33, color: C.ink, lineHeight: 1 }}>0:{String(tok).padStart(2, "0")}</div>
                         <div style={{ fontFamily: MONO, fontSize: 9, color: C.faint, letterSpacing: ".1em", marginTop: 3 }}>EXPIRES</div>
                       </>) : (<>
-                        <Ic n="rotate" s={23} c={C.faint} sw={2} />
+                        <Ic n="rotate" s={23} c={C.faint} />
                         <div style={{ fontFamily: MONO, fontSize: 9, color: C.faint, letterSpacing: ".08em", marginTop: 5 }}>EXPIRED</div>
                       </>)}
                     </div>
@@ -173,7 +173,7 @@ export function Share({ c, back, claim, defaults = {}, docOverride, onSaveOverri
                     <p style={{ fontFamily: DISP, fontSize: 11.5, fontWeight: 500, color: C.faint, marginTop: 9, textAlign: "center", whiteSpace: "nowrap" }}>Works once, then expires.</p>
                   ) : (
                     <button onClick={regen} style={{ display: "flex", alignItems: "center", gap: 7, marginTop: 9, background: "none", border: "none", cursor: "pointer", padding: "4px 6px" }}>
-                      <Ic n="rotate" s={14} c={C.acc} sw={2.4} />
+                      <Ic n="rotate" s={14} c={C.acc} />
                       <span style={{ fontFamily: DISP, fontSize: 13, fontWeight: 700, color: C.acc }}>Generate new PIN</span>
                     </button>
                   )}

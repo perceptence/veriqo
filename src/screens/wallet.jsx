@@ -122,7 +122,7 @@ export function Wallet({ openDetail, addNew, onProof, name, ownedDocs, setOwnedD
           {proofs.map((p) => (
             <button key={p.k} onClick={() => onProof(p)} style={{ flexShrink: 0, display: "flex", alignItems: "center", gap: 8, padding: "11px 15px", background: C.paper, border: `1.5px solid ${C.line}`, borderRadius: 14, cursor: "pointer", boxShadow: "0 2px 8px rgba(20,18,16,.03)" }}>
               <div style={{ width: 26, height: 26, borderRadius: 8, background: C.accSoft, display: "flex", alignItems: "center", justifyContent: "center" }}>
-                <Ic n={p.ic} s={14} c={C.acc} sw={2.4} />
+                <Ic n={p.ic} s={14} c={C.acc} />
               </div>
               <span style={{ fontFamily: DISP, fontSize: 13.5, fontWeight: 700, color: C.ink, whiteSpace: "nowrap", letterSpacing: "-.01em" }}>{p.full}</span>
             </button>
@@ -334,7 +334,7 @@ export function Detail({ c, back, onShare, walletAdded = false, onWalletAdd, onU
               }} style={{ background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: 5, padding: "2px 0" }}>
               {copyAllDone
                 ? <span style={{ fontFamily: MONO, fontSize: 9, color: C.acc, fontWeight: 700, letterSpacing: ".06em" }}>COPIED</span>
-                : <><Ic n="copy" s={11} c={C.faint} sw={2} /><span style={{ fontFamily: MONO, fontSize: 9, color: C.faint, fontWeight: 700, letterSpacing: ".06em" }}>Copy details</span></>}
+                : <><Ic n="copy" s={11} c={C.faint} /><span style={{ fontFamily: MONO, fontSize: 9, color: C.faint, fontWeight: 700, letterSpacing: ".06em" }}>Copy details</span></>}
             </button>
           </div>
           <DataRows rows={c.fields} />

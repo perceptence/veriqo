@@ -112,7 +112,7 @@ export function Notice({ icon = "shield", title, sub, type = "info", className, 
   return (
     <div className={className} onClick={onClick} style={{ background: T.bg, borderRadius: 13, padding: "12px 14px", ...style }}>
       <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: sub ? 5 : 0 }}>
-        <Ic n={icon} s={13} c={T.col} sw={2} />
+        <Ic n={icon} s={13} c={T.col} />
         <span style={{ fontFamily: DISP, fontSize: 13, fontWeight: 700, color: T.text, lineHeight: 1.3 }}>{title}</span>
       </div>
       {sub && <p style={{ fontFamily: DISP, fontSize: 12, fontWeight: 500, color: T.text, lineHeight: 1.5, margin: "4px 0 0 0" }}>{sub}</p>}

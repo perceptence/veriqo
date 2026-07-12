@@ -5,6 +5,7 @@ import {
   Fingerprint, X, MoreHorizontal, LogOut, Pencil, Copy, AlertTriangle,
   Mail, Flag, FileText, Search, Star, Calendar, Hash, MapPin,
 } from "lucide-react";
+import { strokeFor } from "../styles/tokens.js";
 
 /* Film-grain overlay used across dark cards and surfaces */
 export function Grain({ o = 0.05, blend = "overlay" }) {
@@ -17,8 +18,10 @@ export function Grain({ o = 0.05, blend = "overlay" }) {
   );
 }
 
-/* Icon system: custom SVG paths for specialty marks, Lucide for standard UI. */
-export function Ic({ n, s = 22, c = "currentColor", sw = 2 }) {
+/* Icon system: custom SVG paths for specialty marks, Lucide for standard UI.
+   Stroke width is derived from size (see STROKE/strokeFor in tokens.js) so
+   every icon carries the same perceived weight — do not pass sw per call site. */
+export function Ic({ n, s = 22, c = "currentColor", sw = strokeFor(s) }) {
   const SV = {
     pulse: <polyline fill="none" stroke={c} strokeWidth={sw} strokeLinecap="round" strokeLinejoin="round" points="2,12 5,12 7,5 9,19 11,12 13,15 15,9 17,12 22,12" />,
     devices: <g stroke={c} strokeWidth={sw} fill="none" strokeLinecap="round"><rect x="5" y="2" width="14" height="20" rx="2" /><rect x="9" y="17" width="6" height="3" rx="1.5" fill={c} stroke="none" /><line x1="9" y1="7" x2="15" y2="7" /><line x1="9" y1="11" x2="15" y2="11" /></g>,
