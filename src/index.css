@@ -8,3 +8,105 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* ---------------------------------------------------------------------------
+   Full-bleed the veriqo app inside PhoneFrame.
+   The App normally renders a showcase page (its own fake bezel, a header
+   label, a dev surface-jump toolbar, a debug line). Inside the real device
+   frame we dissolve that scaffolding so the mobile UI fills the screen and
+   the app's own functional Dynamic Island is the only island.
+   Scoped to .pf-screen, so the App still renders standalone outside a frame.
+--------------------------------------------------------------------------- */
+.pf-screen .vq-chrome { display: none !important; }
+
+.pf-screen .vq-stage {
+  display: block !important;
+  position: relative !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+
+.pf-screen .vq-frame {
+  width: 100% !important;
+  height: 100% !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  /* Clip the entire app subtree at the device corner radius. The app's screens
+     mount with transform animations (.si/.fu* in global.css) and contain
+     overflow scrollers — transient/permanent composited layers whose edge
+     rasterization against pf-phone's border-radius clip shimmers at the bottom
+     corners at fractional shell scales. clip-path creates a compositor clip
+     node in the SAME coordinate space (no zoom in the chain), which those
+     layers honor. */
+  clip-path: inset(0 round 49.25px) !important;
+  overflow: hidden !important;
+}
+
+/* ---------------------------------------------------------------------------
+   Render the DEVICE in the app's native 360pt design space.
+
+   The veriqo UI is art-directed at 360pt wide; PhoneFrame's chrome is drawn
+   for a 402x874 screen. Every attempt to scale the app up inside the screen
+   (transform or zoom around its scroll containers) hit the same Chromium
+   compositor defect: the composited scroll layers paint with mismatched
+   clips and stacking — corner leaks and bottom-edge flicker that no clip or
+   overlay can contain (verified: leaked paint ignored clip-path AND a
+   z-index:9999 cover ring).
+
+   So we do the opposite: resize the device chrome to the app's space (all
+   metrics x 360/402 = 0.89552) and let PhoneFrame's single outer fit
+   transform blow the WHOLE assembly up. The `fill` prop in main.jsx
+   compensates (x 402/360) so the rendered size is unchanged. One uniform
+   transform around a consistent coordinate space — the same architecture as
+   the artifact-free native setup, with the bold 360 proportions preserved.
+--------------------------------------------------------------------------- */
+.pf-phone {
+  width: 360px !important;
+  height: 782.69px !important;
+  border-radius: 49.25px !important;
+  box-shadow: 0 0 0 8px #0B0C09, 0 36px 72px rgba(0, 0, 0, 0.6) !important;
+}
+/* Bezel ring repainted ABOVE the app content (same geometry/colors as the
+   frame's own ring — overlays it exactly, adding no visual thickness). Any
+   anti-aliasing seam where the app's rounded clip meets the bezel — visible
+   only at certain fractional fit scales, and shimmering while entrance
+   animations re-rasterize — lands under opaque black. pf-shell's box equals
+   pf-phone's, and it does not clip, so this paints over the full bezel zone. */
+.pf-shell::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 49.25px;
+  box-shadow: 0 0 0 8px #0B0C09;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+.pf-btn    { width: 3.6px !important; }
+.pf-left   { left: -10.7px !important; }
+.pf-right  { right: -10.7px !important; }
+.pf-action { top: 134.3px !important; height: 30.4px !important; }
+.pf-volup  { top: 182.7px !important; height: 51.9px !important; }
+.pf-voldn  { top: 245.4px !important; height: 51.9px !important; }
+.pf-side   { top: 188.1px !important; height: 86px !important; }
+.pf-cam    { top: 302.7px !important; height: 37.6px !important; }
+
+/* The wallet & account scroll lists reserve 92px of empty bottom padding for
+   breathing room on the app's original 722pt-tall canvas. On the device's
+   taller (782.7pt) screen the content itself fits, but that padding still
+   tips the list into a scroll with nothing hidden. No floating CTA needs the
+   space, so we drop it in the embedded context (targeting precisely the 92px
+   scrollers) — no scroll when nothing overflows.
+   NOTE: 92 is LAYOUT.scrollGutter in tokens.js. These MUST stay in sync — this
+   selector matches the serialized inline style, so the literal cannot be
+   tokenized. Change both together. */
+.pf-screen [style*="padding-bottom: 92px"] {
+  padding-bottom: 6px !important;
+}
+
+/* Hide the frame's decorative island — the app draws its own functional one. */
+.pf-island { display: none !important; }
