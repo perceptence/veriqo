@@ -1,4 +1,4 @@
-import { C, MONO } from "../styles/tokens.js";
+import { C, MONO, SPACE, sp } from "../styles/tokens.js";
 import { Ic } from "./Icon.jsx";
 import { BitAvatar as BitAvatarBase } from "./BitAvatar.jsx";
 
@@ -9,13 +9,13 @@ export function BadgedAvatar({ size = 62 }) {
   const ring = size + 6;
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", flexShrink: 0, gap: 0 }}>
-      <div style={{ width: ring, height: ring, borderRadius: "50%", border: `2px solid ${C.acc}`, padding: 2, boxSizing: "border-box" }}>
+      <div style={{ width: ring, height: ring, borderRadius: "50%", border: `2px solid ${C.acc}`, padding: SPACE[2], boxSizing: "border-box" }}>
         <div style={{ borderRadius: "50%", overflow: "hidden", width: "100%", height: "100%" }}>
           <BitAvatarBase size={size} />
         </div>
       </div>
-      <div style={{ marginTop: -10, background: C.acc, borderRadius: 20, padding: "3px 9px",
-        display: "flex", alignItems: "center", gap: 4, whiteSpace: "nowrap",
+      <div style={{ marginTop: -10, background: C.acc, borderRadius: 20, padding: sp(3, 8),
+        display: "flex", alignItems: "center", gap: SPACE[4], whiteSpace: "nowrap",
         border: `1.5px solid ${C.paper}`, zIndex: 1 }}>
         <Ic n="shield" s={10} c="#fff" />
         <span style={{ fontFamily: MONO, fontSize: 8.5, fontWeight: 700, color: "#fff", letterSpacing: ".06em" }}>VERIFIED</span>

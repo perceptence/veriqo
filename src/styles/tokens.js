@@ -59,10 +59,20 @@ export const RADIUS = {
   round: "50%",
 };
 
-/* ---- Spacing scale (px) ---- */
+/* ---- Spacing scale (px) ----
+   Single source of truth for gap / margin / padding. Keys ARE the pixel value.
+   The 4px ramp (4,8,12,16,20,24,28,32,40) carries layout rhythm; the half-step
+   (6) and micro tier (1,2,3) exist for tight badge/label/hairline spacing.
+   Reference these — never inline a raw spacing number. For multi-axis
+   padding/margin use the sp() shorthand below. */
 export const SPACE = {
-  0: 0, 1: 4, 2: 8, 3: 12, 4: 16, 5: 20, 6: 24, 7: 28, 8: 32, 10: 40,
+  0: 0, 1: 1, 2: 2, 3: 3, 4: 4, 6: 6, 8: 8,
+  12: 12, 16: 16, 20: 20, 24: 24, 28: 28, 32: 32, 40: 40,
 };
+
+/* Multi-axis shorthand: sp(20, 20, 24) -> "20px 20px 24px".
+   Each argument must be a SPACE key. */
+export const sp = (...v) => v.map((n) => `${SPACE[n]}px`).join(" ");
 
 /* ---- Motion ---- */
 export const EASE = "cubic-bezier(.16,1,.3,1)";

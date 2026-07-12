@@ -1,5 +1,5 @@
 import React from "react";
-import { C, DISP, MONO } from "../styles/tokens.js";
+import { C, DISP, MONO, SPACE, sp } from "../styles/tokens.js";
 import { Ic } from "./Icon.jsx";
 
 /* ---- Back button ---- */
@@ -21,12 +21,12 @@ export function Back({ onClick, light = false }) {
 export function Header({ back, eyebrow, title, light = false, action }) {
   return (
     <>
-      {(back || action) && <div className="fu" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 16 }}>
+      {(back || action) && <div className="fu" style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: SPACE[16] }}>
         {back ? <Back onClick={back} light={light} /> : <span />}
         {action || null}
       </div>}
       <div className="fu1">
-        {eyebrow && <div style={{ fontFamily: MONO, fontSize: 11, color: light ? C.glow : C.acc, fontWeight: 700, letterSpacing: ".12em", marginBottom: 7 }}>{eyebrow}</div>}
+        {eyebrow && <div style={{ fontFamily: MONO, fontSize: 11, color: light ? C.glow : C.acc, fontWeight: 700, letterSpacing: ".12em", marginBottom: SPACE[6] }}>{eyebrow}</div>}
         <h1 style={{ fontFamily: DISP, fontSize: 30, fontWeight: 900, color: light ? "#fff" : C.ink, letterSpacing: "-.025em", lineHeight: 0.98 }}>{title}</h1>
       </div>
     </>
@@ -47,12 +47,12 @@ export function Btn({ label, onClick, ghost = false, disabled = false, variant =
       onMouseDown={(e) => !disabled && (e.currentTarget.style.transform = "scale(.98)")}
       onMouseUp={(e) => (e.currentTarget.style.transform = "scale(1)")}
       onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-      style={{ width: "100%", padding: "17px 22px",
+      style={{ width: "100%", padding: sp(16, 20),
         border: ghost ? `1.5px solid ${C.line}` : "none", borderRadius: 16,
         cursor: disabled ? "not-allowed" : "pointer",
         fontFamily: DISP, fontSize: 15.5, fontWeight: 700, letterSpacing: "-.01em",
         background: v.bg, color: v.fg,
-        display: "flex", alignItems: "center", justifyContent: "center", gap: 8,
+        display: "flex", alignItems: "center", justifyContent: "center", gap: SPACE[8],
         boxShadow: v.sh, transition: "transform .12s", opacity: disabled ? 0.9 : 1 }}>{label}</button>
   );
 }
@@ -73,8 +73,8 @@ export function Toggle({ on, onClick }) {
 /* ---- List row ---- */
 export function Row({ ic, title, sub, right, onClick, danger, last }) {
   return (
-    <div onClick={onClick} style={{ display: "flex", alignItems: "center", gap: 13,
-      padding: "14px 16px", cursor: onClick ? "pointer" : "default",
+    <div onClick={onClick} style={{ display: "flex", alignItems: "center", gap: SPACE[12],
+      padding: sp(12, 16), cursor: onClick ? "pointer" : "default",
       borderTop: last ? "none" : "none" }}>
       <div style={{ width: 36, height: 36, borderRadius: 10, flexShrink: 0,
         background: danger ? "#FBE3DF" : C.bone, display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -82,7 +82,7 @@ export function Row({ ic, title, sub, right, onClick, danger, last }) {
       </div>
       <div style={{ flex: 1 }}>
         <div style={{ fontFamily: DISP, fontSize: 14.5, fontWeight: 700, color: danger ? "#D9583F" : C.ink, letterSpacing: "-.01em" }}>{title}</div>
-        {sub && <div style={{ fontFamily: DISP, fontSize: 12, fontWeight: 500, color: C.faint, marginTop: 1 }}>{sub}</div>}
+        {sub && <div style={{ fontFamily: DISP, fontSize: 12, fontWeight: 500, color: C.faint, marginTop: SPACE[1] }}>{sub}</div>}
       </div>
       {right}
       {onClick && !right && <Ic n="chev" s={16} c={C.faint} />}
@@ -110,12 +110,12 @@ export function Notice({ icon = "shield", title, sub, type = "info", className, 
     info: { col: C.faint, bg: C.bone, text: C.sub },
   }[type] || { col: C.faint, bg: C.bone, text: C.sub };
   return (
-    <div className={className} onClick={onClick} style={{ background: T.bg, borderRadius: 13, padding: "12px 14px", ...style }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: sub ? 5 : 0 }}>
+    <div className={className} onClick={onClick} style={{ background: T.bg, borderRadius: 13, padding: sp(12, 12), ...style }}>
+      <div style={{ display: "flex", alignItems: "center", gap: SPACE[8], marginBottom: sub ? 5 : 0 }}>
         <Ic n={icon} s={13} c={T.col} />
         <span style={{ fontFamily: DISP, fontSize: 13, fontWeight: 700, color: T.text, lineHeight: 1.3 }}>{title}</span>
       </div>
-      {sub && <p style={{ fontFamily: DISP, fontSize: 12, fontWeight: 500, color: T.text, lineHeight: 1.5, margin: "4px 0 0 0" }}>{sub}</p>}
+      {sub && <p style={{ fontFamily: DISP, fontSize: 12, fontWeight: 500, color: T.text, lineHeight: 1.5, margin: sp(4, 0, 0, 0) }}>{sub}</p>}
     </div>
   );
 }
@@ -125,7 +125,7 @@ export function DataRows({ rows }) {
   return (
     <div style={{ background: C.ink, borderRadius: 16, overflow: "hidden", boxShadow: "0 14px 18px -14px rgba(20,18,16,.32)" }}>
       {rows.map(([k, v], i) => (
-        <div key={k} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "11px 16px",
+        <div key={k} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: sp(12, 16),
           borderTop: i ? "1px solid rgba(255,255,255,.08)" : "none" }}>
           <span style={{ fontFamily: MONO, fontSize: 11, color: "rgba(255,255,255,.5)", letterSpacing: ".05em" }}>{k}</span>
           <span style={{ fontFamily: MONO, fontSize: 13, color: "#fff", fontWeight: 700, letterSpacing: ".02em" }}>{v}</span>
@@ -138,7 +138,7 @@ export function DataRows({ rows }) {
 /* ---- Progress bar (4-step onboarding) ---- */
 export function PBar({ step }) {
   return (
-    <div style={{ display: "flex", gap: 5, margin: "16px 0 0" }}>
+    <div style={{ display: "flex", gap: SPACE[4], margin: sp(16, 0, 0) }}>
       {[1, 2, 3, 4].map((i) => (
         <div key={i} style={{ flex: 1, height: 6, borderRadius: 6, overflow: "hidden", background: "rgba(20,18,16,.09)" }}>
           <div style={{ height: "100%", borderRadius: 6, width: i < step ? "100%" : i === step ? "55%" : "0%", background: C.ink, transition: "width .6s cubic-bezier(.16,1,.3,1)" }} />
@@ -151,7 +151,7 @@ export function PBar({ step }) {
 /* ---- Step dots (capture flows) ---- */
 export function StepDots({ total, current, light = false }) {
   return (
-    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 5 }}>
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: SPACE[4] }}>
       {Array.from({ length: total }).map((_, i) => (
         <div key={i} style={{ height: 3, borderRadius: 2, transition: "all .35s cubic-bezier(.16,1,.3,1)",
           width: i === current ? 22 : 8,
@@ -164,7 +164,7 @@ export function StepDots({ total, current, light = false }) {
 /* ---- Progress dots (onboarding 3-step) ---- */
 export function ProgressDots({ current, total }) {
   return (
-    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 5, paddingBottom: 10 }}>
+    <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: SPACE[4], paddingBottom: SPACE[8] }}>
       {Array.from({ length: total }, (_, i) => (
         <div key={i} style={{ height: 3, borderRadius: 2, transition: "all .3s ease",
           background: i < current ? C.ink : "rgba(20,18,16,.12)", width: i === current - 1 ? 22 : 8 }} />
