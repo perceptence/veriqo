@@ -1,4 +1,4 @@
-import { C, DISP, MONO } from "../styles/tokens.js";
+import { C, DISP, MONO, SPACE, sp } from "../styles/tokens.js";
 import { Grain, Ic } from "./Icon.jsx";
 import { BitAvatar } from "./BitAvatar.jsx";
 import { credBy, expiryOf, EXP } from "../data/credentials.js";
@@ -18,13 +18,13 @@ export function IDCard({ w = 222, h = 140, photo = 46, credKey = "dl" }) {
           <Ic n={c.ic} s={11} c={c.accent} />
         </div>
       </div>
-      <div style={{ position: "absolute", top: 34, left: 15, display: "flex", gap: 12, alignItems: "center" }}>
+      <div style={{ position: "absolute", top: 34, left: 15, display: "flex", gap: SPACE[12], alignItems: "center" }}>
         <div style={{ width: photo, height: photo * 1.25, borderRadius: 8, overflow: "hidden", background: C.bone, display: "flex", alignItems: "flex-end", justifyContent: "center" }}>
           <BitAvatar size={photo * 1.18} />
         </div>
         <div>
           {[58, 40, 48].map((wd, i) => (
-            <div key={i} style={{ height: 6, width: wd, marginBottom: 6, borderRadius: 3, background: i === 0 ? C.glow : "rgba(255,255,255,.28)" }} />
+            <div key={i} style={{ height: 6, width: wd, marginBottom: SPACE[6], borderRadius: 3, background: i === 0 ? C.glow : "rgba(255,255,255,.28)" }} />
           ))}
         </div>
       </div>
@@ -40,11 +40,11 @@ export function CredCard({ c, onClick, h = 152, showPhoto = true }) {
       background: "linear-gradient(150deg,#2A2620,#141210)", boxShadow: "0 24px 26px -24px rgba(20,18,16,.5)" }}>
       <Grain o={0.08} />
       <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 6, background: c.accent }} />
-      <div style={{ position: "relative", padding: "18px 18px 16px", height: "100%", display: "flex", flexDirection: "column" }}>
+      <div style={{ position: "relative", padding: sp(16, 16, 16), height: "100%", display: "flex", flexDirection: "column" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
           <div>
             <div style={{ fontFamily: DISP, fontSize: 16, fontWeight: 800, color: "#fff", letterSpacing: "-.01em" }}>{c.type}</div>
-            <div style={{ fontFamily: MONO, fontSize: 9, color: "rgba(255,255,255,.55)", marginTop: 4, letterSpacing: ".08em" }}>{c.issuer.toUpperCase()}</div>
+            <div style={{ fontFamily: MONO, fontSize: 9, color: "rgba(255,255,255,.55)", marginTop: SPACE[4], letterSpacing: ".08em" }}>{c.issuer.toUpperCase()}</div>
           </div>
           <div style={{ width: 36, height: 36, borderRadius: 11, flexShrink: 0, background: c.accent + "26", display: "flex", alignItems: "center", justifyContent: "center" }}>
             <Ic n={c.ic} s={19} c={c.accent} />
@@ -53,11 +53,11 @@ export function CredCard({ c, onClick, h = 152, showPhoto = true }) {
         <div style={{ flex: 1 }} />
         {showPhoto && (
           <div style={{ display: "flex", alignItems: "flex-end", justifyContent: "space-between" }}>
-            <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+            <div style={{ display: "flex", gap: SPACE[8], alignItems: "center" }}>
               <div style={{ width: 34, height: 34, borderRadius: "50%", overflow: "hidden", background: C.bone, flexShrink: 0 }}><BitAvatar size={34} /></div>
               <div>
                 <div style={{ fontFamily: MONO, fontSize: 8, color: "rgba(255,255,255,.5)", letterSpacing: ".08em" }}>{c.token ? "TOKENISED" : "HOLDER"}</div>
-                <div style={{ fontFamily: DISP, fontSize: 13, fontWeight: 700, color: "#fff", marginTop: 1 }}>{c.fields[0][1]}</div>
+                <div style={{ fontFamily: DISP, fontSize: 13, fontWeight: 700, color: "#fff", marginTop: SPACE[1] }}>{c.fields[0][1]}</div>
               </div>
             </div>
             <span style={{ fontFamily: DISP, fontSize: 12, fontWeight: 800, color: "rgba(255,255,255,.5)", letterSpacing: ".06em" }}>VERIQO</span>
@@ -78,21 +78,21 @@ export function CredTile({ c, onClick }) {
       background: "linear-gradient(155deg,#2A2620,#141210)", boxShadow: "0 16px 18px -16px rgba(20,18,16,.42)" }}>
       <Grain o={0.08} />
       <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 5, background: c.accent }} />
-      <div style={{ position: "relative", padding: 15, height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+      <div style={{ position: "relative", padding: SPACE[16], height: "100%", display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
           <div style={{ width: 36, height: 36, borderRadius: 11, background: c.accent + "26", display: "flex", alignItems: "center", justifyContent: "center" }}>
             <Ic n={c.ic} s={19} c={c.accent} />
           </div>
           {status === "valid"
-            ? <div style={{ width: 7, height: 7, borderRadius: "50%", background: C.glow, marginTop: 4 }} />
-            : <div style={{ padding: "3px 8px", borderRadius: 20, background: EXP[status].bg, display: "flex", alignItems: "center", gap: 4 }}>
+            ? <div style={{ width: 7, height: 7, borderRadius: "50%", background: C.glow, marginTop: SPACE[4] }} />
+            : <div style={{ padding: sp(3, 8), borderRadius: 20, background: EXP[status].bg, display: "flex", alignItems: "center", gap: SPACE[4] }}>
                 <div style={{ width: 5, height: 5, borderRadius: "50%", background: EXP[status].color }} />
                 <span style={{ fontFamily: MONO, fontSize: 8.5, fontWeight: 700, color: EXP[status].color, letterSpacing: ".05em" }}>{EXP[status].label}</span>
               </div>}
         </div>
         <div>
           <div style={{ fontFamily: DISP, fontSize: 15, fontWeight: 800, color: "#fff", lineHeight: 1.05, letterSpacing: "-.01em" }}>{c.type}</div>
-          <div style={{ fontFamily: MONO, fontSize: 8.5, color: "rgba(255,255,255,.5)", marginTop: 5, letterSpacing: ".06em" }}>{c.issuer.toUpperCase()}</div>
+          <div style={{ fontFamily: MONO, fontSize: 8.5, color: "rgba(255,255,255,.5)", marginTop: SPACE[4], letterSpacing: ".06em" }}>{c.issuer.toUpperCase()}</div>
         </div>
       </div>
     </button>
@@ -119,7 +119,7 @@ export function QR({ size = 176, seed = "vera-token-7Q2K" }) {
     </g>
   );
   return (
-    <div style={{ padding: 14, background: "#fff", borderRadius: 18, boxShadow: "0 12px 30px rgba(20,18,16,.14)" }}>
+    <div style={{ padding: SPACE[12], background: "#fff", borderRadius: 18, boxShadow: "0 12px 30px rgba(20,18,16,.14)" }}>
       <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
         {cells}
         {finder(0, 0)}{finder(n - 7, 0)}{finder(0, n - 7)}

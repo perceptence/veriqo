@@ -180,22 +180,31 @@ export default function App() {
           }}
           onOpenRequest={openIncomingRequest} />
 
-        <div style={{ position: "absolute", top: 0, left: 0, right: 0, zIndex: 200, padding: "11px 20px 0", display: "flex", justifyContent: "space-between", alignItems: "center", pointerEvents: "none" }}>
-          <span style={{ fontFamily: DISP, fontSize: 13, fontWeight: 700, color: full ? "rgba(255,255,255,.92)" : C.ink }}>9:41</span>
+        <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 56, zIndex: 200, padding: "0 27px", display: "flex", justifyContent: "space-between", alignItems: "center", pointerEvents: "none" }}>
+          <span style={{ fontFamily: DISP, fontSize: 13.5, fontWeight: 700, letterSpacing: ".01em", color: full ? "rgba(255,255,255,.92)" : C.ink }}>9:41</span>
           <span style={{ width: 40 }} />
-          <svg width="17" height="12" viewBox="0 0 17 12" fill={full ? "rgba(255,255,255,.92)" : C.ink}>
+          <svg width="21.5" height="11" viewBox="0 0 17 12" fill={full ? "rgba(255,255,255,.92)" : C.ink}>
             <rect x=".5" y=".5" width="13" height="11" rx="2.5" stroke="currentColor" strokeWidth="1" fill="none" />
             <rect x="2" y="2" width="9" height="8" rx="1.5" fill="currentColor" />
             <path d="M15 4v4a2 2 0 000-4z" fill="currentColor" />
           </svg>
         </div>
 
-        <div style={{ position: "absolute", top: full ? 0 : 42, left: 0, right: 0, bottom: 0, overflow: "hidden" }}>
-          <div style={{ position: "absolute", inset: 0, zIndex: 20, transform: pulseOpen ? "translateY(0)" : "translateY(-100%)", transition: "transform .45s cubic-bezier(.32,0,.15,1)", background: C.bone, display: "flex", flexDirection: "column", pointerEvents: pulseOpen ? "auto" : "none" }}>
+        <div style={{ position: "absolute", top: full ? 0 : 52, left: 0, right: 0, bottom: 0, overflow: "hidden" }}>
+          {/* visibility:hidden when closed — the offscreen panel is a permanently
+              composited layer (transform+transition) whose stale paint bleeds a
+              slice of its bottom edge over the wallet's bottom corners (leak +
+              flicker). Hidden layers paint nothing; visibility rides the
+              transition so the close slide still animates (visible throughout,
+              flips at the end). */}
+          <div style={{ position: "absolute", inset: 0, zIndex: 20, transform: pulseOpen ? "translateY(0)" : "translateY(-100%)", visibility: pulseOpen ? "visible" : "hidden", transition: "transform .45s cubic-bezier(.32,0,.15,1), visibility .45s", background: C.bone, display: "flex", flexDirection: "column", pointerEvents: pulseOpen ? "auto" : "none" }}>
             <Pulse onViewCred={(k) => { setCred(k); setPulseOpen(false); setView("detail"); }} onClose={() => setPulseOpen(false)} />
           </div>
 
-          <div style={{ position: "absolute", inset: 0, overflow: "hidden", transform: pulseOpen ? "scale(0.93) translateY(5%)" : "scale(1) translateY(0)", transformOrigin: "center top", borderRadius: pulseOpen ? 20 : 0, transition: "transform .45s cubic-bezier(.32,0,.15,1)" }}
+          {/* transform:none at rest — an identity scale(1) still forces a
+              permanent compositor layer whose edge re-rasterization shimmers
+              against the rounded device corners; none lets it decomposit. */}
+          <div style={{ position: "absolute", inset: 0, overflow: "hidden", transform: pulseOpen ? "scale(0.93) translateY(5%)" : "none", transformOrigin: "center top", borderRadius: pulseOpen ? 20 : 0, transition: "transform .45s cubic-bezier(.32,0,.15,1)" }}
             onPointerMove={onPullMove} onPointerUp={onPullEnd} onPointerLeave={onPullEnd}>
             {view === "splash" && <Splash onDone={() => { setView("wallet"); }} />}
             {view === "signin" && <OnbSignIn back={() => setView("welcome")} onDone={() => { setView("wallet"); }} />}

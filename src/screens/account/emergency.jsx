@@ -1,18 +1,18 @@
 import { useState } from "react";
-import { C, DISP, MONO } from "../../styles/tokens.js";
+import { C, DISP, MONO, SPACE, sp } from "../../styles/tokens.js";
 import { Ic } from "../../components/Icon.jsx";
 import { Header, Back, Btn, Group, ProgressDots } from "../../components/primitives.jsx";
 
 function EIDFieldGroup({ children }) {
   return (
-    <div style={{ background: C.paper, borderRadius: 14, overflow: "hidden", border: `1px solid ${C.line}`, marginBottom: 14 }}>{children}</div>
+    <div style={{ background: C.paper, borderRadius: 14, overflow: "hidden", border: `1px solid ${C.line}`, marginBottom: SPACE[12] }}>{children}</div>
   );
 }
 function EIDField({ label, value, onChange, placeholder, type = "text", border = true }) {
   return (
-    <div style={{ padding: "10px 16px", borderTop: border ? `1px solid ${C.line}` : "none" }}>
-      <div style={{ fontFamily: MONO, fontSize: 9.5, color: C.faint, fontWeight: 700, letterSpacing: ".07em", marginBottom: 3 }}>{label}</div>
-      <input type={type} value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder || ""} style={{ width: "100%", fontFamily: DISP, fontSize: 15, fontWeight: 500, color: C.ink, border: "none", background: "transparent", outline: "none", padding: "2px 0" }} />
+    <div style={{ padding: sp(8, 16), borderTop: border ? `1px solid ${C.line}` : "none" }}>
+      <div style={{ fontFamily: MONO, fontSize: 9.5, color: C.faint, fontWeight: 700, letterSpacing: ".07em", marginBottom: SPACE[3] }}>{label}</div>
+      <input type={type} value={value} onChange={(e) => onChange(e.target.value)} placeholder={placeholder || ""} style={{ width: "100%", fontFamily: DISP, fontSize: 15, fontWeight: 500, color: C.ink, border: "none", background: "transparent", outline: "none", padding: sp(2, 0) }} />
     </div>
   );
 }
@@ -29,33 +29,33 @@ export function EmergencyID({ back, data, onSave }) {
 
   const ActiveCard = ({ d }) => (
     <div className="si" style={{ height: "100%", display: "flex", flexDirection: "column", background: C.bone }}>
-      <div style={{ background: "#D93025", padding: "20px 20px 24px", flexShrink: 0 }}>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10 }}>
+      <div style={{ background: "#D93025", padding: sp(20, 20, 24), flexShrink: 0 }}>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: SPACE[8] }}>
           <Back onClick={back} light />
-          <button onClick={() => setStep("medical")} style={{ background: "rgba(255,255,255,.15)", border: "none", borderRadius: 8, padding: "5px 10px", cursor: "pointer", flexShrink: 0, fontFamily: MONO, fontSize: 9.5, fontWeight: 700, color: "#fff", letterSpacing: ".05em" }}>EDIT</button>
+          <button onClick={() => setStep("medical")} style={{ background: "rgba(255,255,255,.15)", border: "none", borderRadius: 8, padding: sp(4, 8), cursor: "pointer", flexShrink: 0, fontFamily: MONO, fontSize: 9.5, fontWeight: 700, color: "#fff", letterSpacing: ".05em" }}>EDIT</button>
         </div>
-        <div style={{ fontFamily: MONO, fontSize: 10, fontWeight: 700, letterSpacing: ".12em", color: "rgba(255,255,255,.7)", marginBottom: 4, marginTop: 20 }}>EMERGENCY ID</div>
-        <div style={{ fontFamily: DISP, fontSize: 28, fontWeight: 900, color: "#fff", letterSpacing: "-.02em", marginBottom: 10 }}>Alex Morgan</div>
+        <div style={{ fontFamily: MONO, fontSize: 10, fontWeight: 700, letterSpacing: ".12em", color: "rgba(255,255,255,.7)", marginBottom: SPACE[4], marginTop: SPACE[20] }}>EMERGENCY ID</div>
+        <div style={{ fontFamily: DISP, fontSize: 28, fontWeight: 900, color: "#fff", letterSpacing: "-.02em", marginBottom: SPACE[8] }}>Alex Morgan</div>
         <p style={{ fontFamily: DISP, fontSize: 13.5, fontWeight: 500, color: "rgba(255,255,255,.75)", lineHeight: 1.5 }}>
           Surfaces when Emergency SOS is triggered on your phone — no passcode needed. Also available as a lock screen widget in iOS Settings.
         </p>
       </div>
-      <div style={{ flex: 1, overflowY: "auto", padding: "20px 20px 40px" }}>
-        <p style={{ fontFamily: MONO, fontSize: 10, color: C.faint, fontWeight: 700, letterSpacing: ".12em", marginBottom: 10 }}>MEDICAL INFO</p>
-        <div style={{ background: "#fff", borderRadius: 16, overflow: "hidden", boxShadow: "0 2px 12px rgba(20,18,16,.06)", marginBottom: 20 }}>
+      <div style={{ flex: 1, overflowY: "auto", padding: sp(20, 20, 40) }}>
+        <p style={{ fontFamily: MONO, fontSize: 10, color: C.faint, fontWeight: 700, letterSpacing: ".12em", marginBottom: SPACE[8] }}>MEDICAL INFO</p>
+        <div style={{ background: "#fff", borderRadius: 16, overflow: "hidden", boxShadow: "0 2px 12px rgba(20,18,16,.06)", marginBottom: SPACE[20] }}>
           {[["Blood type", d.bloodType || "—"], ["Organ donor", d.organDonor === null ? "Unknown" : d.organDonor ? "Yes" : "No"],
             ["Allergies", d.allergies || "None"], ["Conditions", d.conditions || "None"], ["Medications", d.medications || "None"]].map(([k, v], i) => (
-            <div key={k} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "13px 16px", borderTop: i ? `1px solid ${C.line}` : "none" }}>
+            <div key={k} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: sp(12, 16), borderTop: i ? `1px solid ${C.line}` : "none" }}>
               <span style={{ fontFamily: DISP, fontSize: 13, fontWeight: 500, color: C.sub }}>{k}</span>
               <span style={{ fontFamily: DISP, fontSize: 13, fontWeight: 700, color: C.ink, maxWidth: "55%", textAlign: "right" }}>{v}</span>
             </div>
           ))}
         </div>
-        <p style={{ fontFamily: MONO, fontSize: 10, color: C.faint, fontWeight: 700, letterSpacing: ".12em", marginBottom: 10 }}>EMERGENCY CONTACT</p>
-        <div style={{ background: "#fff", borderRadius: 16, padding: "14px 16px", boxShadow: "0 2px 12px rgba(20,18,16,.06)" }}>
-          <div style={{ fontFamily: DISP, fontSize: 15, fontWeight: 700, color: C.ink, marginBottom: 2 }}>{d.contact.name}</div>
-          <div style={{ fontFamily: DISP, fontSize: 13, fontWeight: 500, color: C.sub, marginBottom: 10 }}>{d.contact.relation}</div>
-          <div style={{ display: "flex", alignItems: "center", gap: 8, background: C.accSoft, borderRadius: 10, padding: "10px 14px" }}>
+        <p style={{ fontFamily: MONO, fontSize: 10, color: C.faint, fontWeight: 700, letterSpacing: ".12em", marginBottom: SPACE[8] }}>EMERGENCY CONTACT</p>
+        <div style={{ background: "#fff", borderRadius: 16, padding: sp(12, 16), boxShadow: "0 2px 12px rgba(20,18,16,.06)" }}>
+          <div style={{ fontFamily: DISP, fontSize: 15, fontWeight: 700, color: C.ink, marginBottom: SPACE[2] }}>{d.contact.name}</div>
+          <div style={{ fontFamily: DISP, fontSize: 13, fontWeight: 500, color: C.sub, marginBottom: SPACE[8] }}>{d.contact.relation}</div>
+          <div style={{ display: "flex", alignItems: "center", gap: SPACE[8], background: C.accSoft, borderRadius: 10, padding: sp(8, 12) }}>
             <Ic n="phone" s={15} c={C.acc} />
             <span style={{ fontFamily: MONO, fontSize: 12, fontWeight: 700, color: C.accDeep, letterSpacing: ".04em" }}>{d.contact.phone}</span>
           </div>
@@ -67,25 +67,25 @@ export function EmergencyID({ back, data, onSave }) {
   if (step === "view" && data) return <ActiveCard d={data} />;
 
   if (step === "intro") return (
-    <div className="si" style={{ height: "100%", display: "flex", flexDirection: "column", padding: "20px 20px 26px" }}>
+    <div className="si" style={{ height: "100%", display: "flex", flexDirection: "column", padding: sp(20, 20, 24) }}>
       <div style={{ flexShrink: 0 }}>
         <Header back={back} eyebrow="EMERGENCY" title="Emergency ID" />
       </div>
-      <div style={{ flex: 1, minHeight: 0, overflowY: "auto", marginTop: 18 }}>
-        <p className="fu1" style={{ fontFamily: DISP, fontSize: 13.5, fontWeight: 500, color: C.sub, lineHeight: 1.5, marginBottom: 24 }}>
+      <div style={{ flex: 1, minHeight: 0, overflowY: "auto", marginTop: SPACE[16] }}>
+        <p className="fu1" style={{ fontFamily: DISP, fontSize: 13.5, fontWeight: 500, color: C.sub, lineHeight: 1.5, marginBottom: SPACE[24] }}>
           First responders can see your medical info and reach your emergency contact directly from your lock screen — no passcode needed.
         </p>
         <Group>
           {[["lock", "Visible without unlocking", "Always available in an emergency"],
             ["shield", "Zero-knowledge", "Veriqo never shares this data with third parties"],
             ["user", "Your control", "You decide exactly what to show"]].map(([ic, t, d], i) => (
-            <div key={t} style={{ display: "flex", gap: 13, padding: "13px 16px", alignItems: "center", borderTop: i ? `1px solid ${C.line}` : "none" }}>
+            <div key={t} style={{ display: "flex", gap: SPACE[12], padding: sp(12, 16), alignItems: "center", borderTop: i ? `1px solid ${C.line}` : "none" }}>
               <div style={{ width: 36, height: 36, borderRadius: 10, background: C.bone, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>
                 <Ic n={ic} s={17} c={C.ink} />
               </div>
               <div>
                 <div style={{ fontFamily: DISP, fontSize: 13.5, fontWeight: 700, color: C.ink }}>{t}</div>
-                <div style={{ fontFamily: DISP, fontSize: 12, fontWeight: 500, color: C.faint, marginTop: 1 }}>{d}</div>
+                <div style={{ fontFamily: DISP, fontSize: 12, fontWeight: 500, color: C.faint, marginTop: SPACE[1] }}>{d}</div>
               </div>
             </div>
           ))}
@@ -96,25 +96,25 @@ export function EmergencyID({ back, data, onSave }) {
   );
 
   if (step === "medical") return (
-    <div className="si" style={{ height: "100%", display: "flex", flexDirection: "column", padding: "20px 20px 26px" }}>
+    <div className="si" style={{ height: "100%", display: "flex", flexDirection: "column", padding: sp(20, 20, 24) }}>
       <div style={{ flexShrink: 0 }}>
         <ProgressDots total={3} current={1} />
         <Header back={() => setStep(data ? "view" : "intro")} eyebrow="STEP 1 · MEDICAL" title="Medical information" />
       </div>
-      <div style={{ flex: 1, minHeight: 0, overflowY: "auto", marginTop: 18 }}>
-        <p className="fu1" style={{ fontFamily: DISP, fontSize: 13.5, fontWeight: 500, color: C.sub, lineHeight: 1.5, marginBottom: 20 }}>
+      <div style={{ flex: 1, minHeight: 0, overflowY: "auto", marginTop: SPACE[16] }}>
+        <p className="fu1" style={{ fontFamily: DISP, fontSize: 13.5, fontWeight: 500, color: C.sub, lineHeight: 1.5, marginBottom: SPACE[20] }}>
           Shown to first responders. Leave blank anything you don't want to share.
         </p>
-        <p style={{ fontFamily: MONO, fontSize: 9.5, color: C.faint, fontWeight: 700, letterSpacing: ".08em", marginBottom: 10 }}>BLOOD TYPE</p>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 8, marginBottom: 20 }}>
+        <p style={{ fontFamily: MONO, fontSize: 9.5, color: C.faint, fontWeight: 700, letterSpacing: ".08em", marginBottom: SPACE[8] }}>BLOOD TYPE</p>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: SPACE[8], marginBottom: SPACE[20] }}>
           {BLOOD_TYPES.map((t) => (
-            <button key={t} onClick={() => set("bloodType", t)} style={{ padding: "10px 0", borderRadius: 10, border: `1.5px solid ${form.bloodType === t ? C.ink : C.line}`, cursor: "pointer", fontFamily: DISP, fontSize: 13.5, fontWeight: 700, background: form.bloodType === t ? C.ink : "transparent", color: form.bloodType === t ? "#fff" : C.sub, transition: "all .15s" }}>{t}</button>
+            <button key={t} onClick={() => set("bloodType", t)} style={{ padding: sp(8, 0), borderRadius: 10, border: `1.5px solid ${form.bloodType === t ? C.ink : C.line}`, cursor: "pointer", fontFamily: DISP, fontSize: 13.5, fontWeight: 700, background: form.bloodType === t ? C.ink : "transparent", color: form.bloodType === t ? "#fff" : C.sub, transition: "all .15s" }}>{t}</button>
           ))}
         </div>
-        <p style={{ fontFamily: MONO, fontSize: 9.5, color: C.faint, fontWeight: 700, letterSpacing: ".08em", marginBottom: 10 }}>ORGAN DONOR</p>
-        <div style={{ display: "flex", gap: 8, marginBottom: 20 }}>
+        <p style={{ fontFamily: MONO, fontSize: 9.5, color: C.faint, fontWeight: 700, letterSpacing: ".08em", marginBottom: SPACE[8] }}>ORGAN DONOR</p>
+        <div style={{ display: "flex", gap: SPACE[8], marginBottom: SPACE[20] }}>
           {[["Yes", true], ["No", false], ["Unknown", null]].map(([l, v]) => (
-            <button key={l} onClick={() => set("organDonor", v)} style={{ flex: 1, padding: "11px 0", borderRadius: 10, border: `1.5px solid ${form.organDonor === v ? C.ink : C.line}`, cursor: "pointer", fontFamily: DISP, fontSize: 13.5, fontWeight: 700, background: form.organDonor === v ? C.ink : "transparent", color: form.organDonor === v ? "#fff" : C.sub, transition: "all .15s" }}>{l}</button>
+            <button key={l} onClick={() => set("organDonor", v)} style={{ flex: 1, padding: sp(12, 0), borderRadius: 10, border: `1.5px solid ${form.organDonor === v ? C.ink : C.line}`, cursor: "pointer", fontFamily: DISP, fontSize: 13.5, fontWeight: 700, background: form.organDonor === v ? C.ink : "transparent", color: form.organDonor === v ? "#fff" : C.sub, transition: "all .15s" }}>{l}</button>
           ))}
         </div>
         <EIDFieldGroup>
@@ -128,13 +128,13 @@ export function EmergencyID({ back, data, onSave }) {
   );
 
   if (step === "contact") return (
-    <div className="si" style={{ height: "100%", display: "flex", flexDirection: "column", padding: "20px 20px 26px" }}>
+    <div className="si" style={{ height: "100%", display: "flex", flexDirection: "column", padding: sp(20, 20, 24) }}>
       <div style={{ flexShrink: 0 }}>
         <ProgressDots total={3} current={2} />
         <Header back={() => setStep("medical")} eyebrow="STEP 2 · CONTACT" title="Emergency contact" />
       </div>
-      <div style={{ flex: 1, minHeight: 0, overflowY: "auto", marginTop: 18 }}>
-        <p className="fu1" style={{ fontFamily: DISP, fontSize: 13.5, fontWeight: 500, color: C.sub, lineHeight: 1.5, marginBottom: 20 }}>
+      <div style={{ flex: 1, minHeight: 0, overflowY: "auto", marginTop: SPACE[16] }}>
+        <p className="fu1" style={{ fontFamily: DISP, fontSize: 13.5, fontWeight: 500, color: C.sub, lineHeight: 1.5, marginBottom: SPACE[20] }}>
           Who should responders call if you can't speak for yourself?
         </p>
         <EIDFieldGroup>
@@ -148,42 +148,42 @@ export function EmergencyID({ back, data, onSave }) {
   );
 
   if (step === "preview") return (
-    <div className="si" style={{ height: "100%", display: "flex", flexDirection: "column", padding: "20px 20px 26px" }}>
+    <div className="si" style={{ height: "100%", display: "flex", flexDirection: "column", padding: sp(20, 20, 24) }}>
       <div style={{ flexShrink: 0 }}>
         <ProgressDots total={3} current={3} />
         <Header back={() => setStep("contact")} eyebrow="STEP 3 · PREVIEW" title="What responders see" />
-        <p className="fu1" style={{ fontFamily: DISP, fontSize: 13.5, fontWeight: 500, color: C.sub, lineHeight: 1.5, marginTop: 16, marginBottom: 0 }}>
+        <p className="fu1" style={{ fontFamily: DISP, fontSize: 13.5, fontWeight: 500, color: C.sub, lineHeight: 1.5, marginTop: SPACE[16], marginBottom: 0 }}>
           This card surfaces when a responder triggers Emergency SOS on your phone — no passcode needed. You can also add it as a lock screen widget in iOS Settings.
         </p>
       </div>
-      <div style={{ flex: 1, minHeight: 0, overflowY: "auto", marginTop: 20 }}>
+      <div style={{ flex: 1, minHeight: 0, overflowY: "auto", marginTop: SPACE[20] }}>
         <div style={{ background: "#1A1A1F", borderRadius: 18, overflow: "hidden", boxShadow: "0 8px 32px rgba(20,18,16,.2)" }}>
-          <div style={{ background: "#D93025", padding: "12px 16px", display: "flex", alignItems: "center", gap: 8 }}>
-            <Ic n="alert" s={14} c="#fff" sw={2} />
+          <div style={{ background: "#D93025", padding: sp(12, 16), display: "flex", alignItems: "center", gap: SPACE[8] }}>
+            <Ic n="alert" s={14} c="#fff" />
             <span style={{ fontFamily: MONO, fontSize: 10, fontWeight: 700, color: "#fff", letterSpacing: ".06em" }}>EMERGENCY MEDICAL ID</span>
           </div>
-          <div style={{ padding: "14px 16px" }}>
-            <div style={{ fontFamily: DISP, fontSize: 16, fontWeight: 800, color: "#fff", marginBottom: 12 }}>Alex Morgan</div>
+          <div style={{ padding: sp(12, 16) }}>
+            <div style={{ fontFamily: DISP, fontSize: 16, fontWeight: 800, color: "#fff", marginBottom: SPACE[12] }}>Alex Morgan</div>
             {[
               ["Blood type", form.bloodType || "—"],
               ["Organ donor", form.organDonor === null ? "Unknown" : form.organDonor ? "Yes" : "No"],
               form.allergies && ["Allergies", form.allergies],
             ].filter(Boolean).map(([k, v]) => (
-              <div key={k} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
+              <div key={k} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: SPACE[6] }}>
                 <span style={{ fontFamily: DISP, fontSize: 12, color: "rgba(255,255,255,.55)" }}>{k}</span>
                 <span style={{ fontFamily: DISP, fontSize: 12, fontWeight: 600, color: "#fff", maxWidth: "55%", textAlign: "right" }}>{v}</span>
               </div>
             ))}
-            <div style={{ height: 1, background: "rgba(255,255,255,.12)", margin: "12px 0" }} />
-            <div style={{ fontFamily: MONO, fontSize: 8.5, fontWeight: 700, color: "rgba(255,255,255,.4)", letterSpacing: ".07em", marginBottom: 8 }}>EMERGENCY CONTACT</div>
-            <div style={{ fontFamily: DISP, fontSize: 13, fontWeight: 700, color: "#fff", marginBottom: 2 }}>
+            <div style={{ height: 1, background: "rgba(255,255,255,.12)", margin: sp(12, 0) }} />
+            <div style={{ fontFamily: MONO, fontSize: 8.5, fontWeight: 700, color: "rgba(255,255,255,.4)", letterSpacing: ".07em", marginBottom: SPACE[8] }}>EMERGENCY CONTACT</div>
+            <div style={{ fontFamily: DISP, fontSize: 13, fontWeight: 700, color: "#fff", marginBottom: SPACE[2] }}>
               {form.contactName || "—"}{form.contactRelation ? ` · ${form.contactRelation}` : ""}
             </div>
             <div style={{ fontFamily: MONO, fontSize: 12, color: "rgba(255,255,255,.6)" }}>{form.contactPhone || "—"}</div>
           </div>
         </div>
       </div>
-      <div style={{ flexShrink: 0, marginTop: 20 }}>
+      <div style={{ flexShrink: 0, marginTop: SPACE[20] }}>
         <Btn label="Activate Emergency ID" onClick={() => {
           onSave({
             bloodType: form.bloodType, organDonor: form.organDonor,
