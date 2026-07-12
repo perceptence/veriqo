@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { C, DISP, MONO, SPACE, sp } from "../styles/tokens.js";
+import { C, DISP, MONO, SPACE, sp, LAYOUT } from "../styles/tokens.js";
 import { CREDS, PROOFS, expiryOf, EXP } from "../data/credentials.js";
 import { Grain, Ic } from "../components/Icon.jsx";
 import { BitAvatar } from "../components/BitAvatar.jsx";
@@ -102,7 +102,7 @@ export function Wallet({ openDetail, addNew, onProof, name, ownedDocs, setOwnedD
           </div>
         </div>
       </div>
-      <div style={{ flex: 1, minHeight: 0, overflowY: "auto", paddingBottom: 92, paddingLeft: SPACE[20], paddingRight: SPACE[20], position: "relative" }}>
+      <div style={{ flex: 1, minHeight: 0, overflowY: "auto", paddingBottom: LAYOUT.scrollGutter, paddingLeft: SPACE[20], paddingRight: SPACE[20], position: "relative" }}>
         <div className="fu1" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: SPACE[8], paddingLeft: SPACE[2] }}>
           <span style={{ fontFamily: MONO, fontSize: 10.5, color: C.faint, fontWeight: 700, letterSpacing: ".12em" }}>YOUR IDENTITY</span>
           <div style={{ display: "flex", alignItems: "center", gap: SPACE[4] }}>

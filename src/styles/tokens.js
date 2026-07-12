@@ -74,6 +74,18 @@ export const SPACE = {
    Each argument must be a SPACE key. */
 export const sp = (...v) => v.map((n) => `${SPACE[n]}px`).join(" ");
 
+/* ---- Layout constants (px) ----
+   One-off STRUCTURAL clearances that are deliberately NOT on the rhythm scale
+   (safe-area, empty-state centering, scroll-list bottom gutter). Kept separate
+   from SPACE so the rhythm scale stays clean.
+   NOTE: scrollGutter MUST remain 92 — index.css keys the no-scroll fix off the
+   literal `[style*="padding-bottom: 92px"]`; change both together or not at all. */
+export const LAYOUT = {
+  safeTop: 36,      // extra top padding on some full-screen flows (verify)
+  emptyBlock: 48,   // vertical padding around centered empty/placeholder states
+  scrollGutter: 92, // bottom padding on scroll lists so the last item clears chrome
+};
+
 /* ---- Motion ---- */
 export const EASE = "cubic-bezier(.16,1,.3,1)";
 export const MOTION = {

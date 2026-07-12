@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { C, DISP, MONO, NUM, SPACE, sp } from "../styles/tokens.js";
+import { C, DISP, MONO, NUM, SPACE, sp, LAYOUT } from "../styles/tokens.js";
 import { S, CREDS, credBy } from "../data/credentials.js";
 import { Grain, Ic } from "../components/Icon.jsx";
 import { BitAvatar } from "../components/BitAvatar.jsx";
@@ -443,7 +443,7 @@ export function Processing({ go }) {
 export function SuccessScreen({ restart, unlocked = [] }) {
   const has = unlocked.length > 0;
   return (
-    <div className="si" style={{ height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "space-between", padding: "36px 20px 24px", position: "relative", overflow: "hidden", background: C.bone }}>
+    <div className="si" style={{ height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "space-between", padding: `${LAYOUT.safeTop}px ${SPACE[20]}px ${SPACE[24]}px`, position: "relative", overflow: "hidden", background: C.bone }}>
       <Grain o={0.05} />
       <div style={{ position: "absolute", top: "30%", left: "50%", width: 260, height: 260, borderRadius: "50%", background: `radial-gradient(circle,${C.acc}2E,transparent 65%)`, animation: "glowPulse 4s ease-in-out infinite" }} />
       <div style={{ textAlign: "center", zIndex: 2, width: "100%" }}>

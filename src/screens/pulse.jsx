@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { C, DISP, MONO, SPACE, sp } from "../styles/tokens.js";
+import { C, DISP, MONO, SPACE, sp, LAYOUT } from "../styles/tokens.js";
 import { CREDS } from "../data/credentials.js";
 import { Ic } from "../components/Icon.jsx";
 import { Notice } from "../components/primitives.jsx";
@@ -179,7 +179,7 @@ User identity state:
   };
 
   const ActivityView = () => (
-    <div style={{ padding: "4px 0 88px" }}>
+    <div style={{ padding: `${SPACE[4]}px 0 ${LAYOUT.scrollGutter}px` }}>
       {ACT_GROUPS.map((g) => (
         <div key={g.day} className="fu2">
           <div style={{ fontFamily: MONO, fontSize: 10, color: C.faint, fontWeight: 700, letterSpacing: ".12em", margin: sp(6, 0, 8, 2) }}>{g.day}</div>
@@ -287,7 +287,7 @@ User identity state:
               );
             })}
             {active.length === 0 && (
-              <div style={{ textAlign: "center", padding: "48px 0" }}>
+              <div style={{ textAlign: "center", padding: `${LAYOUT.emptyBlock}px 0` }}>
                 <div style={{ width: 52, height: 52, borderRadius: 16, background: C.accSoft, display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 12px" }}>
                   <Ic n="checkcirc" s={26} c={C.acc} />
                 </div>

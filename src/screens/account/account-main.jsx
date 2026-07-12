@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { C, DISP, MONO, SPACE, sp } from "../../styles/tokens.js";
+import { C, DISP, MONO, SPACE, sp, LAYOUT } from "../../styles/tokens.js";
 import { USER } from "../../data/credentials.js";
 import { Ic } from "../../components/Icon.jsx";
 import { BadgedAvatar } from "../../components/Avatar.jsx";
@@ -18,7 +18,7 @@ export function Account({ onSignOut, profile, go, services, pending, back, emerg
           <Ic n="x" s={18} c={C.faint} />
         </button>}
       </div>
-      <div style={{ flex: 1, minHeight: 0, overflowY: "auto", paddingBottom: 92 }}>
+      <div style={{ flex: 1, minHeight: 0, overflowY: "auto", paddingBottom: LAYOUT.scrollGutter }}>
         <button onClick={() => go("acctProfile")} className="fu1" style={{ ...dim, display: "flex", alignItems: "center", gap: SPACE[12], marginBottom: SPACE[16], marginTop: SPACE[8], width: "100%", background: "none", border: "none", cursor: "pointer", textAlign: "left", padding: 0 }}>
           <div style={{ alignSelf: "flex-start", paddingTop: SPACE[4] }}>
             <BadgedAvatar size={54} />
