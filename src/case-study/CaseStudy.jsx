@@ -121,22 +121,57 @@ function HeroPreview() {
 function LiveEmbed() {
   const [state, setState] = useState("loading");
   const [nonce, setNonce] = useState(0);
+  const [driving, setDriving] = useState(true);
+  const frameRef = useRef(null);
+
   useEffect(() => {
     setState("loading");
+    setDriving(true);
     const t = setTimeout(() => setState((s) => (s === "loading" ? "failed" : s)), 8000);
     return () => clearTimeout(t);
   }, [nonce]);
 
+  /* The embed is same-origin, so we can read the tour's own state. It flips
+     `running` to false the instant a real pointer event hands control to the
+     visitor — that's the cue to stop calling this a self-driving demo. */
+  useEffect(() => {
+    const id = setInterval(() => {
+      try {
+        const w = frameRef.current?.contentWindow;
+        if (!w) return;
+        const sc = w.__vqShowcase;
+        if (sc) setDriving(sc.running);
+      } catch { /* cross-origin — leave the badge as-is */ }
+    }, 600);
+    return () => clearInterval(id);
+  }, [nonce]);
+
+  const restart = () => setNonce((n) => n + 1);
+
   return (
     <div>
       <div style={{ display: "flex", alignItems: "center", gap: SPACE[8], marginBottom: SPACE[16], flexWrap: "wrap" }}>
-        <span style={{ display: "inline-flex", alignItems: "center", gap: SPACE[6], padding: sp(4, 8), borderRadius: RADIUS.pill, background: C.accSoft, border: `1px solid ${C.acc}55` }}>
-          <span style={{ width: 6, height: 6, borderRadius: RADIUS.round, background: C.acc, animation: "breathe 1.6s ease infinite" }} />
-          <span style={{ fontFamily: MONO, fontSize: 10.5, fontWeight: 700, color: C.accDeep, letterSpacing: ".1em" }}>LIVE — THE REAL APP</span>
-        </span>
-        <span style={{ fontFamily: DISP, fontSize: 15, fontWeight: 500, color: C.sub }}>
-          Not a video, and not the static preview above — the product itself, driving itself.
-        </span>
+        {driving ? (
+          <>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: SPACE[6], padding: sp(4, 8), borderRadius: RADIUS.pill, background: C.accSoft, border: `1px solid ${C.acc}55` }}>
+              <span style={{ width: 6, height: 6, borderRadius: RADIUS.round, background: C.acc, animation: "breathe 1.6s ease infinite" }} />
+              <span style={{ fontFamily: MONO, fontSize: 10.5, fontWeight: 700, color: C.accDeep, letterSpacing: ".1em" }}>LIVE — DRIVING ITSELF</span>
+            </span>
+            <span style={{ fontFamily: DISP, fontSize: 15, fontWeight: 500, color: C.sub }}>
+              Not a video, and not the static preview above — the product itself. Touch it to take over.
+            </span>
+          </>
+        ) : (
+          <>
+            <span style={{ display: "inline-flex", alignItems: "center", gap: SPACE[6], padding: sp(4, 8), borderRadius: RADIUS.pill, background: "#FEF4E6", border: "1px solid #C07B0055" }}>
+              <span style={{ width: 6, height: 6, borderRadius: RADIUS.round, background: "#C07B00" }} />
+              <span style={{ fontFamily: MONO, fontSize: 10.5, fontWeight: 700, color: "#8A5A00", letterSpacing: ".1em" }}>DEMO STOPPED — YOU'RE DRIVING</span>
+            </span>
+            <span style={{ fontFamily: DISP, fontSize: 15, fontWeight: 500, color: C.sub }}>
+              It handed control to you. Explore freely, or restart the tour below.
+            </span>
+          </>
+        )}
       </div>
 
       {/* No border, no shadow: the device brings its own edge. */}
@@ -161,6 +196,7 @@ function LiveEmbed() {
         )}
         <iframe
           key={nonce}
+          ref={frameRef}
           title="Veriqo — live product, self-driving demo"
           src={`/?showcase&embed=${nonce}`}
           onLoad={() => setState("ready")}
@@ -168,16 +204,23 @@ function LiveEmbed() {
         />
       </div>
 
-      <div style={{ display: "flex", gap: SPACE[12], marginTop: SPACE[20], flexWrap: "wrap" }}>
+      <div style={{ display: "flex", gap: SPACE[12], marginTop: SPACE[20], flexWrap: "wrap", alignItems: "center" }}>
+        {/* Restarts the tour in place — the demo belongs on this page. */}
+        <button onClick={restart} style={{
+          display: "inline-flex", alignItems: "center", gap: SPACE[8], cursor: "pointer",
+          fontFamily: DISP, fontSize: 15, fontWeight: 700,
+          color: driving ? C.ink : "#fff", background: driving ? C.paper : C.acc,
+          border: `1px solid ${driving ? C.line : C.acc}`, padding: sp(12, 20), borderRadius: RADIUS.md,
+        }}>
+          {driving ? "Restart the tour" : "Run the demo again"}
+          <Ic n={driving ? "rotate" : "pulse"} s={16} c={driving ? C.acc : "#fff"} />
+        </button>
         <a href="/" target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: SPACE[8], textDecoration: "none", fontFamily: DISP, fontSize: 15, fontWeight: 700, color: "#fff", background: C.ink, padding: sp(12, 20), borderRadius: RADIUS.md }}>
-          Try the real thing <Ic n="arrow" s={16} c="#fff" />
-        </a>
-        <a href="/?showcase" target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: SPACE[8], textDecoration: "none", fontFamily: DISP, fontSize: 15, fontWeight: 700, color: C.ink, background: C.paper, border: `1px solid ${C.line}`, padding: sp(12, 20), borderRadius: RADIUS.md }}>
-          Watch it drive itself <Ic n="pulse" s={16} c={C.acc} />
+          Open it full screen <Ic n="arrow" s={16} c="#fff" />
         </a>
       </div>
       <div style={{ fontFamily: MONO, fontSize: 11, color: C.faint, marginTop: SPACE[8], letterSpacing: ".04em" }}>
-        OPENS IN A NEW TAB · SAME DEPLOYMENT AS THIS PAGE
+        THE DEMO RUNS HERE · FULL SCREEN OPENS IN A NEW TAB · SAME DEPLOYMENT
       </div>
     </div>
   );
@@ -331,13 +374,15 @@ export default function CaseStudy() {
         <div style={{ position: "absolute", top: "-18%", left: "12%", width: 820, height: 820, borderRadius: RADIUS.round, pointerEvents: "none", background: `radial-gradient(circle, ${C.acc}3D, transparent 65%)`, filter: "blur(80px)" }} />
         <div style={{ position: "absolute", bottom: "-30%", right: "-6%", width: 620, height: 620, borderRadius: RADIUS.round, pointerEvents: "none", background: `radial-gradient(circle, ${C.acc}22, transparent 68%)`, filter: "blur(90px)" }} />
 
-        {/* wordmark pinned to the top so the hero reads as a full screen */}
-        <div style={{ position: "absolute", top: 0, left: 0, right: 0, padding: sp(32, 24, 0) }}>
+        {/* Wordmark sits in normal flow, not absolutely positioned — when the
+            hero content grows on narrow or short viewports it pushes the mark
+            instead of sliding underneath it. */}
+        <div style={{ position: "relative", flexShrink: 0, padding: sp(32, 24, 0) }}>
           <div style={{ maxWidth: W, margin: "0 auto" }}><Wordmark size={21} light /></div>
         </div>
 
-        <div style={{ position: "relative", maxWidth: W, margin: "0 auto", width: "100%", padding: sp(40, 24) }}>
-          <div style={{ display: "flex", gap: SPACE[40] * 1.5, alignItems: "center", flexWrap: "wrap" }}>
+        <div style={{ position: "relative", maxWidth: W, margin: "0 auto", width: "100%", padding: sp(40, 24), flex: "1 0 auto", display: "flex", alignItems: "center" }}>
+          <div style={{ display: "flex", gap: SPACE[40] * 1.5, alignItems: "center", flexWrap: "wrap", width: "100%" }}>
             <div style={{ flex: "1 1 400px", minWidth: 0 }}>
               <div style={{ display: "flex", alignItems: "center", gap: SPACE[8], marginBottom: SPACE[24] }}>
                 <span style={{ width: 26, height: 2, background: C.glow, borderRadius: 2 }} />

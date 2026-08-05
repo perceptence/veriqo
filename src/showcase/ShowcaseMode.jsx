@@ -40,6 +40,10 @@ export default function ShowcaseMode({ api }) {
   useEffect(() => {
     if (window.__vqShowcaseActive) return; // singleton (StrictMode / HMR)
     window.__vqShowcaseActive = true;
+    /* Public state so an embedder (the case study) can tell whether the tour
+       is still driving or the visitor has taken over. `running` flips to false
+       the moment a real pointer event hands control back. */
+    window.__vqShowcase = { running: true };
 
     const alive = { ok: true };
     const frame = layerRef.current.closest(".vq-frame");
@@ -304,6 +308,7 @@ export default function ShowcaseMode({ api }) {
     /* ---- hand control back on any real user input ---- */
     const stop = () => {
       alive.ok = false;
+      if (window.__vqShowcase) window.__vqShowcase.running = false;
       cursor.classList.remove("on");
       window.removeEventListener("pointerdown", onRealInput, true);
     };
@@ -312,7 +317,7 @@ export default function ShowcaseMode({ api }) {
 
     run().catch(() => {});
 
-    return () => { stop(); delete window.__vqShowcaseActive; };
+    return () => { stop(); delete window.__vqShowcaseActive; delete window.__vqShowcase; };
   }, []); // api setters are stable
 
   return (
