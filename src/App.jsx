@@ -13,6 +13,10 @@ import { AcctRecoveryKey, AcctAutoLock, AcctDevices, AcctTrustedContacts } from 
 import { AcctSharingDefaults, AcctConnectedServices, AcctServicesConsent, AcctServicesManage, AcctDataExport } from "./screens/account/account-privacy.jsx";
 import { AcctNotifications, AcctHelp, AcctDeleteAccount } from "./screens/account/account-misc.jsx";
 import { EmergencyID } from "./screens/account/emergency.jsx";
+import ShowcaseMode from "./showcase/ShowcaseMode.jsx";
+
+/* ?showcase — self-driving demo tour (see src/showcase/ShowcaseMode.jsx) */
+const SHOWCASE = typeof window !== "undefined" && new URLSearchParams(window.location.search).has("showcase");
 
 const VENUES = [
   { id: "tsa", name: "TSA PreCheck", sub: "Gate B12 · DEN", ic: "scan", credKey: "dl", credLabel: "Driver License", color: "#1A4FBF" },
@@ -206,7 +210,7 @@ export default function App() {
               against the rounded device corners; none lets it decomposit. */}
           <div style={{ position: "absolute", inset: 0, overflow: "hidden", transform: pulseOpen ? "scale(0.93) translateY(5%)" : "none", transformOrigin: "center top", borderRadius: pulseOpen ? 20 : 0, transition: "transform .45s cubic-bezier(.32,0,.15,1)" }}
             onPointerMove={onPullMove} onPointerUp={onPullEnd} onPointerLeave={onPullEnd}>
-            {view === "splash" && <Splash onDone={() => { setView("wallet"); }} />}
+            {view === "splash" && <Splash onDone={() => { if (!SHOWCASE) setView("wallet"); }} />}
             {view === "signin" && <OnbSignIn back={() => setView("welcome")} onDone={() => { setView("wallet"); }} />}
             {view === "tos" && <ToSScreen back={() => setView("welcome")} which="tos" />}
             {view === "privacy" && <ToSScreen back={() => setView("welcome")} which="privacy" />}
@@ -284,6 +288,8 @@ export default function App() {
             }} />}
           </div>
         </div>
+
+        {SHOWCASE && <ShowcaseMode api={{ setView, setIsland, setPulseOpen }} />}
       </div>
 
       <div className="vq-chrome" style={{ marginTop: 20, display: "flex", gap: 6, flexWrap: "wrap", justifyContent: "center", maxWidth: 420 }}>

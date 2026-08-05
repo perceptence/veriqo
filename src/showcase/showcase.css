@@ -1,0 +1,59 @@
+/* ShowcaseMode — self-driving demo layer.
+   All animation here uses ONLY transform/opacity (compositor-driven, 60fps-safe).
+   The ripple green mirrors the design token C.acc (#15A06A) — CSS cannot import
+   tokens.js, keep in sync if the accent ever changes. */
+
+.sc-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 400; /* above the Dynamic Island (320) */
+}
+
+.sc-cursor {
+  position: absolute;
+  left: 0;
+  top: 0;
+  will-change: transform;
+  transform: translate3d(180px, 430px, 0);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+.sc-cursor.on { opacity: 1; }
+
+.sc-dot {
+  width: 34px;
+  height: 34px;
+  margin: -17px 0 0 -17px;
+  border-radius: 50%;
+  background: rgba(20, 18, 16, 0.14);
+  border: 1.5px solid rgba(255, 255, 255, 0.92);
+  box-shadow: 0 3px 12px rgba(20, 18, 16, 0.28), inset 0 0 0 1px rgba(20, 18, 16, 0.1);
+  transition: transform 0.16s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.sc-cursor.press .sc-dot { transform: scale(0.72); }
+
+.sc-ripple {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 34px;
+  height: 34px;
+  margin: -17px 0 0 -17px;
+  border-radius: 50%;
+  border: 2px solid rgba(21, 160, 106, 0.75);
+  opacity: 0;
+  transform: scale(0.5);
+}
+.sc-ripple.go {
+  animation: scRipple 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@keyframes scRipple {
+  0%   { opacity: 0.85; transform: scale(0.5); }
+  100% { opacity: 0;    transform: scale(1.9); }
+}
+
+/* Accessibility: never auto-animate for reduced-motion users. */
+@media (prefers-reduced-motion: reduce) {
+  .sc-layer { display: none; }
+}
