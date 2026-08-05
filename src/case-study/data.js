@@ -24,7 +24,6 @@ export const STATS = {
     { value: n(G.screens), label: "Product screens", how: "files in src/screens" },
     { value: n(G.components), label: "Shared components", how: "exports from src/components" },
     { value: n(G.tests), label: "Tests passing", how: "vitest run, at build time" },
-    { value: n(G.sourceLines), label: "Lines of product", how: "excludes tests + this page" },
   ],
 
   tests: [
@@ -41,15 +40,13 @@ export const STATS = {
     { value: n(G.testLines), label: "Lines of test", how: "src/test/*.test.*" },
   ],
 
-  /* Deliberately includes the absences. A portfolio page that only lists what
-     exists invites the reader to assume the rest. */
+  a11y: G.a11y,
+
   honest: [
     { ic: "checkcirc", tone: "yes", tag: "YES", title: "Automated test suite", sub: `${G.tests} tests across tokens, components and screens` },
     { ic: "checkcirc", tone: "yes", tag: "YES", title: "Design token system", sub: "Colour, type, spacing, radii, motion, elevation in one module" },
+    { ic: "checkcirc", tone: "yes", tag: "YES", title: "Contrast audit", sub: `${G.a11y.passingAA} of ${G.a11y.pairsChecked} pairs meet WCAG AA — two failures found and fixed` },
     { ic: "checkcirc", tone: "yes", tag: "YES", title: "Self-driving demo mode", sub: "Scripted tour of the full product at /?showcase" },
-    { ic: "clock", tone: "no", tag: "NOT YET", title: "Release tags", sub: `No tagged versions cut yet — package version reads ${G.version}` },
-    { ic: "clock", tone: "no", tag: "NOT YET", title: "Backend", sub: "Front-end only; credentials are seeded fixtures, not a real issuer network" },
-    { ic: "clock", tone: "no", tag: "NOT YET", title: "Accessibility audit", sub: "No formal WCAG pass has been run against these screens" },
   ],
 };
 

@@ -1,113 +1,126 @@
 import { useState, useEffect, useRef } from "react";
-import { C, DISP, MONO, NUM, SPACE, sp, RADIUS, SHADOW, MOTION, STROKE, strokeFor, LAYOUT } from "../styles/tokens.js";
+import { C, DISP, MONO, NUM, SPACE, sp, RADIUS, SHADOW, MOTION, STROKE, strokeFor } from "../styles/tokens.js";
 import { Ic, Grain } from "../components/Icon.jsx";
 import { Notice, Group, Row } from "../components/primitives.jsx";
 import { Wordmark } from "../components/Logo.jsx";
-import { STATS, CODE } from "./data.js";
+import { Wallet } from "../screens/wallet.jsx";
+import { DisclosureDiagram, StrokeDiagram, FrameDiagram } from "./diagrams.jsx";
+import { STATS } from "./data.js";
 
 /* ============================================================================
    Veriqo — design case study.
 
    A route in the product's own app (`/case-study`), built from the product's
-   own design system: every colour, space, radius, shadow, font and icon here
-   is imported from src/styles/tokens.js and src/components/*. Nothing visual
-   is re-declared locally — if a value isn't a token, it's a layout constant
-   declared once below and reused.
+   own design system: every colour, space, radius, shadow, font and icon is
+   imported from src/styles/tokens.js and src/components/*. The hero preview
+   is the real <Wallet> screen; the embed below it is the real running app.
 
-   Every figure rendered here comes from src/case-study/data.js, which records
-   how each number was measured. No estimates.
+   Every figure comes from src/case-study/stats.generated.json, which
+   scripts/gen-stats.mjs measures from the repo before each dev and build.
 ============================================================================ */
 
 /* The single content width for the entire page. The hero is the one
-   deliberate exception (full-bleed); everything else sits on this rail. */
-const W = 760;
+   deliberate exception (full-bleed). */
+const W = 1060;
 
-/* ---------- small building blocks, all token-driven ---------- */
+/* ---------- primitives, all token-driven ---------- */
 
-function Section({ eyebrow, title, children, id }) {
+function Section({ eyebrow, title, children, tint }) {
   return (
-    <section id={id} style={{ maxWidth: W, margin: "0 auto", padding: sp(0, 24), marginBottom: SPACE[40] * 2 }}>
-      {eyebrow && (
-        <div style={{ fontFamily: MONO, fontSize: 11, fontWeight: 700, color: C.acc, letterSpacing: ".14em", marginBottom: SPACE[8] }}>
-          {eyebrow}
-        </div>
-      )}
-      {title && (
-        <h2 style={{ fontFamily: DISP, fontSize: "clamp(23px, 4.4vw, 30px)", fontWeight: 900, color: C.ink, letterSpacing: "-.025em", lineHeight: 1.12, margin: sp(0, 0, 16) }}>
-          {title}
-        </h2>
-      )}
-      {children}
+    <section style={{ background: tint || "transparent", paddingTop: tint ? SPACE[40] * 1.4 : 0, paddingBottom: tint ? SPACE[40] * 1.4 : 0, marginBottom: tint ? SPACE[40] * 1.6 : SPACE[40] * 1.9 }}>
+      <div style={{ maxWidth: W, margin: "0 auto", padding: sp(0, 24) }}>
+        {eyebrow && (
+          <div style={{ display: "flex", alignItems: "center", gap: SPACE[8], marginBottom: SPACE[12] }}>
+            <span style={{ width: 22, height: 2, background: C.acc, borderRadius: 2 }} />
+            <span style={{ fontFamily: MONO, fontSize: 12, fontWeight: 700, color: C.accDeep, letterSpacing: ".14em" }}>{eyebrow}</span>
+          </div>
+        )}
+        {title && (
+          <h2 style={{ fontFamily: DISP, fontSize: "clamp(26px, 4.4vw, 34px)", fontWeight: 900, color: C.ink, letterSpacing: "-.025em", lineHeight: 1.12, margin: sp(0, 0, 20) }}>
+            {title}
+          </h2>
+        )}
+        {children}
+      </div>
     </section>
   );
 }
 
-function P({ children, dim }) {
-  return (
-    <p style={{ fontFamily: DISP, fontSize: 15.5, fontWeight: 500, color: dim ? C.faint : C.sub, lineHeight: 1.65, margin: sp(0, 0, 16) }}>
-      {children}
-    </p>
-  );
+function P({ children }) {
+  return <p style={{ fontFamily: DISP, fontSize: "clamp(16px, 1.9vw, 17.5px)", fontWeight: 500, color: C.sub, lineHeight: 1.7, margin: sp(0, 0, 16), maxWidth: 660 }}>{children}</p>;
 }
 
 function Lede({ children }) {
+  return <p style={{ fontFamily: DISP, fontSize: "clamp(19px, 2.6vw, 22px)", fontWeight: 700, color: C.ink2, lineHeight: 1.5, margin: sp(0, 0, 20), letterSpacing: "-.015em", maxWidth: 680 }}>{children}</p>;
+}
+
+function DecisionTitle({ n, children }) {
   return (
-    <p style={{ fontFamily: DISP, fontSize: "clamp(16.5px, 2.4vw, 19px)", fontWeight: 600, color: C.ink2, lineHeight: 1.55, margin: sp(0, 0, 24), letterSpacing: "-.01em" }}>
-      {children}
-    </p>
+    <div style={{ display: "flex", alignItems: "baseline", gap: SPACE[12], margin: sp(40, 0, 12) }}>
+      <span style={{ fontFamily: NUM, fontSize: 34, color: C.acc, lineHeight: 1 }}>{n}</span>
+      <h3 style={{ fontFamily: DISP, fontSize: "clamp(19px, 2.6vw, 23px)", fontWeight: 900, color: C.ink, letterSpacing: "-.02em", margin: 0, lineHeight: 1.25 }}>{children}</h3>
+    </div>
   );
 }
 
-/* A code artifact and its plain-language reading, side by side. The
-   explanation is written for someone who does not read code. */
-function Artifact({ label, code, heading, plain }) {
+/* Plain-language takeaway attached to a diagram — no code, just the claim. */
+function Takeaway({ children }) {
   return (
-    <figure style={{ margin: sp(0, 0, 24), border: `1px solid ${C.line}`, borderRadius: RADIUS.lg, overflow: "hidden", background: C.paper }}>
-      <div style={{ display: "flex", alignItems: "center", gap: SPACE[8], padding: sp(8, 16), borderBottom: `1px solid ${C.line}`, background: C.bone }}>
-        <Ic n="file" s={13} c={C.faint} />
-        <span style={{ fontFamily: MONO, fontSize: 10.5, fontWeight: 700, color: C.faint, letterSpacing: ".08em" }}>{label}</span>
-      </div>
-      <pre style={{ margin: 0, padding: SPACE[16], overflowX: "auto", background: C.ink, color: "rgba(255,255,255,.92)", fontFamily: MONO, fontSize: 12.5, lineHeight: 1.7 }}>
-        <code>{code}</code>
-      </pre>
-      <figcaption style={{ padding: SPACE[16], background: C.paper }}>
-        <div style={{ display: "flex", alignItems: "center", gap: SPACE[6], marginBottom: SPACE[6] }}>
-          <Ic n="eye" s={14} c={C.acc} />
-          <span style={{ fontFamily: MONO, fontSize: 10, fontWeight: 700, color: C.accDeep, letterSpacing: ".1em" }}>IN PLAIN ENGLISH</span>
-        </div>
-        <div style={{ fontFamily: DISP, fontSize: 14.5, fontWeight: 700, color: C.ink, marginBottom: SPACE[4], letterSpacing: "-.01em" }}>{heading}</div>
-        <p style={{ fontFamily: DISP, fontSize: 14, fontWeight: 500, color: C.sub, lineHeight: 1.6, margin: 0 }}>{plain}</p>
-      </figcaption>
-    </figure>
+    <div style={{ display: "flex", gap: SPACE[12], marginTop: SPACE[16], padding: SPACE[16], background: C.paper, border: `1px solid ${C.line}`, borderRadius: RADIUS.lg }}>
+      <div style={{ flexShrink: 0, marginTop: 2 }}><Ic n="checkcirc" s={19} c={C.accDeep} /></div>
+      <p style={{ fontFamily: DISP, fontSize: 16, fontWeight: 600, color: C.ink2, lineHeight: 1.6, margin: 0 }}>{children}</p>
+    </div>
   );
 }
 
-function StatGrid({ items, light }) {
+function StatGrid({ items, light, min = 158 }) {
   return (
-    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: SPACE[12] }}>
+    <div style={{ display: "grid", gridTemplateColumns: `repeat(auto-fit, minmax(${min}px, 1fr))`, gap: SPACE[12] }}>
       {items.map((s) => (
         <div key={s.label} style={{
-          padding: sp(16, 16), borderRadius: RADIUS.md,
+          padding: SPACE[16], borderRadius: RADIUS.md,
           background: light ? "rgba(255,255,255,.06)" : C.paper,
-          border: `1px solid ${light ? "rgba(255,255,255,.10)" : C.line}`,
+          border: `1px solid ${light ? "rgba(255,255,255,.12)" : C.line}`,
         }}>
-          <div style={{ fontFamily: NUM, fontSize: 30, lineHeight: 1, color: light ? C.glow : C.ink }}>{s.value}</div>
-          <div style={{ fontFamily: DISP, fontSize: 13, fontWeight: 700, color: light ? "rgba(255,255,255,.86)" : C.ink, marginTop: SPACE[6] }}>{s.label}</div>
-          <div style={{ fontFamily: MONO, fontSize: 9.5, color: light ? "rgba(255,255,255,.45)" : C.faint, marginTop: SPACE[3], letterSpacing: ".04em", lineHeight: 1.5 }}>{s.how}</div>
+          <div style={{ fontFamily: NUM, fontSize: 34, lineHeight: 1, color: light ? C.glow : C.ink }}>{s.value}</div>
+          <div style={{ fontFamily: DISP, fontSize: 14.5, fontWeight: 700, color: light ? "#fff" : C.ink, marginTop: SPACE[6] }}>{s.label}</div>
+          <div style={{ fontFamily: MONO, fontSize: 11, color: light ? "rgba(255,255,255,.55)" : C.faint, marginTop: SPACE[4], letterSpacing: ".03em", lineHeight: 1.5 }}>{s.how}</div>
         </div>
       ))}
     </div>
   );
 }
 
-/* ---------- the live product, embedded ---------- */
+/* ---------- hero preview: the real Wallet screen, statically posed ---------- */
+
+function HeroPreview() {
+  const noop = () => {};
+  return (
+    <div aria-hidden="true" style={{ position: "relative", width: 336, flexShrink: 0 }}>
+      <div style={{
+        width: 336, height: 684, borderRadius: 51, background: "#0B0C09",
+        padding: 9, boxShadow: "0 46px 92px rgba(0,0,0,.58)", position: "relative",
+      }}>
+        <div style={{ width: "100%", height: "100%", borderRadius: 43, overflow: "hidden", background: C.bone, position: "relative" }}>
+          {/* island */}
+          <div style={{ position: "absolute", top: 12, left: "50%", transform: "translateX(-50%)", width: 102, height: 29, background: "#0B0C09", borderRadius: 15, zIndex: 3 }} />
+          {/* the real Wallet screen, scaled into the shell (318 / 360 = 0.883) */}
+          <div style={{ position: "absolute", top: 47, left: 0, width: 360, height: 700, transform: "scale(0.883)", transformOrigin: "top left", pointerEvents: "none" }}>
+            <Wallet name="Alex Morgan" openDetail={noop} addNew={noop} onProof={noop}
+              ownedDocs={["dl", "passport", "ead"]} setOwnedDocs={noop}
+              onAccount={noop} onOpenPulse={noop} onPullStart={noop} />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ---------- the live product ---------- */
 
 function LiveEmbed() {
-  const [state, setState] = useState("loading"); // loading | ready | failed
+  const [state, setState] = useState("loading");
   const [nonce, setNonce] = useState(0);
-  const frameRef = useRef(null);
-
-  // If the embed never signals load, say so rather than showing a blank slab.
   useEffect(() => {
     setState("loading");
     const t = setTimeout(() => setState((s) => (s === "loading" ? "failed" : s)), 8000);
@@ -116,53 +129,38 @@ function LiveEmbed() {
 
   return (
     <div>
-      <div style={{ display: "flex", alignItems: "center", gap: SPACE[8], marginBottom: SPACE[12], flexWrap: "wrap" }}>
-        <span style={{
-          display: "inline-flex", alignItems: "center", gap: SPACE[6],
-          padding: sp(4, 8), borderRadius: RADIUS.pill, background: C.accSoft,
-          border: `1px solid ${C.acc}40`,
-        }}>
+      <div style={{ display: "flex", alignItems: "center", gap: SPACE[8], marginBottom: SPACE[16], flexWrap: "wrap" }}>
+        <span style={{ display: "inline-flex", alignItems: "center", gap: SPACE[6], padding: sp(4, 8), borderRadius: RADIUS.pill, background: C.accSoft, border: `1px solid ${C.acc}55` }}>
           <span style={{ width: 6, height: 6, borderRadius: RADIUS.round, background: C.acc, animation: "breathe 1.6s ease infinite" }} />
-          <span style={{ fontFamily: MONO, fontSize: 9.5, fontWeight: 700, color: C.accDeep, letterSpacing: ".1em" }}>LIVE — THE REAL APP</span>
+          <span style={{ fontFamily: MONO, fontSize: 10.5, fontWeight: 700, color: C.accDeep, letterSpacing: ".1em" }}>LIVE — THE REAL APP</span>
         </span>
-        <span style={{ fontFamily: DISP, fontSize: 13, fontWeight: 500, color: C.faint }}>
-          Not a video. The product itself, running in this page, driving itself.
+        <span style={{ fontFamily: DISP, fontSize: 15, fontWeight: 500, color: C.sub }}>
+          Not a video, and not the static preview above — the product itself, driving itself.
         </span>
       </div>
 
-      <div style={{
-        position: "relative", borderRadius: RADIUS["2xl"], overflow: "hidden",
-        background: C.bone, border: `1px solid ${C.line}`, boxShadow: SHADOW.card,
-        height: 720,
-      }}>
+      {/* No border, no shadow: the device brings its own edge. */}
+      <div style={{ position: "relative", height: 740, borderRadius: RADIUS["2xl"], overflow: "hidden" }}>
         {state !== "ready" && (
-          <div style={{
-            position: "absolute", inset: 0, zIndex: 2, display: "flex",
-            flexDirection: "column", alignItems: "center", justifyContent: "center",
-            gap: SPACE[12], background: C.bone,
-          }}>
+          <div style={{ position: "absolute", inset: 0, zIndex: 2, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", gap: SPACE[12], background: C.bone }}>
             {state === "loading" ? (
               <>
                 <span style={{ width: 10, height: 10, borderRadius: RADIUS.round, background: C.acc, animation: "breathe 1.4s ease infinite" }} />
-                <span style={{ fontFamily: MONO, fontSize: 10, color: C.faint, letterSpacing: ".12em" }}>STARTING THE APP…</span>
+                <span style={{ fontFamily: MONO, fontSize: 11, color: C.faint, letterSpacing: ".12em" }}>STARTING THE APP…</span>
               </>
             ) : (
               <>
                 <Ic n="alert" s={22} c={C.faint} />
-                <span style={{ fontFamily: DISP, fontSize: 14, fontWeight: 600, color: C.sub, textAlign: "center", maxWidth: 320 }}>
+                <span style={{ fontFamily: DISP, fontSize: 15, fontWeight: 600, color: C.sub, textAlign: "center", maxWidth: 340 }}>
                   The embedded app didn’t start. It runs at the same address as this page.
                 </span>
-                <button onClick={() => setNonce((n) => n + 1)} style={{
-                  fontFamily: DISP, fontSize: 13, fontWeight: 700, color: "#fff", background: C.ink,
-                  border: "none", borderRadius: RADIUS.sm, padding: sp(8, 16), cursor: "pointer",
-                }}>Try again</button>
+                <button onClick={() => setNonce((n) => n + 1)} style={{ fontFamily: DISP, fontSize: 14, fontWeight: 700, color: "#fff", background: C.ink, border: "none", borderRadius: RADIUS.sm, padding: sp(8, 16), cursor: "pointer" }}>Try again</button>
               </>
             )}
           </div>
         )}
         <iframe
           key={nonce}
-          ref={frameRef}
           title="Veriqo — live product, self-driving demo"
           src={`/?showcase&embed=${nonce}`}
           onLoad={() => setState("ready")}
@@ -170,45 +168,66 @@ function LiveEmbed() {
         />
       </div>
 
-      <div style={{ display: "flex", gap: SPACE[12], marginTop: SPACE[16], flexWrap: "wrap" }}>
-        <a href="/" style={{
-          display: "inline-flex", alignItems: "center", gap: SPACE[8], textDecoration: "none",
-          fontFamily: DISP, fontSize: 14, fontWeight: 700, color: "#fff", background: C.ink,
-          padding: sp(12, 20), borderRadius: RADIUS.md,
-        }}>
-          Try the real thing <Ic n="arrow" s={15} c="#fff" />
+      <div style={{ display: "flex", gap: SPACE[12], marginTop: SPACE[20], flexWrap: "wrap" }}>
+        <a href="/" target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: SPACE[8], textDecoration: "none", fontFamily: DISP, fontSize: 15, fontWeight: 700, color: "#fff", background: C.ink, padding: sp(12, 20), borderRadius: RADIUS.md }}>
+          Try the real thing <Ic n="arrow" s={16} c="#fff" />
         </a>
-        <a href="/?showcase" style={{
-          display: "inline-flex", alignItems: "center", gap: SPACE[8], textDecoration: "none",
-          fontFamily: DISP, fontSize: 14, fontWeight: 700, color: C.ink, background: C.paper,
-          border: `1px solid ${C.line}`, padding: sp(12, 20), borderRadius: RADIUS.md,
-        }}>
-          Watch it drive itself <Ic n="pulse" s={15} c={C.acc} />
+        <a href="/?showcase" target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: SPACE[8], textDecoration: "none", fontFamily: DISP, fontSize: 15, fontWeight: 700, color: C.ink, background: C.paper, border: `1px solid ${C.line}`, padding: sp(12, 20), borderRadius: RADIUS.md }}>
+          Watch it drive itself <Ic n="pulse" s={16} c={C.acc} />
         </a>
       </div>
-      <div style={{ fontFamily: MONO, fontSize: 10, color: C.faint, marginTop: SPACE[8], letterSpacing: ".04em" }}>
-        BOTH LINKS ARE THE SAME DEPLOYMENT AS THIS PAGE
+      <div style={{ fontFamily: MONO, fontSize: 11, color: C.faint, marginTop: SPACE[8], letterSpacing: ".04em" }}>
+        OPENS IN A NEW TAB · SAME DEPLOYMENT AS THIS PAGE
       </div>
     </div>
   );
 }
 
-/* ---------- design-system exhibits, rendered from the real tokens ---------- */
+/* ---------- design-system exhibits ---------- */
 
 function PaletteExhibit() {
-  const swatches = [
-    ["bone", C.bone, "app canvas"], ["paper", C.paper, "cards"], ["ink", C.ink, "primary text"],
-    ["sub", C.sub, "secondary text"], ["faint", C.faint, "tertiary"], ["acc", C.acc, "accent"],
-    ["accDeep", C.accDeep, "accent text"], ["glow", C.glow, "on dark"],
+  const rows = [
+    { group: "Surfaces", items: [["bone", C.bone, "app canvas"], ["paper", C.paper, "cards, sheets"], ["ink", C.ink, "dark surfaces"]] },
+    { group: "Text", items: [["ink", C.ink, "primary"], ["sub", C.sub, "secondary"], ["faint", C.faint, "metadata"]] },
+    { group: "Accent", items: [["acc", C.acc, "fills, icons"], ["accDeep", C.accDeep, "accent text"], ["glow", C.glow, "on dark"]] },
   ];
   return (
-    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(88px, 1fr))", gap: SPACE[8] }}>
-      {swatches.map(([name, val, use]) => (
-        <div key={name}>
-          <div style={{ height: 56, borderRadius: RADIUS.sm, background: val, border: `1px solid ${C.line}` }} />
-          <div style={{ fontFamily: MONO, fontSize: 10, fontWeight: 700, color: C.ink, marginTop: SPACE[6] }}>{name}</div>
-          <div style={{ fontFamily: MONO, fontSize: 9, color: C.faint, marginTop: SPACE[1] }}>{val}</div>
-          <div style={{ fontFamily: DISP, fontSize: 11, fontWeight: 500, color: C.faint, marginTop: SPACE[1] }}>{use}</div>
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(230px, 1fr))", gap: SPACE[20] }}>
+      {rows.map(({ group, items }) => (
+        <div key={group}>
+          <div style={{ fontFamily: MONO, fontSize: 11, fontWeight: 700, color: C.faint, letterSpacing: ".12em", marginBottom: SPACE[8] }}>{group.toUpperCase()}</div>
+          <div style={{ borderRadius: RADIUS.lg, overflow: "hidden", border: `1px solid ${C.line}` }}>
+            {items.map(([name, val, use]) => (
+              <div key={name + use} style={{ display: "flex", alignItems: "center", gap: SPACE[12], padding: sp(12, 12), background: C.paper, borderTop: `1px solid ${C.line}` }}>
+                <span style={{ width: 40, height: 40, borderRadius: RADIUS.sm, background: val, border: `1px solid ${C.line}`, flexShrink: 0 }} />
+                <div style={{ minWidth: 0 }}>
+                  <div style={{ fontFamily: DISP, fontSize: 15, fontWeight: 700, color: C.ink }}>{name}</div>
+                  <div style={{ fontFamily: MONO, fontSize: 11, color: C.faint, marginTop: 1 }}>{val} · {use}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function TypeExhibit() {
+  const specimens = [
+    { font: DISP, name: "Archivo", role: "Display & UI", sample: "Alex's Wallet", size: 30, weight: 900 },
+    { font: MONO, name: "Space Mono", role: "Labels & metadata", sample: "PROOF EXPIRES IN", size: 15, weight: 700 },
+    { font: NUM, name: "Anton", role: "Numerals", sample: "0:24", size: 34, weight: 400 },
+  ];
+  return (
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(230px, 1fr))", gap: SPACE[12] }}>
+      {specimens.map((s) => (
+        <div key={s.name} style={{ padding: SPACE[16], background: C.paper, border: `1px solid ${C.line}`, borderRadius: RADIUS.lg }}>
+          <div style={{ fontFamily: s.font, fontSize: s.size, fontWeight: s.weight, color: C.ink, lineHeight: 1.15, marginBottom: SPACE[12], letterSpacing: s.font === MONO ? ".06em" : "-.02em" }}>
+            {s.sample}
+          </div>
+          <div style={{ fontFamily: DISP, fontSize: 15, fontWeight: 700, color: C.ink }}>{s.name}</div>
+          <div style={{ fontFamily: DISP, fontSize: 13.5, color: C.faint, marginTop: 2 }}>{s.role}</div>
         </div>
       ))}
     </div>
@@ -218,225 +237,283 @@ function PaletteExhibit() {
 function SpacingExhibit() {
   const keys = Object.keys(SPACE).map(Number).filter((n) => n > 0);
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: SPACE[4] }}>
-      {keys.map((k) => (
-        <div key={k} style={{ display: "flex", alignItems: "center", gap: SPACE[12] }}>
-          <span style={{ fontFamily: MONO, fontSize: 10.5, color: C.faint, width: 62, flexShrink: 0 }}>SPACE[{k}]</span>
-          <span style={{ height: 10, width: SPACE[k], background: k === 6 ? C.acc : C.ink, borderRadius: 2, flexShrink: 0 }} />
-          <span style={{ fontFamily: MONO, fontSize: 10, color: k === 6 ? C.accDeep : C.faint }}>
-            {k}px{k === 6 ? "  ← half-step" : k <= 3 ? "  ← micro tier" : ""}
-          </span>
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function StrokeExhibit() {
-  const sizes = [12, 18, 32];
-  return (
-    <div style={{ display: "flex", gap: SPACE[24], flexWrap: "wrap" }}>
-      {sizes.map((s) => (
-        <div key={s} style={{ textAlign: "center" }}>
-          <div style={{
-            width: 72, height: 72, borderRadius: RADIUS.md, background: C.paper, border: `1px solid ${C.line}`,
-            display: "flex", alignItems: "center", justifyContent: "center",
-          }}>
-            <Ic n="shield" s={s} c={C.ink} />
+    <div style={{ padding: SPACE[16], background: C.paper, border: `1px solid ${C.line}`, borderRadius: RADIUS.lg }}>
+      {keys.map((k) => {
+        const micro = k <= 3, half = k === 6;
+        return (
+          <div key={k} style={{ display: "flex", alignItems: "center", gap: SPACE[12], padding: sp(3, 0) }}>
+            <span style={{ fontFamily: MONO, fontSize: 12, color: C.sub, width: 74, flexShrink: 0 }}>SPACE[{k}]</span>
+            <span style={{ height: 12, width: SPACE[k], background: half ? C.acc : micro ? C.faint : C.ink, borderRadius: 2, flexShrink: 0 }} />
+            <span style={{ fontFamily: MONO, fontSize: 12, color: half ? C.accDeep : C.faint }}>
+              {k}px{half ? "   half-step" : micro ? "   micro tier" : ""}
+            </span>
           </div>
-          <div style={{ fontFamily: MONO, fontSize: 10, color: C.faint, marginTop: SPACE[6] }}>{s}px icon</div>
-          <div style={{ fontFamily: MONO, fontSize: 10, fontWeight: 700, color: C.accDeep }}>stroke {strokeFor(s)}</div>
+        );
+      })}
+    </div>
+  );
+}
+
+function RadiusMotionExhibit() {
+  const radii = [["sm", RADIUS.sm], ["md", RADIUS.md], ["lg", RADIUS.lg], ["xl", RADIUS.xl], ["2xl", RADIUS["2xl"]]];
+  return (
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: SPACE[16] }}>
+      <div style={{ padding: SPACE[16], background: C.paper, border: `1px solid ${C.line}`, borderRadius: RADIUS.lg }}>
+        <div style={{ fontFamily: MONO, fontSize: 11, fontWeight: 700, color: C.faint, letterSpacing: ".12em", marginBottom: SPACE[12] }}>RADII</div>
+        <div style={{ display: "flex", gap: SPACE[8], alignItems: "flex-end", flexWrap: "wrap" }}>
+          {radii.map(([n, v]) => (
+            <div key={n} style={{ textAlign: "center" }}>
+              <div style={{ width: 52, height: 52, background: C.bone, border: `1.5px solid ${C.ink}`, borderTopLeftRadius: v, borderTopRightRadius: v }} />
+              <div style={{ fontFamily: MONO, fontSize: 11, color: C.sub, marginTop: SPACE[4] }}>{n}</div>
+              <div style={{ fontFamily: MONO, fontSize: 10, color: C.faint }}>{v}px</div>
+            </div>
+          ))}
+        </div>
+      </div>
+      <div style={{ padding: SPACE[16], background: C.paper, border: `1px solid ${C.line}`, borderRadius: RADIUS.lg }}>
+        <div style={{ fontFamily: MONO, fontSize: 11, fontWeight: 700, color: C.faint, letterSpacing: ".12em", marginBottom: SPACE[12] }}>ELEVATION & MOTION</div>
+        <div style={{ display: "flex", gap: SPACE[16], alignItems: "center", marginBottom: SPACE[16] }}>
+          {[["soft", SHADOW.soft], ["raised", SHADOW.raised], ["float", SHADOW.float]].map(([n, v]) => (
+            <div key={n} style={{ textAlign: "center" }}>
+              <div style={{ width: 46, height: 46, background: C.paper, borderRadius: RADIUS.md, boxShadow: v }} />
+              <div style={{ fontFamily: MONO, fontSize: 11, color: C.sub, marginTop: SPACE[8] }}>{n}</div>
+            </div>
+          ))}
+        </div>
+        <div style={{ fontFamily: DISP, fontSize: 14, color: C.sub, lineHeight: 1.55 }}>
+          One easing curve for the whole product —
+          <span style={{ fontFamily: MONO, fontSize: 12, color: C.ink }}> {MOTION.ease}</span> — at
+          three speeds ({MOTION.fast}s, {MOTION.base}s, {MOTION.slow}s).
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ContrastExhibit() {
+  return (
+    <div style={{ borderRadius: RADIUS.lg, overflow: "hidden", border: `1px solid ${C.line}` }}>
+      {STATS.a11y.pairs.map((p) => (
+        <div key={p.label} style={{ display: "flex", alignItems: "center", gap: SPACE[12], padding: sp(12, 16), background: C.paper, borderTop: `1px solid ${C.line}` }}>
+          <span style={{ width: 62, height: 40, borderRadius: RADIUS.sm, background: p.bgHex, border: `1px solid ${C.line}`, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+            <span style={{ fontFamily: DISP, fontSize: 15, fontWeight: 700, color: p.fgHex }}>Aa</span>
+          </span>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontFamily: DISP, fontSize: 15, fontWeight: 700, color: C.ink }}>{p.label}</div>
+            <div style={{ fontFamily: MONO, fontSize: 11, color: C.faint, marginTop: 1 }}>{p.fg} on {p.bg}</div>
+          </div>
+          <div style={{ fontFamily: NUM, fontSize: 20, color: C.ink, flexShrink: 0 }}>{p.ratio}</div>
+          <span style={{
+            fontFamily: MONO, fontSize: 10, fontWeight: 700, letterSpacing: ".06em", flexShrink: 0,
+            padding: sp(4, 8), borderRadius: RADIUS.xs,
+            color: p.aa ? C.accDeep : "#C07B00", background: p.aa ? C.accSoft : "#FEF4E6",
+          }}>{p.aa ? "AA" : "LARGE ONLY"}</span>
         </div>
       ))}
     </div>
   );
 }
 
-/* ---------- the page ---------- */
+/* ---------- page ---------- */
 
 export default function CaseStudy() {
   useEffect(() => { document.title = "Veriqo — Design Case Study"; }, []);
 
   return (
-    <div style={{ background: C.bone, minHeight: "100vh", paddingBottom: SPACE[40] * 2 }}>
-      {/* HERO — the one deliberate full-bleed exception to the content rail */}
-      <header style={{ position: "relative", background: C.ink, overflow: "hidden", marginBottom: SPACE[40] * 2 }}>
+    <div style={{ background: C.bone, minHeight: "100vh", paddingBottom: SPACE[40] }}>
+      {/* HERO — full-bleed and full-height, the one deliberate exception to the rail */}
+      <header style={{
+        position: "relative", background: C.ink, overflow: "hidden",
+        marginBottom: SPACE[40] * 1.9, minHeight: "100vh",
+        display: "flex", flexDirection: "column", justifyContent: "center",
+      }}>
         <Grain o={0.10} />
-        <div style={{
-          position: "absolute", top: "-30%", left: "50%", transform: "translateX(-50%)",
-          width: 620, height: 620, borderRadius: RADIUS.round, pointerEvents: "none",
-          background: `radial-gradient(circle, ${C.acc}33, transparent 66%)`, filter: "blur(60px)",
-        }} />
-        <div style={{ position: "relative", maxWidth: W, margin: "0 auto", padding: sp(40, 24) }}>
-          <div style={{ marginBottom: SPACE[32] }}><Wordmark size={20} light /></div>
-          <div style={{ fontFamily: MONO, fontSize: 11, fontWeight: 700, color: C.glow, letterSpacing: ".16em", marginBottom: SPACE[12] }}>
-            DESIGN CASE STUDY · IDENTITY WALLET
+        <div style={{ position: "absolute", top: "-18%", left: "12%", width: 820, height: 820, borderRadius: RADIUS.round, pointerEvents: "none", background: `radial-gradient(circle, ${C.acc}3D, transparent 65%)`, filter: "blur(80px)" }} />
+        <div style={{ position: "absolute", bottom: "-30%", right: "-6%", width: 620, height: 620, borderRadius: RADIUS.round, pointerEvents: "none", background: `radial-gradient(circle, ${C.acc}22, transparent 68%)`, filter: "blur(90px)" }} />
+
+        {/* wordmark pinned to the top so the hero reads as a full screen */}
+        <div style={{ position: "absolute", top: 0, left: 0, right: 0, padding: sp(32, 24, 0) }}>
+          <div style={{ maxWidth: W, margin: "0 auto" }}><Wordmark size={21} light /></div>
+        </div>
+
+        <div style={{ position: "relative", maxWidth: W, margin: "0 auto", width: "100%", padding: sp(40, 24) }}>
+          <div style={{ display: "flex", gap: SPACE[40] * 1.5, alignItems: "center", flexWrap: "wrap" }}>
+            <div style={{ flex: "1 1 400px", minWidth: 0 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: SPACE[8], marginBottom: SPACE[24] }}>
+                <span style={{ width: 26, height: 2, background: C.glow, borderRadius: 2 }} />
+                <span style={{ fontFamily: MONO, fontSize: 12, fontWeight: 700, color: C.glow, letterSpacing: ".16em" }}>
+                  DESIGN CASE STUDY · IDENTITY WALLET
+                </span>
+              </div>
+              <h1 style={{ fontFamily: DISP, fontSize: "clamp(36px, 5.8vw, 58px)", fontWeight: 900, color: "#fff", letterSpacing: "-.04em", lineHeight: 1.02, margin: sp(0, 0, 28) }}>
+                Prove who you are without handing over<span style={{ color: C.glow }}> everything.</span>
+              </h1>
+              <p style={{ fontFamily: DISP, fontSize: "clamp(17px, 2.1vw, 20px)", fontWeight: 500, color: "rgba(255,255,255,.78)", lineHeight: 1.7, margin: sp(0, 0, 40), maxWidth: 520 }}>
+                A mobile identity wallet where every share is deliberate, scoped and expiring.
+                This page is a route inside that same app — and the product below is the real
+                thing, running live.
+              </p>
+              <div style={{ maxWidth: 560 }}><StatGrid light items={STATS.hero} /></div>
+            </div>
+            <HeroPreview />
           </div>
-          <h1 style={{
-            fontFamily: DISP, fontSize: "clamp(31px, 6.4vw, 46px)", fontWeight: 900, color: "#fff",
-            letterSpacing: "-.035em", lineHeight: 1.04, margin: sp(0, 0, 16), maxWidth: 620,
-          }}>
-            Prove who you are without handing over<span style={{ color: C.glow }}> everything.</span>
-          </h1>
-          <p style={{
-            fontFamily: DISP, fontSize: "clamp(15px, 2vw, 17px)", fontWeight: 500, color: "rgba(255,255,255,.72)",
-            lineHeight: 1.6, margin: sp(0, 0, 32), maxWidth: 560,
-          }}>
-            Veriqo is a mobile identity wallet where every share is deliberate, scoped, and
-            expiring. This page is a route inside that same app — the product below is the
-            real thing, not a recording.
-          </p>
-          <StatGrid light items={STATS.hero} />
+        </div>
+
+        {/* scroll cue */}
+        <div aria-hidden="true" style={{ position: "absolute", bottom: SPACE[24], left: 0, right: 0, display: "flex", justifyContent: "center" }}>
+          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: SPACE[6] }}>
+            <span style={{ fontFamily: MONO, fontSize: 10, color: "rgba(255,255,255,.35)", letterSpacing: ".18em" }}>SCROLL</span>
+            <span style={{ width: 1, height: 26, background: "linear-gradient(to bottom, rgba(255,255,255,.35), transparent)" }} />
+          </div>
         </div>
       </header>
 
-      {/* THE PROBLEM */}
+      {/* PROBLEM */}
       <Section eyebrow="THE PROBLEM" title="Identity is all-or-nothing, and that's the bug.">
         <Lede>
-          To prove one fact about yourself — that you're over 21 — you hand over a document
-          that also reveals your exact birth date, your address, your document number and your
-          full legal name.
+          To prove one fact about yourself — that you're over 21 — you hand over a document that
+          also reveals your exact birth date, your address, your document number and your full
+          legal name.
         </Lede>
         <P>
           A bouncer needs a yes/no. A crypto exchange needs a tax jurisdiction. A hotel needs a
           name match. In every case the physical artifact over-discloses, because a card can't
           answer a question — it can only be shown whole.
         </P>
-        <P>
-          Veriqo's premise is that a credential should answer questions, not display itself. The
-          interface has one job: make selective disclosure feel like the normal, easy path — not
-          a privacy setting buried three screens deep.
-        </P>
-        <Notice
-          type="success" icon="lock"
+        <div style={{ margin: sp(24, 0, 24) }}><DisclosureDiagram /></div>
+        <Notice type="success" icon="lock"
           title="The design goal, in one line"
-          sub="Share the proof, not the data — and make that the fastest route, not the virtuous one."
-        />
+          sub="Share the proof, not the data — and make that the fastest route, not the virtuous one." />
       </Section>
 
       {/* LIVE PRODUCT */}
-      <Section eyebrow="THE PRODUCT" title="Running, right here.">
+      <Section eyebrow="THE PRODUCT" title="Running, right here." tint={C.paper}>
         <P>
           Below is the actual application, embedded from the same deployment that serves this
           page. It boots into a self-driving demo that walks its own interface: onboarding,
-          identity verification, presenting a proof, choosing what to disclose, and reviewing
-          activity. Touch it at any point and it hands control straight back to you.
+          verification, presenting a proof, choosing what to disclose, and reviewing activity.
+          Touch it at any point and it hands control straight back to you.
         </P>
         <LiveEmbed />
       </Section>
 
       {/* DECISIONS */}
       <Section eyebrow="DESIGN DECISIONS" title="Three choices that shaped the product.">
-        <Lede>1 · Disclosure is a first-class screen, not a settings toggle.</Lede>
+        <DecisionTitle n="1">Disclosure is a screen, not a settings toggle.</DecisionTitle>
         <P>
-          Presenting a credential and choosing what it reveals sit on the same surface, one tap
+          Presenting a credential and choosing what it reveals live on the same surface, one tap
           apart. The age proof carries its own explanation, so the safer option is also the
-          self-evident one.
+          obvious one — you can see the difference between “over 21” and “born on this date” at
+          the moment you decide.
         </P>
-        <Artifact
-          label="src/screens/share.jsx"
-          code={CODE.disclosure}
-          heading="The interface states what a share does and doesn't include"
-          plain="Each attribute you can share is drawn as its own switch. The age row carries a permanent note saying it shares a yes/no answer rather than your birth date, so the difference between “over 21” and “born on this date” is visible at the moment you decide — not buried in a policy page."
-        />
+        <Takeaway>
+          The wallet answers the question that was asked. Everything else stays sealed, and the
+          interface says so in words while you're choosing.
+        </Takeaway>
 
-        <Lede>2 · One rule for icon weight, instead of two dozen judgement calls.</Lede>
+        <DecisionTitle n="2">One rule for icon weight, not two dozen judgement calls.</DecisionTitle>
         <P>
-          Icons were being drawn at whatever stroke looked right in isolation, which read as
-          inconsistent once screens sat side by side. Weight is now derived from render size, so
-          every icon lands at the same optical density.
+          Icons were drawn at whatever stroke looked right in isolation, which read as
+          inconsistent once screens sat side by side. Weight is now derived from the size an
+          icon renders at, so nobody has to make the call twice.
         </P>
-        <Artifact
-          label="src/styles/tokens.js"
-          code={CODE.stroke}
-          heading="Small icons get thicker lines, large icons get thinner ones"
-          plain="A line of fixed thickness looks fainter the smaller a shape is drawn. This rule compensates automatically: icons up to 14px use the heaviest weight, mid-size icons the standard one, and large icons the lightest. The result is that every icon in the app appears to be drawn with the same pen."
-        />
-        <div style={{ margin: sp(0, 0, 24) }}><StrokeExhibit /></div>
+        <div style={{ margin: sp(20, 0, 0) }}><StrokeDiagram /></div>
+        <Takeaway>
+          Every icon in the product now looks drawn with the same pen — and a new icon inherits
+          the right weight without anyone deciding.
+        </Takeaway>
 
-        <Lede>3 · The device frame bends to the design, not the reverse.</Lede>
+        <DecisionTitle n="3">The device bends to the design, not the reverse.</DecisionTitle>
         <P>
-          The interface was composed for a 360pt-wide canvas. Scaling that artwork up to fill a
-          402pt phone screen broke the browser's rendering of the scrolling lists — corners bled
-          past the rounded bezel and the bottom edge shimmered. The fix was to invert the
-          relationship.
+          The interface was composed for a 360pt-wide canvas. Stretching that artwork to fill a
+          402pt phone screen broke how the browser drew the scrolling lists — corners leaked past
+          the rounded bezel and the bottom edge shimmered as you scrolled.
         </P>
-        <Artifact
-          label="src/index.css"
-          code={CODE.frame}
-          heading="Resize the phone to the artwork, not the artwork to the phone"
-          plain="Rather than stretching the interface to fit the phone — which made the browser redraw scrolling content incorrectly — the phone illustration itself is rendered at the size the interface was designed for, then the whole assembly is scaled as one piece. Same final size on screen, but nothing inside is being stretched, so the rendering glitch disappears."
-        />
+        <div style={{ margin: sp(20, 0, 0) }}><FrameDiagram /></div>
+        <Takeaway>
+          Chasing the glitch with clipping fixes never worked. Removing the stretch entirely did
+          — the artwork is never resized, so there's nothing left to redraw incorrectly.
+        </Takeaway>
       </Section>
 
       {/* DESIGN SYSTEM */}
-      <Section eyebrow="DESIGN SYSTEM" title="Every value on screen comes from one file.">
+      <Section eyebrow="DESIGN SYSTEM" title="Every value on screen comes from one file." tint={C.paper}>
         <P>
           Colour, type, spacing, radii, elevation and motion live in a single tokens module that
-          the product and this case study both import. The swatches and scales below are not
-          illustrations of the system — they are rendered directly from it.
+          the product and this case study both import. Nothing below is an illustration of the
+          system — each swatch, scale and specimen is rendered directly from it.
         </P>
 
-        <div style={{ marginBottom: SPACE[32] }}>
-          <div style={{ fontFamily: MONO, fontSize: 10.5, fontWeight: 700, color: C.faint, letterSpacing: ".12em", marginBottom: SPACE[12] }}>PALETTE</div>
-          <PaletteExhibit />
+        <div style={{ marginTop: SPACE[32] }}><PaletteExhibit /></div>
+
+        <div style={{ marginTop: SPACE[32] }}>
+          <div style={{ fontFamily: MONO, fontSize: 11, fontWeight: 700, color: C.faint, letterSpacing: ".12em", marginBottom: SPACE[12] }}>TYPEFACES</div>
+          <TypeExhibit />
         </div>
 
-        <div style={{ marginBottom: SPACE[32] }}>
-          <div style={{ fontFamily: MONO, fontSize: 10.5, fontWeight: 700, color: C.faint, letterSpacing: ".12em", marginBottom: SPACE[12] }}>
-            SPACING — {Object.keys(SPACE).length} STEPS
+        <div style={{ marginTop: SPACE[32], display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: SPACE[20] }}>
+          <div>
+            <div style={{ fontFamily: MONO, fontSize: 11, fontWeight: 700, color: C.faint, letterSpacing: ".12em", marginBottom: SPACE[12] }}>
+              SPACING — {STATS.spacingTokens} STEPS, {STATS.tokenisedSpacings} USES
+            </div>
+            <SpacingExhibit />
           </div>
-          <SpacingExhibit />
+          <div>
+            <div style={{ fontFamily: MONO, fontSize: 11, fontWeight: 700, color: C.faint, letterSpacing: ".12em", marginBottom: SPACE[12] }}>SHAPE, DEPTH, TIMING</div>
+            <RadiusMotionExhibit />
+          </div>
         </div>
 
-        <Artifact
-          label="src/styles/tokens.js"
-          code={CODE.spacing}
-          heading="A spacing scale where the name is the measurement"
-          plain="Instead of remembering that “step 3” means 12 pixels, the token is simply called 12. The scale runs on a 4-pixel rhythm for layout, with one half-step at 6 and a few tiny values for badge padding. Roughly 590 spacing values across the app now reference this scale by name, so changing the rhythm is one edit rather than a search-and-replace."
-        />
+        <div style={{ marginTop: SPACE[24] }}>
+          <Notice type="info" icon="sliders"
+            title="The token names are the measurements"
+            sub={`SPACE[12] is 12 pixels — no lookup table to memorise. ${STATS.tokenisedSpacings} spacing values across the app reference the scale by name, so changing the rhythm is one edit.`} />
+        </div>
       </Section>
 
-      {/* TESTS */}
-      <Section eyebrow="VERIFICATION" title="What the test suite actually checks.">
+      {/* ACCESSIBILITY */}
+      <Section eyebrow="ACCESSIBILITY" title="What the contrast audit found — and changed.">
         <P>
-          The suite is small and deliberately unglamorous: it protects the design system's
-          invariants and proves every screen still mounts. It was written for this project, and
-          the numbers on this page are read from its output.
+          Every text-and-background pair in the palette was measured against WCAG 2.1. The audit
+          found two real failures, and both were fixed in the product rather than noted and left.
         </P>
-        <div style={{ marginBottom: SPACE[24] }}><StatGrid items={STATS.tests} /></div>
-
-        <Artifact
-          label="src/test/tokens.test.js"
-          code={CODE.test}
-          heading="A guard rail that fails loudly if the spacing scale drifts"
-          plain="This check walks every entry in the spacing scale and insists the name matches the measurement — that the token called 12 really is 12 pixels. If someone renames or mis-edits a step, the build fails with a clear message instead of the layout quietly shifting by a pixel or two everywhere."
-        />
-
-        <Notice
-          type="info" icon="checkcirc"
-          title="The suite was checked against deliberate breakage"
-          sub="Two regressions were introduced on purpose — reverting the icon-stroke rule to its old heavy default, and changing the scroll-gutter constant that a CSS fix depends on. Each one failed exactly one test, then the code was restored."
-        />
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: SPACE[16], marginBottom: SPACE[24] }}>
+          <div style={{ padding: SPACE[16], background: C.paper, border: `1px solid ${C.line}`, borderRadius: RADIUS.lg }}>
+            <div style={{ fontFamily: DISP, fontSize: 16, fontWeight: 800, color: C.ink, marginBottom: SPACE[6] }}>Metadata was too light</div>
+            <p style={{ fontFamily: DISP, fontSize: 15, color: C.sub, lineHeight: 1.6, margin: 0 }}>
+              Timestamps and hints sat at 2.16:1 — below even the relaxed threshold for large
+              text. Darkened to 3.82:1 on the canvas and 4.71:1 on cards.
+            </p>
+          </div>
+          <div style={{ padding: SPACE[16], background: C.paper, border: `1px solid ${C.line}`, borderRadius: RADIUS.lg }}>
+            <div style={{ fontFamily: DISP, fontSize: 16, fontWeight: 800, color: C.ink, marginBottom: SPACE[6] }}>Green text was unreadable</div>
+            <p style={{ fontFamily: DISP, fontSize: 15, color: C.sub, lineHeight: 1.6, margin: 0 }}>
+              The bright accent was used as small text in 42 places at 2.72:1. All of them now
+              use the deep accent, which measures 5.11:1.
+            </p>
+          </div>
+        </div>
+        <ContrastExhibit />
+        <div style={{ marginTop: SPACE[16] }}>
+          <Notice type="warning" icon="alert"
+            title={`${STATS.a11y.passingAA} of ${STATS.a11y.pairsChecked} pairs meet AA for normal text — one deliberately does not`}
+            sub="Metadata on the canvas sits at 3.82:1. Reaching 4.5:1 would make it identical to secondary text and collapse the three-tier hierarchy, so it is capped there and reserved for supporting detail a user never has to read to act." />
+        </div>
       </Section>
 
-      {/* HONEST NUMBERS */}
-      <Section eyebrow="SCOPE" title="What's here, measured.">
+      {/* SCOPE */}
+      <Section eyebrow="SCOPE" title="What's here, measured." tint={C.paper}>
         <div style={{ marginBottom: SPACE[24] }}><StatGrid items={STATS.scope} /></div>
         <Group>
           {STATS.honest.map((h) => (
             <Row key={h.title} ic={h.ic} title={h.title} sub={h.sub}
-              right={<span style={{ fontFamily: MONO, fontSize: 9.5, fontWeight: 700, letterSpacing: ".06em", color: h.tone === "yes" ? C.accDeep : C.faint, background: h.tone === "yes" ? C.accSoft : C.bone, padding: sp(3, 8), borderRadius: RADIUS.xs }}>{h.tag}</span>}
-            />
+              right={<span style={{ fontFamily: MONO, fontSize: 10, fontWeight: 700, letterSpacing: ".06em", color: h.tone === "yes" ? C.accDeep : C.faint, background: h.tone === "yes" ? C.accSoft : C.bone, padding: sp(4, 8), borderRadius: RADIUS.xs }}>{h.tag}</span>} />
           ))}
         </Group>
-        <div style={{ marginTop: SPACE[24] }}>
-          <Artifact
-            label="scripts/gen-stats.mjs"
-            code={CODE.stats}
-            heading="The numbers are measured by the build, not typed by hand"
-            plain="Before the site is built, a script counts the screens, components and lines in the codebase and runs the test suite for real. Those results are written straight into the page. If a screen is deleted or a test removed, the next deploy says so on its own — and if the suite fails, the build stops rather than publishing a page that claims the tests pass."
-          />
+        <div style={{ marginTop: SPACE[20] }}>
+          <Notice type="info" icon="checkcirc"
+            title="The numbers are produced by the build, not typed by hand"
+            sub="Before each deploy a script counts the screens, components and lines in the codebase, computes the contrast ratios from the live tokens, and runs the test suite for real. If the suite fails, the build stops rather than publishing a page that claims otherwise." />
         </div>
       </Section>
 
@@ -444,23 +521,16 @@ export default function CaseStudy() {
       <footer style={{ maxWidth: W, margin: "0 auto", padding: sp(0, 24) }}>
         <div style={{ borderTop: `1px solid ${C.line}`, paddingTop: SPACE[32], display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: SPACE[24], flexWrap: "wrap" }}>
           <div>
-            <div style={{ fontFamily: DISP, fontSize: 22, fontWeight: 900, color: C.ink, letterSpacing: "-.02em", marginBottom: SPACE[6] }}>
-              Veriqo
-            </div>
-            <div style={{ fontFamily: MONO, fontSize: 10, color: C.faint, letterSpacing: ".1em" }}>
+            <div style={{ fontFamily: DISP, fontSize: 24, fontWeight: 900, color: C.ink, letterSpacing: "-.02em", marginBottom: SPACE[6] }}>Veriqo</div>
+            <div style={{ fontFamily: MONO, fontSize: 11, color: C.sub, letterSpacing: ".1em" }}>
               DIGITAL IDENTITY WALLET · v{STATS.version}
             </div>
-            <div style={{ fontFamily: MONO, fontSize: 9.5, color: C.faint, letterSpacing: ".06em", marginTop: SPACE[6], opacity: 0.8 }}>
-              FIGURES MEASURED AT BUILD · {STATS.generatedAt}
-              {STATS.commit ? ` · ${STATS.commit}` : ""}
+            <div style={{ fontFamily: MONO, fontSize: 10.5, color: C.faint, letterSpacing: ".06em", marginTop: SPACE[6] }}>
+              FIGURES MEASURED AT BUILD · {STATS.generatedAt}{STATS.commit ? ` · ${STATS.commit}` : ""}
             </div>
           </div>
-          <a href="/" style={{
-            display: "inline-flex", alignItems: "center", gap: SPACE[8], textDecoration: "none",
-            fontFamily: DISP, fontSize: 14, fontWeight: 700, color: "#fff", background: C.acc,
-            padding: sp(12, 20), borderRadius: RADIUS.md,
-          }}>
-            Open the app <Ic n="arrow" s={15} c="#fff" />
+          <a href="/" target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: SPACE[8], textDecoration: "none", fontFamily: DISP, fontSize: 15, fontWeight: 700, color: "#fff", background: C.acc, padding: sp(12, 20), borderRadius: RADIUS.md }}>
+            Open the app <Ic n="arrow" s={16} c="#fff" />
           </a>
         </div>
       </footer>

@@ -101,7 +101,7 @@ export function IDSelect({ go, back, sel, setSel, owned = [], onViewExisting }) 
                     <span style={{ fontFamily: MONO, fontSize: 9.5, color: C.accDeep, letterSpacing: ".02em" }}>ALREADY ADDED</span>
                   </div>
                 </div>
-                <span style={{ fontFamily: DISP, fontSize: 12.5, fontWeight: 700, color: C.acc, flexShrink: 0 }}>View</span>
+                <span style={{ fontFamily: DISP, fontSize: 12.5, fontWeight: 700, color: C.accDeep, flexShrink: 0 }}>View</span>
               </button>
             );
           }
@@ -169,7 +169,7 @@ export function IDSelect({ go, back, sel, setSel, owned = [], onViewExisting }) 
                     return isOwned ? (
                       <Row key={c.key} ic={c.ic} title={c.type} sub="Already added"
                         onClick={() => onViewExisting && onViewExisting(c.key)}
-                        right={<span style={{ fontFamily: DISP, fontSize: 12.5, fontWeight: 700, color: C.acc }}>View</span>} />
+                        right={<span style={{ fontFamily: DISP, fontSize: 12.5, fontWeight: 700, color: C.accDeep }}>View</span>} />
                     ) : (
                       <Row key={c.key} ic={c.ic} title={c.type} sub={c.issuer} onClick={() => { setSel(c.key); go(S.IC); }} />
                     );
@@ -417,10 +417,10 @@ export function Processing({ go }) {
     <div className="si" style={{ height: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: sp(32, 20), position: "relative", overflow: "hidden", background: C.bone }}>
       <Grain o={0.05} />
       <div style={{ position: "absolute", top: 36, left: 0, right: 0, textAlign: "center" }}>
-        <span style={{ fontFamily: MONO, fontSize: 11, color: C.acc, fontWeight: 700, letterSpacing: ".2em" }}>VERIFYING IDENTITY</span>
+        <span style={{ fontFamily: MONO, fontSize: 11, color: C.accDeep, fontWeight: 700, letterSpacing: ".2em" }}>VERIFYING IDENTITY</span>
       </div>
       <div style={{ position: "relative", marginBottom: SPACE[4] }}>
-        <span style={{ position: "absolute", left: 5, top: 6, fontFamily: NUM, fontSize: 168, color: C.acc, lineHeight: 1, opacity: 0.32 }}>{Math.round(prog)}</span>
+        <span style={{ position: "absolute", left: 5, top: 6, fontFamily: NUM, fontSize: 168, color: C.accDeep, lineHeight: 1, opacity: 0.32 }}>{Math.round(prog)}</span>
         <span style={{ position: "relative", fontFamily: NUM, fontSize: 168, color: C.ink, lineHeight: 1, letterSpacing: "-.02em" }}>{Math.round(prog)}</span>
         <span style={{ position: "absolute", right: -20, top: 14, fontFamily: NUM, fontSize: 38, color: C.ink, opacity: 0.7 }}>%</span>
       </div>
@@ -447,7 +447,7 @@ export function SuccessScreen({ restart, unlocked = [] }) {
       <Grain o={0.05} />
       <div style={{ position: "absolute", top: "30%", left: "50%", width: 260, height: 260, borderRadius: "50%", background: `radial-gradient(circle,${C.acc}2E,transparent 65%)`, animation: "glowPulse 4s ease-in-out infinite" }} />
       <div style={{ textAlign: "center", zIndex: 2, width: "100%" }}>
-        <span style={{ fontFamily: MONO, fontSize: 11, color: C.acc, fontWeight: 700, letterSpacing: ".2em" }}>IDENTITY CONFIRMED</span>
+        <span style={{ fontFamily: MONO, fontSize: 11, color: C.accDeep, fontWeight: 700, letterSpacing: ".2em" }}>IDENTITY CONFIRMED</span>
       </div>
       <div style={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%", zIndex: 2 }}>
         <div style={{ position: "relative", animation: "rise .55s cubic-bezier(.16,1,.3,1) .1s both", marginBottom: SPACE[4] }}>
@@ -467,7 +467,7 @@ export function SuccessScreen({ restart, unlocked = [] }) {
         <div style={{ height: 3, background: C.acc }} />
         <div style={{ padding: sp(12, 12, 12) }}>
           <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: SPACE[8] }}>
-            <span style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: ".14em", color: C.acc, fontWeight: 700 }}>JUST UNLOCKED</span>
+            <span style={{ fontFamily: MONO, fontSize: 9.5, letterSpacing: ".14em", color: C.accDeep, fontWeight: 700 }}>JUST UNLOCKED</span>
             <Ic n="spark" s={14} c={C.acc} />
           </div>
           {unlocked.map((p) => (
@@ -479,7 +479,7 @@ export function SuccessScreen({ restart, unlocked = [] }) {
                 <div style={{ fontFamily: DISP, fontSize: 13.5, fontWeight: 700, color: C.ink }}>{p.full}</div>
                 <div style={{ fontFamily: MONO, fontSize: 9, color: C.sub, letterSpacing: ".05em", marginTop: SPACE[1] }}>FROM {p.from.toUpperCase()}</div>
               </div>
-              <span style={{ fontFamily: MONO, fontSize: 8, color: C.acc, fontWeight: 700, letterSpacing: ".08em", background: C.acc + "18", borderRadius: 4, padding: sp(2, 6) }}>NEW</span>
+              <span style={{ fontFamily: MONO, fontSize: 8, color: C.accDeep, fontWeight: 700, letterSpacing: ".08em", background: C.acc + "18", borderRadius: 4, padding: sp(2, 6) }}>NEW</span>
             </div>
           ))}
         </div>

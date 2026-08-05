@@ -58,7 +58,7 @@ export function Share({ c, back, claim, defaults = {}, docOverride, onSaveOverri
           <>
             <div className="fu" style={{ marginBottom: SPACE[12] }}><Back onClick={back} /></div>
             <div className="fu1">
-              <div style={{ fontFamily: MONO, fontSize: 11, color: C.acc, fontWeight: 700, letterSpacing: ".12em", marginBottom: claim ? 2 : 4 }}>{claim ? "PROVING" : "PRESENT PROOF"}</div>
+              <div style={{ fontFamily: MONO, fontSize: 11, color: C.accDeep, fontWeight: 700, letterSpacing: ".12em", marginBottom: claim ? 2 : 4 }}>{claim ? "PROVING" : "PRESENT PROOF"}</div>
               <h1 style={{ fontFamily: DISP, fontSize: 29, fontWeight: 900, color: C.ink, letterSpacing: "-.025em", lineHeight: 0.98 }}>{claim || c.type}</h1>
               {claim && <div style={{ fontFamily: DISP, fontSize: 12, fontWeight: 600, color: C.sub, marginTop: SPACE[4] }}>via {c.type}</div>}
             </div>
@@ -76,7 +76,7 @@ export function Share({ c, back, claim, defaults = {}, docOverride, onSaveOverri
           <div key="choose" style={{ animation: "sheetUp .35s ease both" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: SPACE[12] }}>
               <p style={{ fontFamily: DISP, fontSize: 13, fontWeight: 500, color: C.sub, lineHeight: 1.5, flex: 1 }}>Reveal exactly what's needed. Everything else stays private.</p>
-              {isCustom && <button onClick={resetToDefaults} style={{ background: "none", border: "none", cursor: "pointer", padding: sp(0, 0, 0, 12), fontFamily: DISP, fontSize: 12, fontWeight: 700, color: C.acc, flexShrink: 0 }}>Reset</button>}
+              {isCustom && <button onClick={resetToDefaults} style={{ background: "none", border: "none", cursor: "pointer", padding: sp(0, 0, 0, 12), fontFamily: DISP, fontSize: 12, fontWeight: 700, color: C.accDeep, flexShrink: 0 }}>Reset</button>}
             </div>
             {isCustom && <div style={{ display: "flex", alignItems: "center", gap: SPACE[6], marginBottom: SPACE[8], padding: sp(4, 8), background: C.bone, borderRadius: 20, alignSelf: "flex-start", width: "fit-content" }}>
               <div style={{ width: 5, height: 5, borderRadius: "50%", background: C.acc }} />
@@ -174,7 +174,7 @@ export function Share({ c, back, claim, defaults = {}, docOverride, onSaveOverri
                   ) : (
                     <button onClick={regen} style={{ display: "flex", alignItems: "center", gap: SPACE[6], marginTop: SPACE[8], background: "none", border: "none", cursor: "pointer", padding: sp(4, 6) }}>
                       <Ic n="rotate" s={14} c={C.acc} />
-                      <span style={{ fontFamily: DISP, fontSize: 13, fontWeight: 700, color: C.acc }}>Generate new PIN</span>
+                      <span style={{ fontFamily: DISP, fontSize: 13, fontWeight: 700, color: C.accDeep }}>Generate new PIN</span>
                     </button>
                   )}
                 </div>
@@ -202,7 +202,7 @@ export function Share({ c, back, claim, defaults = {}, docOverride, onSaveOverri
           <>
             <button onClick={() => setPreviewing(true)} style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: SPACE[6], width: "100%", background: "none", border: "none", cursor: "pointer", padding: sp(4, 0, 12) }}>
               <Ic n="eye" s={14} c={C.acc} />
-              <span style={{ fontFamily: DISP, fontSize: 13, fontWeight: 700, color: C.acc }}>Preview what they'll see</span>
+              <span style={{ fontFamily: DISP, fontSize: 13, fontWeight: 700, color: C.accDeep }}>Preview what they'll see</span>
             </button>
             <button onClick={() => setChoosing(true)} style={{ display: "flex", alignItems: "center", gap: SPACE[12], padding: sp(12, 16), background: C.paper, border: `1px solid ${C.line}`, borderRadius: 14, cursor: "pointer", width: "100%", flexShrink: 0, boxShadow: "0 2px 8px rgba(20,18,16,.03)" }}>
               <div style={{ width: 34, height: 34, borderRadius: 10, background: C.bone, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>

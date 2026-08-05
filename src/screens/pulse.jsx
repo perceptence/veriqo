@@ -115,7 +115,7 @@ User identity state:
           <Ic n="checkcirc" s={20} c={C.acc} />
           <div>
             <div style={{ fontFamily: DISP, fontSize: 13.5, fontWeight: 700, color: C.accDeep }}>{fieldChoice === "decline" ? "Request declined" : "Sharing updated"}</div>
-            <div style={{ fontFamily: DISP, fontSize: 12, fontWeight: 500, color: C.acc, marginTop: SPACE[1] }}>
+            <div style={{ fontFamily: DISP, fontSize: 12, fontWeight: 500, color: C.accDeep, marginTop: SPACE[1] }}>
               {fieldChoice === "decline" ? "Coinbase notified — no address data shared" : `Coinbase now receives: ${FIELD_OPTS.find((f) => f.k === fieldChoice)?.d}`}
             </div>
           </div>
@@ -214,7 +214,7 @@ User identity state:
         onPointerDown={(e) => { if (e.target.tagName === "INPUT" || e.target.tagName === "BUTTON") return; e.currentTarget.setPointerCapture(e.pointerId); e.currentTarget._sy = e.clientY; }}
         onPointerMove={(e) => { if (e.currentTarget._sy === undefined) return; if (e.clientY - e.currentTarget._sy > 60) { onClose && onClose(); delete e.currentTarget._sy; e.currentTarget.releasePointerCapture(e.pointerId); } }}
         onPointerUp={(e) => { delete e.currentTarget._sy; }} onPointerCancel={(e) => { delete e.currentTarget._sy; }}>
-        <div style={{ fontFamily: MONO, fontSize: 10, color: C.acc, fontWeight: 700, letterSpacing: ".12em", marginBottom: SPACE[3] }}>IDENTITY INTELLIGENCE</div>
+        <div style={{ fontFamily: MONO, fontSize: 10, color: C.accDeep, fontWeight: 700, letterSpacing: ".12em", marginBottom: SPACE[3] }}>IDENTITY INTELLIGENCE</div>
         <div style={{ fontFamily: DISP, fontSize: 28, fontWeight: 900, color: C.ink, letterSpacing: "-.02em", marginBottom: SPACE[16] }}>Pulse</div>
         <div style={{ background: C.paper, borderRadius: 14, border: `1px solid ${C.line}`, marginBottom: SPACE[12], overflow: "hidden" }}>
           <div style={{ padding: sp(8, 12), display: "flex", alignItems: "center", gap: SPACE[8] }}>

@@ -83,7 +83,7 @@ export function Welcome({ go, onSignIn }) {
         </div>
         <div className="fu3" style={{ fontFamily: MONO, fontSize: 11, color: C.sub, fontWeight: 700, letterSpacing: ".16em", marginBottom: SPACE[12] }}>DIGITAL IDENTITY WALLET</div>
         <h1 className="fu4" style={{ fontFamily: DISP, fontSize: 38, fontWeight: 900, color: C.ink, lineHeight: 0.92, letterSpacing: "-.035em", marginBottom: SPACE[12] }}>
-          Every ID.<br />One <span style={{ color: C.acc }}>wallet.</span>
+          Every ID.<br />One <span style={{ color: C.accDeep }}>wallet.</span>
         </h1>
         <p className="fu4" style={{ fontFamily: DISP, fontSize: 14.5, fontWeight: 500, color: C.sub, lineHeight: 1.5, maxWidth: "88%" }}>
           Verify once. Prove anything. Reveal only what's needed.
@@ -91,7 +91,7 @@ export function Welcome({ go, onSignIn }) {
       </div>
       <div className="fu5" style={{ position: "relative" }}>
         <Btn label="Get started" onClick={() => go()} />
-        <button onClick={onSignIn} style={{ width: "100%", background: "none", border: "none", cursor: "pointer", padding: sp(12, 0, 0), fontFamily: DISP, fontSize: 13, fontWeight: 600, color: C.sub }}>Already have an account? <span style={{ color: C.acc }}>Sign in</span></button>
+        <button onClick={onSignIn} style={{ width: "100%", background: "none", border: "none", cursor: "pointer", padding: sp(12, 0, 0), fontFamily: DISP, fontSize: 13, fontWeight: 600, color: C.sub }}>Already have an account? <span style={{ color: C.accDeep }}>Sign in</span></button>
         <p style={{ textAlign: "center", fontFamily: MONO, fontSize: 10, color: C.faint, marginTop: SPACE[12], letterSpacing: ".04em" }}>ENCRYPTED ON-DEVICE · YOU CONTROL EVERY SHARE</p>
       </div>
     </div>
@@ -130,9 +130,9 @@ export function OnbDetails({ back, onDone }) {
           </div>
           <p style={{ fontFamily: DISP, fontSize: 12.5, fontWeight: 500, color: C.sub, lineHeight: 1.5 }}>
             I agree to Veriqo's{" "}
-            <span onClick={(e) => { e.stopPropagation(); setTosView("tos"); }} style={{ color: C.acc, fontWeight: 700, cursor: "pointer" }}>Terms of Service</span>
+            <span onClick={(e) => { e.stopPropagation(); setTosView("tos"); }} style={{ color: C.accDeep, fontWeight: 700, cursor: "pointer" }}>Terms of Service</span>
             {" "}and{" "}
-            <span onClick={(e) => { e.stopPropagation(); setTosView("privacy"); }} style={{ color: C.acc, fontWeight: 700, cursor: "pointer" }}>Privacy Policy</span>
+            <span onClick={(e) => { e.stopPropagation(); setTosView("privacy"); }} style={{ color: C.accDeep, fontWeight: 700, cursor: "pointer" }}>Privacy Policy</span>
           </p>
         </button>
       </div>
@@ -167,7 +167,7 @@ export function OnbVerify({ email, phone, back, onDone }) {
             {eVerified
               ? <div style={{ display: "flex", alignItems: "center", gap: SPACE[4] }}>
                   <Ic n="checkcirc" s={15} c={C.acc} />
-                  <span style={{ fontFamily: MONO, fontSize: 9.5, color: C.acc, fontWeight: 700, letterSpacing: ".06em" }}>VERIFIED</span>
+                  <span style={{ fontFamily: MONO, fontSize: 9.5, color: C.accDeep, fontWeight: 700, letterSpacing: ".06em" }}>VERIFIED</span>
                 </div>
               : <Ic n="mail" s={16} c={eSimulating ? C.acc : C.faint} />}
           </div>
@@ -184,7 +184,7 @@ export function OnbVerify({ email, phone, back, onDone }) {
                   <Ic n="clock" s={13} c={C.faint} />
                   {eSecs > 0
                     ? <span style={{ fontFamily: MONO, fontSize: 10.5, color: C.faint, letterSpacing: ".04em" }}>RESEND IN 0:{String(eSecs).padStart(2, "0")}</span>
-                    : <button onClick={() => setESecs(30)} style={{ background: "none", border: "none", cursor: "pointer", fontFamily: MONO, fontSize: 10.5, color: C.acc, fontWeight: 700, letterSpacing: ".04em" }}>RESEND LINK</button>}
+                    : <button onClick={() => setESecs(30)} style={{ background: "none", border: "none", cursor: "pointer", fontFamily: MONO, fontSize: 10.5, color: C.accDeep, fontWeight: 700, letterSpacing: ".04em" }}>RESEND LINK</button>}
                 </div>
               </div>
               <button onClick={simulateClick} disabled={eSimulating} style={{ width: "100%", padding: SPACE[12], background: C.bone, border: `1px dashed ${C.line}`, borderRadius: 11, cursor: eSimulating ? "default" : "pointer", fontFamily: MONO, fontSize: 10, fontWeight: 700, color: C.faint, letterSpacing: ".06em", opacity: eSimulating ? 0.6 : 1, transition: "opacity .2s" }}>
@@ -199,7 +199,7 @@ export function OnbVerify({ email, phone, back, onDone }) {
               <span style={{ fontFamily: MONO, fontSize: 10, fontWeight: 700, color: C.faint, letterSpacing: ".1em" }}>PHONE NUMBER</span>
               {pDone && <div style={{ display: "flex", alignItems: "center", gap: SPACE[4] }}>
                 <Ic n="checkcirc" s={15} c={C.acc} />
-                <span style={{ fontFamily: MONO, fontSize: 9.5, color: C.acc, fontWeight: 700, letterSpacing: ".06em" }}>VERIFIED</span>
+                <span style={{ fontFamily: MONO, fontSize: 9.5, color: C.accDeep, fontWeight: 700, letterSpacing: ".06em" }}>VERIFIED</span>
               </div>}
             </div>
             <p style={{ fontFamily: DISP, fontSize: 13, fontWeight: 600, color: C.sub, marginBottom: SPACE[12] }}>
@@ -221,7 +221,7 @@ export function OnbVerify({ email, phone, back, onDone }) {
               <Ic n="clock" s={13} c={C.faint} />
               {pSecs > 0
                 ? <span style={{ fontFamily: MONO, fontSize: 10.5, color: C.faint, letterSpacing: ".04em" }}>RESEND IN 0:{String(pSecs).padStart(2, "0")}</span>
-                : <button onClick={() => setPSecs(24)} style={{ background: "none", border: "none", cursor: "pointer", fontFamily: MONO, fontSize: 10.5, color: C.acc, fontWeight: 700, letterSpacing: ".04em" }}>RESEND CODE</button>}
+                : <button onClick={() => setPSecs(24)} style={{ background: "none", border: "none", cursor: "pointer", fontFamily: MONO, fontSize: 10.5, color: C.accDeep, fontWeight: 700, letterSpacing: ".04em" }}>RESEND CODE</button>}
             </div>}
             {!pDone && <p style={{ textAlign: "center", fontFamily: MONO, fontSize: 9.5, color: C.faint, marginTop: SPACE[8], letterSpacing: ".03em" }}>DEMO · TYPE ANY 6 DIGITS TO CONTINUE</p>}
           </div>
@@ -293,7 +293,7 @@ export function Auth({ back, onDone, email, phone }) {
         </p>
         <div className="fu3" style={{ marginBottom: SPACE[12] }}>
           <Group>
-            <Row ic="faceid" title="Face ID passkey" sub="Protects every credential" right={<div style={{ fontFamily: MONO, fontSize: 10, color: C.acc, fontWeight: 700 }}>READY</div>} />
+            <Row ic="faceid" title="Face ID passkey" sub="Protects every credential" right={<div style={{ fontFamily: MONO, fontSize: 10, color: C.accDeep, fontWeight: 700 }}>READY</div>} />
             <Row ic="globe" title={email} sub="Recovery address" />
           </Group>
         </div>
@@ -321,7 +321,7 @@ export function Auth({ back, onDone, email, phone }) {
           <>
             <Btn label="Try Face ID again" onClick={onDone} />
             <button onClick={() => setShowOTP(true)} style={{ width: "100%", background: "none", border: "none", cursor: "pointer", padding: sp(8, 0, 0), fontFamily: DISP, fontSize: 12.5, fontWeight: 600, color: C.sub }}>
-              Still not working?{" "}<span style={{ color: C.acc }}>Verify with phone instead</span>
+              Still not working?{" "}<span style={{ color: C.accDeep }}>Verify with phone instead</span>
             </button>
           </>
         ) : faceIdState === "trying" ? (

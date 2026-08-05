@@ -94,7 +94,7 @@ export function AcctConnectedServices({ back, services, pending, onManage, onRec
           <div className="fu3"><Group>
             {revoked.map((s) => (
               <Row key={s.key} ic={s.ic} title={s.name} sub="Access revoked"
-                right={<button onClick={() => onReconnect(s)} style={{ background: "none", border: "none", cursor: "pointer", padding: sp(4, 2), fontFamily: DISP, fontSize: 12.5, fontWeight: 700, color: C.acc }}>Reconnect</button>} />
+                right={<button onClick={() => onReconnect(s)} style={{ background: "none", border: "none", cursor: "pointer", padding: sp(4, 2), fontFamily: DISP, fontSize: 12.5, fontWeight: 700, color: C.accDeep }}>Reconnect</button>} />
             ))}
           </Group></div>
         </>)}

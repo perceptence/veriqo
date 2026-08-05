@@ -151,7 +151,7 @@ export function AcctEditProfile({ back, profile, onSave, onReverify }) {
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: SPACE[6], paddingLeft: SPACE[2], paddingRight: SPACE[2] }}>
         <div style={{ fontFamily: MONO, fontSize: 10, color: C.faint, fontWeight: 700, letterSpacing: ".1em" }}>{label}</div>
         {locked && !showConfirm && (
-          <button onClick={onChangeTap} style={{ background: "none", border: "none", cursor: "pointer", padding: 0, fontFamily: DISP, fontSize: 11.5, fontWeight: 700, color: C.acc }}>Change</button>
+          <button onClick={onChangeTap} style={{ background: "none", border: "none", cursor: "pointer", padding: 0, fontFamily: DISP, fontSize: 11.5, fontWeight: 700, color: C.accDeep }}>Change</button>
         )}
       </div>
       <div style={{ position: "relative" }}>

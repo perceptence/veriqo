@@ -333,7 +333,7 @@ export function Detail({ c, back, onShare, walletAdded = false, onWalletAdd, onU
                 setCopyAllDone(true); setTimeout(() => setCopyAllDone(false), 2000);
               }} style={{ background: "none", border: "none", cursor: "pointer", display: "flex", alignItems: "center", gap: SPACE[4], padding: sp(2, 0) }}>
               {copyAllDone
-                ? <span style={{ fontFamily: MONO, fontSize: 9, color: C.acc, fontWeight: 700, letterSpacing: ".06em" }}>COPIED</span>
+                ? <span style={{ fontFamily: MONO, fontSize: 9, color: C.accDeep, fontWeight: 700, letterSpacing: ".06em" }}>COPIED</span>
                 : <><Ic n="copy" s={11} c={C.faint} /><span style={{ fontFamily: MONO, fontSize: 9, color: C.faint, fontWeight: 700, letterSpacing: ".06em" }}>Copy details</span></>}
             </button>
           </div>

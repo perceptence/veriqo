@@ -76,6 +76,29 @@ const components = [...readAll(walk("src/components")).matchAll(/^export functio
 const screens = walk("src/screens").filter((f) => f.endsWith(".jsx")).length;
 const assertions = [...readAll(testFiles).matchAll(/\bexpect\(/g)].length;
 
+/* ---- accessibility: WCAG 2.1 contrast, computed from the live tokens --- */
+const hexToRgb = (h) => { h = h.replace("#", ""); return [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16)); };
+const relLum = (rgb) => { const [r, g, b] = rgb.map((v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }); return 0.2126 * r + 0.7152 * g + 0.0722 * b; };
+const contrast = (a, b) => { const [l1, l2] = [relLum(hexToRgb(a)), relLum(hexToRgb(b))].sort((x, y) => y - x); return (l1 + 0.05) / (l2 + 0.05); };
+
+const pick = (name) => tokensSrc.match(new RegExp(`${name}:\\s*"(#[0-9A-Fa-f]{6})"`))?.[1];
+const T = Object.fromEntries(["bone", "paper", "ink", "sub", "faint", "acc", "accDeep", "glow"].map((k) => [k, pick(k)]));
+
+const contrastPairs = [
+  ["Body text", "ink", "bone"], ["Body text on cards", "ink", "paper"],
+  ["Secondary text", "sub", "bone"], ["Secondary on cards", "sub", "paper"],
+  ["Metadata", "faint", "bone"], ["Metadata on cards", "faint", "paper"],
+  ["Accent text", "accDeep", "bone"], ["Text on dark", "glow", "ink"],
+].map(([label, fg, bg]) => {
+  const r = +contrast(T[fg], T[bg]).toFixed(2);
+  return { label, fg, bg, fgHex: T[fg], bgHex: T[bg], ratio: r, aa: r >= 4.5, aaLarge: r >= 3 };
+});
+const a11y = {
+  pairsChecked: contrastPairs.length,
+  passingAA: contrastPairs.filter((p) => p.aa).length,
+  pairs: contrastPairs,
+};
+
 /* ---- provenance ------------------------------------------------------ */
 // Vercel shallow-clones, so a local commit count would be wrong there. Record
 // the commit we were built from instead — always available and unambiguous.
@@ -100,6 +123,7 @@ const stats = {
   sourceLines: lines(appFiles),
   spacingTokens,
   tokenisedSpacings,
+  a11y,
 };
 
 fs.mkdirSync(rel("src/case-study"), { recursive: true });

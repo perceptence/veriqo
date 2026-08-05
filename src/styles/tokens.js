@@ -11,7 +11,13 @@ export const C = {
   ink: "#141210",
   ink2: "#29251F",
   sub: "#6B665E",
-  faint: "#A49E94",
+  /* Tertiary text. Darkened from #A49E94 after the 2026-08 contrast audit:
+     the old value was 2.16:1 on bone, failing even the 3:1 large-text floor.
+     4.5:1 would require ~#69655F, which is indistinguishable from `sub` and
+     collapses the three-tier hierarchy — so this sits at 3.82:1 on bone /
+     4.71:1 on paper and is reserved for supporting metadata (timestamps,
+     hints, unit labels), never for content a user must read to act. */
+  faint: "#78736A",
   line: "rgba(20,18,16,.1)",
   acc: "#15A06A",
   accDeep: "#0C6E48",

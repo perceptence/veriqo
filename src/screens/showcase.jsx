@@ -12,7 +12,7 @@ export function IslandShowcase({ fire }) {
   return (
     <div className="si" style={{ height: "100%", display: "flex", flexDirection: "column", padding: sp(20, 20, 24) }}>
       <div style={{ flexShrink: 0 }}>
-        <div style={{ fontFamily: MONO, fontSize: 11, color: C.acc, fontWeight: 700, letterSpacing: ".12em", marginBottom: SPACE[6] }}>LIVE ACTIVITY</div>
+        <div style={{ fontFamily: MONO, fontSize: 11, color: C.accDeep, fontWeight: 700, letterSpacing: ".12em", marginBottom: SPACE[6] }}>LIVE ACTIVITY</div>
         <h1 style={{ fontFamily: DISP, fontSize: 30, fontWeight: 900, color: C.ink, letterSpacing: "-.025em", lineHeight: 0.98 }}>Dynamic Island.</h1>
       </div>
       <div style={{ flex: 1, minHeight: 0, overflowY: "auto", marginTop: SPACE[16] }}>
@@ -29,7 +29,7 @@ export function IslandShowcase({ fire }) {
                 <div style={{ fontFamily: DISP, fontSize: 15, fontWeight: 700, color: C.ink, letterSpacing: "-.01em" }}>{d.t}</div>
                 <div style={{ fontFamily: DISP, fontSize: 12.5, fontWeight: 500, color: C.faint, marginTop: SPACE[1] }}>{d.d}</div>
               </div>
-              <div style={{ fontFamily: MONO, fontSize: 10, color: C.acc, fontWeight: 700, letterSpacing: ".06em" }}>PLAY ▸</div>
+              <div style={{ fontFamily: MONO, fontSize: 10, color: C.accDeep, fontWeight: 700, letterSpacing: ".06em" }}>PLAY ▸</div>
             </button>
           ))}
         </div>
@@ -56,14 +56,14 @@ export function LogoStudio() {
   return (
     <div className="si" style={{ height: "100%", display: "flex", flexDirection: "column", padding: sp(20, 20, 0) }}>
       <div style={{ flexShrink: 0, marginBottom: SPACE[6] }}>
-        <div style={{ fontFamily: MONO, fontSize: 11, color: C.acc, fontWeight: 700, letterSpacing: ".12em", marginBottom: SPACE[6] }}>BRAND IDEA</div>
+        <div style={{ fontFamily: MONO, fontSize: 11, color: C.accDeep, fontWeight: 700, letterSpacing: ".12em", marginBottom: SPACE[6] }}>BRAND IDEA</div>
         <h1 style={{ fontFamily: DISP, fontSize: 30, fontWeight: 900, color: C.ink, letterSpacing: "-.025em" }}>From scratch.</h1>
       </div>
       <div style={{ flex: 1, minHeight: 0, overflowY: "auto", paddingBottom: SPACE[24], marginTop: SPACE[12] }}>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: SPACE[12] }}>
           {opts.map((o) => (
             <div key={o.k} style={{ background: C.paper, border: `1px solid ${C.line}`, borderRadius: 18, padding: sp(16, 12), display: "flex", flexDirection: "column", alignItems: "center", textAlign: "center", position: "relative" }}>
-              {o.k === LOGO && <div style={{ position: "absolute", top: 10, right: 10, fontFamily: MONO, fontSize: 8.5, color: C.acc, fontWeight: 700, letterSpacing: ".06em" }}>● LIVE</div>}
+              {o.k === LOGO && <div style={{ position: "absolute", top: 10, right: 10, fontFamily: MONO, fontSize: 8.5, color: C.accDeep, fontWeight: 700, letterSpacing: ".06em" }}>● LIVE</div>}
               <LogoMark size={64} mark={o.k} />
               <div style={{ fontFamily: DISP, fontSize: 15, fontWeight: 800, color: C.ink, marginTop: SPACE[12], letterSpacing: "-.01em" }}>{o.name}</div>
               <div style={{ fontFamily: DISP, fontSize: 11.5, fontWeight: 500, color: C.faint, marginTop: SPACE[3], lineHeight: 1.35 }}>{o.desc}</div>

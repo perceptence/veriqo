@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-08-05",
-  "commit": "cde95b2",
+  "commit": "24ad921",
   "version": "0.1.0",
   "tests": 58,
   "testSuites": 22,
@@ -10,7 +10,93 @@
   "screens": 11,
   "components": 24,
   "sourceFiles": 27,
-  "sourceLines": 4628,
+  "sourceLines": 4634,
   "spacingTokens": 14,
-  "tokenisedSpacings": 589
+  "tokenisedSpacings": 589,
+  "a11y": {
+    "pairsChecked": 8,
+    "passingAA": 7,
+    "pairs": [
+      {
+        "label": "Body text",
+        "fg": "ink",
+        "bg": "bone",
+        "fgHex": "#141210",
+        "bgHex": "#ECE7DE",
+        "ratio": 15.17,
+        "aa": true,
+        "aaLarge": true
+      },
+      {
+        "label": "Body text on cards",
+        "fg": "ink",
+        "bg": "paper",
+        "fgHex": "#141210",
+        "bgHex": "#FFFFFF",
+        "ratio": 18.69,
+        "aa": true,
+        "aaLarge": true
+      },
+      {
+        "label": "Secondary text",
+        "fg": "sub",
+        "bg": "bone",
+        "fgHex": "#6B665E",
+        "bgHex": "#ECE7DE",
+        "ratio": 4.62,
+        "aa": true,
+        "aaLarge": true
+      },
+      {
+        "label": "Secondary on cards",
+        "fg": "sub",
+        "bg": "paper",
+        "fgHex": "#6B665E",
+        "bgHex": "#FFFFFF",
+        "ratio": 5.7,
+        "aa": true,
+        "aaLarge": true
+      },
+      {
+        "label": "Metadata",
+        "fg": "faint",
+        "bg": "bone",
+        "fgHex": "#78736A",
+        "bgHex": "#ECE7DE",
+        "ratio": 3.82,
+        "aa": false,
+        "aaLarge": true
+      },
+      {
+        "label": "Metadata on cards",
+        "fg": "faint",
+        "bg": "paper",
+        "fgHex": "#78736A",
+        "bgHex": "#FFFFFF",
+        "ratio": 4.71,
+        "aa": true,
+        "aaLarge": true
+      },
+      {
+        "label": "Accent text",
+        "fg": "accDeep",
+        "bg": "bone",
+        "fgHex": "#0C6E48",
+        "bgHex": "#ECE7DE",
+        "ratio": 5.11,
+        "aa": true,
+        "aaLarge": true
+      },
+      {
+        "label": "Text on dark",
+        "fg": "glow",
+        "bg": "ink",
+        "fgHex": "#22E08C",
+        "bgHex": "#141210",
+        "ratio": 10.78,
+        "aa": true,
+        "aaLarge": true
+      }
+    ]
+  }
 }
