@@ -20,6 +20,10 @@ export const STATS = {
   commit: G.commit,
   generatedAt: G.generatedAt,
 
+  /* Referenced inline in prose, so they're exposed formatted and ready. */
+  spacingTokens: n(G.spacingTokens),
+  tokenisedSpacings: n(G.tokenisedSpacings),
+
   hero: [
     { value: n(G.screens), label: "Product screens", how: "files in src/screens" },
     { value: n(G.components), label: "Shared components", how: "exports from src/components" },
