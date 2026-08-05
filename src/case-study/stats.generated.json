@@ -1,0 +1,16 @@
+{
+  "generatedAt": "2026-08-05",
+  "commit": "cde95b2",
+  "version": "0.1.0",
+  "tests": 58,
+  "testSuites": 22,
+  "testFiles": 3,
+  "testLines": 435,
+  "assertions": 95,
+  "screens": 11,
+  "components": 24,
+  "sourceFiles": 27,
+  "sourceLines": 4628,
+  "spacingTokens": 14,
+  "tokenisedSpacings": 589
+}

@@ -9,7 +9,10 @@
     "preview": "vite preview",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "stats": "node scripts/gen-stats.mjs",
+    "predev": "npm run stats",
+    "prebuild": "npm run stats"
   },
   "dependencies": {
     "lucide-react": "^0.469.0",

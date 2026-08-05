@@ -430,13 +430,13 @@ export default function CaseStudy() {
             />
           ))}
         </Group>
-        <div style={{ marginTop: SPACE[16] }}>
-          <P dim>
-            Every figure above was measured from the repository at build time — file counts and
-            line counts from the source tree, the test count from the suite's own output. Nothing
-            here is estimated, and where something doesn't exist yet it's listed as absent rather
-            than omitted.
-          </P>
+        <div style={{ marginTop: SPACE[24] }}>
+          <Artifact
+            label="scripts/gen-stats.mjs"
+            code={CODE.stats}
+            heading="The numbers are measured by the build, not typed by hand"
+            plain="Before the site is built, a script counts the screens, components and lines in the codebase and runs the test suite for real. Those results are written straight into the page. If a screen is deleted or a test removed, the next deploy says so on its own — and if the suite fails, the build stops rather than publishing a page that claims the tests pass."
+          />
         </div>
       </Section>
 
@@ -449,6 +449,10 @@ export default function CaseStudy() {
             </div>
             <div style={{ fontFamily: MONO, fontSize: 10, color: C.faint, letterSpacing: ".1em" }}>
               DIGITAL IDENTITY WALLET · v{STATS.version}
+            </div>
+            <div style={{ fontFamily: MONO, fontSize: 9.5, color: C.faint, letterSpacing: ".06em", marginTop: SPACE[6], opacity: 0.8 }}>
+              FIGURES MEASURED AT BUILD · {STATS.generatedAt}
+              {STATS.commit ? ` · ${STATS.commit}` : ""}
             </div>
           </div>
           <a href="/" style={{

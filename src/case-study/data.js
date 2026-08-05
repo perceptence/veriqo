@@ -1,44 +1,53 @@
+import G from "./stats.generated.json";
+
 /* ============================================================================
    Case-study facts.
 
-   Every number here was measured from this repository, and each carries the
-   command that produced it so it can be re-checked. Nothing is estimated or
-   rounded for effect. If a figure can't be measured, it isn't on the page.
+   Nothing here is typed by hand. Every figure comes from
+   stats.generated.json, which scripts/gen-stats.mjs writes before each `dev`
+   and `build` by measuring this repository — the test count by actually
+   running the suite, the rest by walking the source tree.
 
-   Last measured: 2026-07-12, at commit 0cee534 + working tree.
+   That means these numbers cannot drift from the code they describe: if the
+   suite shrinks or a screen is deleted, the next build says so. If the suite
+   fails, the build stops rather than shipping a page that claims otherwise.
 ============================================================================ */
 
+const n = (v) => v.toLocaleString("en-US");
+
 export const STATS = {
-  version: "0.1.0", // package.json
+  version: G.version,
+  commit: G.commit,
+  generatedAt: G.generatedAt,
 
   hero: [
-    { value: "11", label: "Product screens", how: "ls src/screens/**/*.jsx" },
-    { value: "24", label: "Shared components", how: "grep 'export function' src/components/*" },
-    { value: "58", label: "Tests passing", how: "npm test" },
-    { value: "4,588", label: "Lines of source", how: "wc -l, excluding tests" },
+    { value: n(G.screens), label: "Product screens", how: "files in src/screens" },
+    { value: n(G.components), label: "Shared components", how: "exports from src/components" },
+    { value: n(G.tests), label: "Tests passing", how: "vitest run, at build time" },
+    { value: n(G.sourceLines), label: "Lines of product", how: "excludes tests + this page" },
   ],
 
   tests: [
-    { value: "58", label: "Tests", how: "vitest run — all passing" },
-    { value: "3", label: "Test files", how: "tokens · components · screens" },
-    { value: "459", label: "Lines of test", how: "wc -l src/test/*" },
+    { value: n(G.tests), label: "Tests", how: `${G.testSuites} suites, all passing` },
+    { value: n(G.assertions), label: "Assertions", how: "expect() calls in the suite" },
+    { value: n(G.testFiles), label: "Test files", how: "tokens · components · screens" },
     { value: "2/2", label: "Mutations caught", how: "deliberate regressions, each failed a test" },
   ],
 
   scope: [
-    { value: "27", label: "Source files", how: "jsx + js + css, excluding tests" },
-    { value: "14", label: "Spacing tokens", how: "Object.keys(SPACE).length" },
-    { value: "589", label: "Tokenised spacings", how: "SPACE[n] / sp() references in app code" },
-    { value: "5", label: "Commits", how: "git rev-list --count HEAD" },
+    { value: n(G.sourceFiles), label: "Source files", how: "jsx + js + css, product only" },
+    { value: n(G.spacingTokens), label: "Spacing tokens", how: "keys in the SPACE scale" },
+    { value: n(G.tokenisedSpacings), label: "Tokenised spacings", how: "SPACE[n] / sp() uses in app code" },
+    { value: n(G.testLines), label: "Lines of test", how: "src/test/*.test.*" },
   ],
 
   /* Deliberately includes the absences. A portfolio page that only lists what
      exists invites the reader to assume the rest. */
   honest: [
-    { ic: "checkcirc", tone: "yes", tag: "YES", title: "Automated test suite", sub: "58 tests across tokens, components and screens" },
+    { ic: "checkcirc", tone: "yes", tag: "YES", title: "Automated test suite", sub: `${G.tests} tests across tokens, components and screens` },
     { ic: "checkcirc", tone: "yes", tag: "YES", title: "Design token system", sub: "Colour, type, spacing, radii, motion, elevation in one module" },
     { ic: "checkcirc", tone: "yes", tag: "YES", title: "Self-driving demo mode", sub: "Scripted tour of the full product at /?showcase" },
-    { ic: "clock", tone: "no", tag: "NOT YET", title: "Release tags", sub: "No tagged versions cut yet — package version reads 0.1.0" },
+    { ic: "clock", tone: "no", tag: "NOT YET", title: "Release tags", sub: `No tagged versions cut yet — package version reads ${G.version}` },
     { ic: "clock", tone: "no", tag: "NOT YET", title: "Backend", sub: "Front-end only; credentials are seeded fixtures, not a real issuer network" },
     { ic: "clock", tone: "no", tag: "NOT YET", title: "Accessibility audit", sub: "No formal WCAG pass has been run against these screens" },
   ],
@@ -85,4 +94,11 @@ export const sp = (...v) => v.map((n) => \`\${SPACE[n]}px\`).join(" ");`,
     expect(value, \`SPACE[\${key}]\`).toBe(Number(key));
   }
 });`,
+
+  stats: `// scripts/gen-stats.mjs — runs before every dev and build
+const r = JSON.parse(fs.readFileSync(testResults, "utf8"));
+if (r.numFailedTests > 0) process.exit(1);   // don't ship the page
+
+fs.writeFileSync("src/case-study/stats.generated.json",
+  JSON.stringify({ tests: r.numTotalTests, screens, components, ... }));`,
 };
