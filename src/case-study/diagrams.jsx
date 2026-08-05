@@ -165,8 +165,8 @@ export function AdvocacyDiagram() {
   ];
   return (
     <div>
-      <div style={{ display: "flex", gap: SPACE[12], flexWrap: "wrap", alignItems: "stretch" }}>
-        <Card tone="#E4C9C4" bg="#FDF6F5" style={{ flex: "1 1 210px" }}>
+      <div style={{ display: "flex", gap: SPACE[16], flexWrap: "wrap", alignItems: "stretch" }}>
+        <Card tone="#E4C9C4" bg="#FDF6F5">
           <Label tone="#D93025">WHAT WAS ASKED FOR</Label>
           <div style={{ marginTop: SPACE[12], display: "flex", alignItems: "center", gap: SPACE[8] }}>
             <Ic n="plug" s={18} c="#D93025" />
@@ -179,7 +179,7 @@ export function AdvocacyDiagram() {
 
         <Arrow />
 
-        <Card tone={C.acc} bg={C.paper} style={{ flex: "1 1 320px" }}>
+        <Card tone={C.acc} bg={C.paper}>
           <Label tone={C.accDeep}>WHAT THE WALLET RECOMMENDS</Label>
           <div style={{ display: "flex", gap: SPACE[8], marginTop: SPACE[12], marginBottom: SPACE[12], padding: sp(8, 12), background: C.accSoft, borderRadius: RADIUS.sm }}>
             <span style={{ flexShrink: 0, marginTop: 2 }}><Ic n="pulse" s={14} c={C.accDeep} /></span>

@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { STATS } from "../case-study/data.js";
+import { STATS, NEXT } from "../case-study/data.js";
 import G from "../case-study/stats.generated.json";
 import CaseStudy from "../case-study/CaseStudy.jsx";
 
@@ -47,6 +47,17 @@ describe("STATS exposed to the page", () => {
   it("exposes the figures quoted inline in prose", () => {
     expect(String(STATS.spacingTokens)).not.toMatch(/undefined/);
     expect(String(STATS.tokenisedSpacings)).not.toMatch(/undefined/);
+  });
+
+  it("gives every next-step a tag, title and body", () => {
+    expect(NEXT.length).toBeGreaterThan(0);
+    for (const n of NEXT) {
+      expect(n.title, "next-step title").toBeTruthy();
+      expect(n.body, `${n.title} body`).toBeTruthy();
+      expect(n.tag, `${n.title} tag`).toBeTruthy();
+      expect(String(n.body)).not.toMatch(/undefined|NaN/);
+      expect(["block", "improve"]).toContain(n.tone);
+    }
   });
 
   it("gives every scope line a tag and a description", () => {

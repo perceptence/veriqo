@@ -5,7 +5,7 @@ import { Notice, Group, Row } from "../components/primitives.jsx";
 import { Wordmark } from "../components/Logo.jsx";
 import { Wallet } from "../screens/wallet.jsx";
 import { DisclosureDiagram, LeaseDiagram, AdvocacyDiagram, StrokeDiagram } from "./diagrams.jsx";
-import { STATS } from "./data.js";
+import { STATS, NEXT } from "./data.js";
 
 /* ============================================================================
    Veriqo — design case study.
@@ -46,8 +46,11 @@ function Section({ eyebrow, title, children, tint }) {
   );
 }
 
-function P({ children }) {
-  return <p style={{ fontFamily: DISP, fontSize: "clamp(16px, 1.9vw, 17.5px)", fontWeight: 500, color: C.sub, lineHeight: 1.7, margin: sp(0, 0, 16), maxWidth: 660 }}>{children}</p>;
+/* `wide` drops the reading-measure cap so a paragraph spans the full content
+   rail — used for the decision write-ups, which sit directly above
+   full-width diagrams and read better aligned to them. */
+function P({ children, wide }) {
+  return <p style={{ fontFamily: DISP, fontSize: "clamp(16px, 1.9vw, 17.5px)", fontWeight: 500, color: C.sub, lineHeight: 1.7, margin: sp(0, 0, 16), maxWidth: wide ? "none" : 660 }}>{children}</p>;
 }
 
 function Lede({ children }) {
@@ -450,7 +453,7 @@ export default function CaseStudy() {
         </Lede>
 
         <DecisionTitle n="1">Disclosure is a screen, not a settings toggle.</DecisionTitle>
-        <P>
+        <P wide>
           Presenting a credential and choosing what it reveals live on the same surface, one tap
           apart. The age proof carries its own explanation, so the safer option is also the
           obvious one — you can see the difference between “over 21” and “born on this date” at
@@ -462,7 +465,7 @@ export default function CaseStudy() {
         </Takeaway>
 
         <DecisionTitle n="2">A share is a lease, not a transfer.</DecisionTitle>
-        <P>
+        <P wide>
           Handing someone a document gives them a copy forever. Veriqo never hands over an
           artifact — it produces a proof that dies on a timer. The countdown isn't decoration;
           it's the whole mechanism, so it's the most prominent thing on the screen and it keeps
@@ -475,7 +478,7 @@ export default function CaseStudy() {
         </Takeaway>
 
         <DecisionTitle n="3">The wallet argues on your side.</DecisionTitle>
-        <P>
+        <P wide>
           Most consent interfaces are neutral referees: here's what they want, approve or deny.
           Veriqo isn't neutral. When a service asks for more than its stated purpose needs, the
           wallet says so in plain language, pre-selects the smallest sufficient answer, and makes
@@ -580,6 +583,33 @@ export default function CaseStudy() {
           <Notice type="info" icon="checkcirc"
             title="The numbers are produced by the build, not typed by hand"
             sub="Before each deploy a script counts the screens, components and lines in the codebase, computes the contrast ratios from the live tokens, and runs the test suite for real. If the suite fails, the build stops rather than publishing a page that claims otherwise." />
+        </div>
+      </Section>
+
+      {/* WHAT'S NEXT */}
+      <Section eyebrow="WHAT I'D DO NEXT" title="Where this goes from here.">
+        <Lede>
+          The interface argues its case. What it doesn't yet have is a spine — real credentials,
+          a server, and proof that the timing feels trustworthy in a hand rather than a browser.
+        </Lede>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: SPACE[16], marginTop: SPACE[24] }}>
+          {NEXT.map((n, i) => (
+            <div key={n.title} style={{ padding: SPACE[20], background: C.paper, border: `1px solid ${C.line}`, borderRadius: RADIUS.lg, display: "flex", flexDirection: "column" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: SPACE[8], marginBottom: SPACE[12] }}>
+                <span style={{ fontFamily: NUM, fontSize: 22, color: C.acc, lineHeight: 1 }}>{String(i + 1).padStart(2, "0")}</span>
+                <span style={{ fontFamily: MONO, fontSize: 10, fontWeight: 700, letterSpacing: ".08em", color: n.tone === "block" ? "#8A5A00" : C.faint, background: n.tone === "block" ? "#FEF4E6" : C.bone, padding: sp(3, 8), borderRadius: RADIUS.xs }}>
+                  {n.tag}
+                </span>
+              </div>
+              <div style={{ fontFamily: DISP, fontSize: 17.5, fontWeight: 800, color: C.ink, letterSpacing: "-.015em", marginBottom: SPACE[8], lineHeight: 1.3 }}>{n.title}</div>
+              <p style={{ fontFamily: DISP, fontSize: 15, fontWeight: 500, color: C.sub, lineHeight: 1.6, margin: 0 }}>{n.body}</p>
+            </div>
+          ))}
+        </div>
+        <div style={{ marginTop: SPACE[20] }}>
+          <Notice type="info" icon="eye"
+            title="Everything above is a known gap, not a discovered one"
+            sub="Each item comes from the repository as it stands today — the assistant's network call, the seeded fixtures, the zero ARIA attributes across 56 interactive controls. Listing them is cheaper than letting a reviewer find them." />
         </div>
       </Section>
 

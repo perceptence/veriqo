@@ -54,6 +54,42 @@ export const STATS = {
   ],
 };
 
+/* Next steps, each traceable to something real in the repository today —
+   not a wish list. `block` marks work that must happen before any public
+   launch, as opposed to work that makes the product better. */
+export const NEXT = [
+  {
+    tag: "BLOCKS LAUNCH", tone: "block",
+    title: "Put the assistant behind a server",
+    body: "Pulse's “Ask anything” calls the model API straight from the browser. That can't ship — the key would be public, and the browser blocks the request in production anyway. A small serverless proxy is the first thing to build.",
+  },
+  {
+    tag: "BLOCKS LAUNCH", tone: "block",
+    title: "Make the credentials real",
+    body: "Every document on screen is a seeded fixture. The interface already assumes selective-disclosure semantics, so the next step is binding it to an actual issuer and real cryptographic proofs instead of a claim rendered as text.",
+  },
+  {
+    tag: "ACCESSIBILITY", tone: "improve",
+    title: "Take accessibility past colour",
+    body: "The audit covered contrast only. There are 56 interactive controls with no ARIA labelling, the product's own animations don't yet honour prefers-reduced-motion, and touch-target sizes haven't been measured against the 44px minimum.",
+  },
+  {
+    tag: "VALIDATION", tone: "improve",
+    title: "Test the timing in the hand",
+    body: "The lease model rests entirely on a countdown feeling trustworthy. In a browser that's an animation; on a phone it's haptics, the real Dynamic Island and a lock screen. That's where the idea either holds up or doesn't.",
+  },
+  {
+    tag: "PRODUCT GAP", tone: "improve",
+    title: "Design the aftermath",
+    body: "The wallet shows what you shared and lets a proof expire, but has no answer for “this service was breached — show me everything they ever saw, and cut them off.” Recovery is the half of trust the current design doesn't cover.",
+  },
+  {
+    tag: "PRODUCT GAP", tone: "improve",
+    title: "Prove the anomaly detection",
+    body: "Flagging “age presented four times in an hour” is the most opinionated thing the wallet does, and right now the rule is hard-coded against fixture data. It needs real thresholds, and a way to be wrong gracefully when the pattern is innocent.",
+  },
+];
+
 /* Verbatim excerpts from the source. Each is quoted, not paraphrased, so a
    reader can open the named file and find exactly this. */
 export const CODE = {
