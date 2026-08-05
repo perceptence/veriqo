@@ -54,41 +54,71 @@ export const STATS = {
   ],
 };
 
-/* Next steps, each traceable to something real in the repository today —
-   not a wish list. `block` marks work that must happen before any public
-   launch, as opposed to work that makes the product better. */
+/* Where the product goes next: new surfaces to build, and how it pays for
+   itself. Each capability extends a mechanism the current design already
+   has, rather than bolting on something unrelated. */
 export const NEXT = [
   {
-    tag: "BLOCKS LAUNCH", tone: "block",
-    title: "Put the assistant behind a server",
-    body: "Pulse's “Ask anything” calls the model API straight from the browser. That can't ship — the key would be public, and the browser blocks the request in production anyway. A small serverless proxy is the first thing to build.",
+    tag: "COMMERCE", ic: "wine",
+    title: "Age-gated checkout on the web",
+    body: "Every alcohol, gaming and pharmacy checkout currently asks for a birth date and stores it. A browser extension that answers “over 21” with a scoped proof turns the wallet's core mechanic into an everyday habit — and puts it in front of merchants who already pay for age checks.",
   },
   {
-    tag: "BLOCKS LAUNCH", tone: "block",
-    title: "Make the credentials real",
-    body: "Every document on screen is a seeded fixture. The interface already assumes selective-disclosure semantics, so the next step is binding it to an actual issuer and real cryptographic proofs instead of a claim rendered as text.",
+    tag: "TRAVEL", ic: "book",
+    title: "Border and boarding",
+    body: "The passport is already in the wallet. Pairing it with a boarding pass makes the airport the highest-stakes proving ground for expiring proofs — and the place where “I forgot my documents” has the highest cost to solve.",
   },
   {
-    tag: "ACCESSIBILITY", tone: "improve",
-    title: "Take accessibility past colour",
-    body: "The audit covered contrast only. There are 56 interactive controls with no ARIA labelling, the product's own animations don't yet honour prefers-reduced-motion, and touch-target sizes haven't been measured against the 44px minimum.",
+    tag: "FINANCE", ic: "card",
+    title: "Verify once, reuse everywhere",
+    body: "Opening a bank, brokerage or crypto account means re-uploading the same documents each time. A reusable, cryptographically-signed identity that any institution can request collapses days of onboarding into one approval — the clearest wedge into a market that already spends heavily on KYC.",
   },
   {
-    tag: "VALIDATION", tone: "improve",
-    title: "Test the timing in the hand",
-    body: "The lease model rests entirely on a countdown feeling trustworthy. In a browser that's an animation; on a phone it's haptics, the real Dynamic Island and a lock screen. That's where the idea either holds up or doesn't.",
+    tag: "FAMILY", ic: "contacts",
+    title: "Credentials you hold for someone else",
+    body: "Parents carry their children's documents; adult children manage their parents'. Delegated custody with its own consent trail extends the wallet to the people least able to run one themselves, and turns a single-user app into a household account.",
   },
   {
-    tag: "PRODUCT GAP", tone: "improve",
-    title: "Design the aftermath",
-    body: "The wallet shows what you shared and lets a proof expire, but has no answer for “this service was breached — show me everything they ever saw, and cut them off.” Recovery is the half of trust the current design doesn't cover.",
+    tag: "RESILIENCE", ic: "shield",
+    title: "Breach response, not just breach alerts",
+    body: "Pulse already spots misuse. The next step is acting on it: one screen that shows everything a compromised service ever received, revokes it, and reissues affected credentials — recovery being the half of trust the current design doesn't yet cover.",
   },
   {
-    tag: "PRODUCT GAP", tone: "improve",
-    title: "Prove the anomaly detection",
-    body: "Flagging “age presented four times in an hour” is the most opinionated thing the wallet does, and right now the rule is hard-coded against fixture data. It needs real thresholds, and a way to be wrong gracefully when the pattern is innocent.",
+    tag: "OFFLINE", ic: "phone",
+    title: "Proofs without a network",
+    body: "Bouncers in basements and border desks abroad don't have reliable signal. Presenting over NFC or Bluetooth with a pre-signed, short-lived proof removes the last dependency between the holder and the verifier.",
   },
 ];
+
+/* Revenue model. The strategic point is the one that keeps recurring in
+   identity: the person proving something is the wrong party to charge. */
+export const REVENUE = {
+  thesis: "The wallet is free because its value is acceptance — every extra holder makes it worth more to verifiers, and every extra verifier makes it worth more to holders. Charging the person proving who they are would cap both. So the people who currently pay for identity checks keep paying, and get something cheaper and better.",
+  tiers: [
+    {
+      name: "Wallet", price: "Free", tone: "quiet",
+      who: "Everyone holding credentials",
+      lines: ["Unlimited documents and proofs", "Selective disclosure and expiry", "Activity timeline"],
+      note: "Acquisition. The network only works at scale.",
+    },
+    {
+      name: "Pro", price: "Subscription", tone: "accent",
+      who: "Frequent provers and families",
+      lines: ["Breach monitoring across connected services", "Delegated and family credentials", "Priority identity recovery", "Full sharing history and richer Pulse intelligence"],
+      note: "Consumer revenue from the anxious minority, not a paywall on proving.",
+    },
+    {
+      name: "Verify", price: "Per check", tone: "ink",
+      who: "Bars, banks, landlords, employers",
+      lines: ["Request a scoped proof by API or SDK", "Compliance-ready audit log", "No document images to store or insure", "Volume pricing below incumbent KYC"],
+      note: "The primary business. Verifiers already have this budget.",
+    },
+  ],
+  adjacent: [
+    { title: "Issuer partnerships", body: "White-label issuance for DMVs, universities and employers who want their credential to live in a wallet people already carry." },
+    { title: "Fraud signals", body: "Aggregate, anonymised misuse patterns — the same detection that flags a stolen credential is worth something to the institutions being defrauded." },
+  ],
+};
 
 /* Verbatim excerpts from the source. Each is quoted, not paraphrased, so a
    reader can open the named file and find exactly this. */

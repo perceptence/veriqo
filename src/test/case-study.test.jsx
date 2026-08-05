@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { STATS, NEXT } from "../case-study/data.js";
+import { STATS, NEXT, REVENUE } from "../case-study/data.js";
 import G from "../case-study/stats.generated.json";
 import CaseStudy from "../case-study/CaseStudy.jsx";
 
@@ -49,14 +49,33 @@ describe("STATS exposed to the page", () => {
     expect(String(STATS.tokenisedSpacings)).not.toMatch(/undefined/);
   });
 
-  it("gives every next-step a tag, title and body", () => {
+  it("gives every roadmap item a tag, icon, title and body", () => {
     expect(NEXT.length).toBeGreaterThan(0);
     for (const n of NEXT) {
-      expect(n.title, "next-step title").toBeTruthy();
+      expect(n.title, "roadmap title").toBeTruthy();
       expect(n.body, `${n.title} body`).toBeTruthy();
       expect(n.tag, `${n.title} tag`).toBeTruthy();
+      expect(n.ic, `${n.title} icon`).toBeTruthy();
       expect(String(n.body)).not.toMatch(/undefined|NaN/);
-      expect(["block", "improve"]).toContain(n.tone);
+    }
+  });
+
+  it("describes a complete revenue model", () => {
+    expect(REVENUE.thesis).toBeTruthy();
+    expect(REVENUE.tiers.length).toBeGreaterThan(1);
+    for (const t of REVENUE.tiers) {
+      expect(t.name, "tier name").toBeTruthy();
+      expect(t.price, `${t.name} price`).toBeTruthy();
+      expect(t.who, `${t.name} audience`).toBeTruthy();
+      expect(t.note, `${t.name} rationale`).toBeTruthy();
+      expect(t.lines.length, `${t.name} lines`).toBeGreaterThan(0);
+      expect(["quiet", "accent", "ink"]).toContain(t.tone);
+    }
+    // the strategic claim the section rests on: holders aren't the payer
+    expect(REVENUE.tiers.some((t) => /free/i.test(t.price))).toBe(true);
+    for (const a of REVENUE.adjacent) {
+      expect(a.title).toBeTruthy();
+      expect(a.body).toBeTruthy();
     }
   });
 

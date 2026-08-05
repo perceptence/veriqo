@@ -5,7 +5,7 @@ import { Notice, Group, Row } from "../components/primitives.jsx";
 import { Wordmark } from "../components/Logo.jsx";
 import { Wallet } from "../screens/wallet.jsx";
 import { DisclosureDiagram, LeaseDiagram, AdvocacyDiagram, StrokeDiagram } from "./diagrams.jsx";
-import { STATS, NEXT } from "./data.js";
+import { STATS, NEXT, REVENUE } from "./data.js";
 
 /* ============================================================================
    Veriqo — design case study.
@@ -46,13 +46,14 @@ function Section({ eyebrow, title, children, tint }) {
   );
 }
 
-/* `wide` drops the reading-measure cap so a paragraph spans the full content
-   rail — used for the decision write-ups, which sit directly above
-   full-width diagrams and read better aligned to them. */
-function P({ children, wide }) {
-  return <p style={{ fontFamily: DISP, fontSize: "clamp(16px, 1.9vw, 17.5px)", fontWeight: 500, color: C.sub, lineHeight: 1.7, margin: sp(0, 0, 16), maxWidth: wide ? "none" : 660 }}>{children}</p>;
+/* Body copy sits on a fixed reading measure across the whole page — the
+   content rail is wider than a comfortable line length. */
+function P({ children }) {
+  return <p style={{ fontFamily: DISP, fontSize: "clamp(16px, 1.9vw, 17.5px)", fontWeight: 500, color: C.sub, lineHeight: 1.7, margin: sp(0, 0, 16), maxWidth: 660 }}>{children}</p>;
 }
 
+/* Used exactly once, for the page's opening thesis. Every other section
+   intro is a plain P, so this reads as emphasis rather than inconsistency. */
 function Lede({ children }) {
   return <p style={{ fontFamily: DISP, fontSize: "clamp(19px, 2.6vw, 22px)", fontWeight: 700, color: C.ink2, lineHeight: 1.5, margin: sp(0, 0, 20), letterSpacing: "-.015em", maxWidth: 680 }}>{children}</p>;
 }
@@ -447,13 +448,13 @@ export default function CaseStudy() {
 
       {/* DECISIONS */}
       <Section eyebrow="DESIGN DECISIONS" title="Three positions the product takes.">
-        <Lede>
+        <P>
           Each of these is a stance, not a feature. They're the answers to the questions that
           decide whether an identity wallet is worth carrying.
-        </Lede>
+        </P>
 
         <DecisionTitle n="1">Disclosure is a screen, not a settings toggle.</DecisionTitle>
-        <P wide>
+        <P>
           Presenting a credential and choosing what it reveals live on the same surface, one tap
           apart. The age proof carries its own explanation, so the safer option is also the
           obvious one — you can see the difference between “over 21” and “born on this date” at
@@ -465,7 +466,7 @@ export default function CaseStudy() {
         </Takeaway>
 
         <DecisionTitle n="2">A share is a lease, not a transfer.</DecisionTitle>
-        <P wide>
+        <P>
           Handing someone a document gives them a copy forever. Veriqo never hands over an
           artifact — it produces a proof that dies on a timer. The countdown isn't decoration;
           it's the whole mechanism, so it's the most prominent thing on the screen and it keeps
@@ -478,7 +479,7 @@ export default function CaseStudy() {
         </Takeaway>
 
         <DecisionTitle n="3">The wallet argues on your side.</DecisionTitle>
-        <P wide>
+        <P>
           Most consent interfaces are neutral referees: here's what they want, approve or deny.
           Veriqo isn't neutral. When a service asks for more than its stated purpose needs, the
           wallet says so in plain language, pre-selects the smallest sufficient answer, and makes
@@ -586,30 +587,75 @@ export default function CaseStudy() {
         </div>
       </Section>
 
-      {/* WHAT'S NEXT */}
-      <Section eyebrow="WHAT I'D DO NEXT" title="Where this goes from here.">
-        <Lede>
-          The interface argues its case. What it doesn't yet have is a spine — real credentials,
-          a server, and proof that the timing feels trustworthy in a hand rather than a browser.
-        </Lede>
+      {/* WHERE IT GOES NEXT */}
+      <Section eyebrow="WHERE IT GOES NEXT" title="From a wallet to an identity layer.">
+        <P>
+          Everything below extends a mechanism the product already has rather than bolting on
+          something unrelated. Selective disclosure and expiring proofs are the primitives; the
+          opportunity is in how many places they're worth carrying.
+        </P>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: SPACE[16], marginTop: SPACE[24] }}>
-          {NEXT.map((n, i) => (
+          {NEXT.map((n) => (
             <div key={n.title} style={{ padding: SPACE[20], background: C.paper, border: `1px solid ${C.line}`, borderRadius: RADIUS.lg, display: "flex", flexDirection: "column" }}>
               <div style={{ display: "flex", alignItems: "center", gap: SPACE[8], marginBottom: SPACE[12] }}>
-                <span style={{ fontFamily: NUM, fontSize: 22, color: C.acc, lineHeight: 1 }}>{String(i + 1).padStart(2, "0")}</span>
-                <span style={{ fontFamily: MONO, fontSize: 10, fontWeight: 700, letterSpacing: ".08em", color: n.tone === "block" ? "#8A5A00" : C.faint, background: n.tone === "block" ? "#FEF4E6" : C.bone, padding: sp(3, 8), borderRadius: RADIUS.xs }}>
-                  {n.tag}
+                <span style={{ width: 32, height: 32, borderRadius: RADIUS.sm, background: C.accSoft, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  <Ic n={n.ic} s={17} c={C.accDeep} />
                 </span>
+                <span style={{ fontFamily: MONO, fontSize: 10, fontWeight: 700, letterSpacing: ".08em", color: C.accDeep }}>{n.tag}</span>
               </div>
               <div style={{ fontFamily: DISP, fontSize: 17.5, fontWeight: 800, color: C.ink, letterSpacing: "-.015em", marginBottom: SPACE[8], lineHeight: 1.3 }}>{n.title}</div>
               <p style={{ fontFamily: DISP, fontSize: 15, fontWeight: 500, color: C.sub, lineHeight: 1.6, margin: 0 }}>{n.body}</p>
             </div>
           ))}
         </div>
-        <div style={{ marginTop: SPACE[20] }}>
-          <Notice type="info" icon="eye"
-            title="Everything above is a known gap, not a discovered one"
-            sub="Each item comes from the repository as it stands today — the assistant's network call, the seeded fixtures, the zero ARIA attributes across 56 interactive controls. Listing them is cheaper than letting a reviewer find them." />
+      </Section>
+
+      {/* BUSINESS MODEL */}
+      <Section eyebrow="THE BUSINESS" title="Who pays, and why it isn't the holder." tint={C.paper}>
+        <P>{REVENUE.thesis}</P>
+
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: SPACE[16], marginTop: SPACE[24] }}>
+          {REVENUE.tiers.map((t) => {
+            const accent = t.tone === "accent", dark = t.tone === "ink";
+            return (
+              <div key={t.name} style={{
+                padding: SPACE[20], borderRadius: RADIUS.lg, display: "flex", flexDirection: "column",
+                background: dark ? C.ink : accent ? C.accSoft : C.bone,
+                border: `1.5px solid ${dark ? C.ink : accent ? C.acc : C.line}`,
+              }}>
+                <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: SPACE[8], marginBottom: SPACE[4] }}>
+                  <span style={{ fontFamily: DISP, fontSize: 21, fontWeight: 900, letterSpacing: "-.02em", color: dark ? "#fff" : C.ink }}>{t.name}</span>
+                  <span style={{ fontFamily: MONO, fontSize: 11, fontWeight: 700, letterSpacing: ".06em", color: dark ? C.glow : accent ? C.accDeep : C.sub }}>{t.price}</span>
+                </div>
+                <div style={{ fontFamily: DISP, fontSize: 14, fontWeight: 600, color: dark ? "rgba(255,255,255,.65)" : C.faint, marginBottom: SPACE[16] }}>{t.who}</div>
+                <div style={{ display: "flex", flexDirection: "column", gap: SPACE[8], flex: 1 }}>
+                  {t.lines.map((l) => (
+                    <div key={l} style={{ display: "flex", gap: SPACE[8], alignItems: "flex-start" }}>
+                      <span style={{ flexShrink: 0, marginTop: 3 }}>
+                        <Ic n="check" s={13} c={dark ? C.glow : C.accDeep} />
+                      </span>
+                      <span style={{ fontFamily: DISP, fontSize: 14.5, fontWeight: 500, color: dark ? "rgba(255,255,255,.86)" : C.sub, lineHeight: 1.5 }}>{l}</span>
+                    </div>
+                  ))}
+                </div>
+                <div style={{ marginTop: SPACE[16], paddingTop: SPACE[12], borderTop: `1px solid ${dark ? "rgba(255,255,255,.14)" : C.line}`, fontFamily: DISP, fontSize: 13.5, fontWeight: 600, fontStyle: "italic", color: dark ? "rgba(255,255,255,.6)" : C.faint, lineHeight: 1.5 }}>
+                  {t.note}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: SPACE[16], marginTop: SPACE[16] }}>
+          {REVENUE.adjacent.map((a) => (
+            <div key={a.title} style={{ display: "flex", gap: SPACE[12], padding: SPACE[16], background: C.bone, borderRadius: RADIUS.md }}>
+              <span style={{ flexShrink: 0, marginTop: 2 }}><Ic n="plus" s={17} c={C.accDeep} /></span>
+              <div>
+                <div style={{ fontFamily: DISP, fontSize: 15.5, fontWeight: 800, color: C.ink, marginBottom: SPACE[3] }}>{a.title}</div>
+                <p style={{ fontFamily: DISP, fontSize: 14.5, fontWeight: 500, color: C.sub, lineHeight: 1.55, margin: 0 }}>{a.body}</p>
+              </div>
+            </div>
+          ))}
         </div>
       </Section>
 
