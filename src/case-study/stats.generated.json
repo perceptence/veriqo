@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-08-05",
-  "commit": "d6db5bf",
+  "commit": "4ebb0e4",
   "version": "0.1.0",
   "tests": 69,
   "testSuites": 26,
@@ -10,12 +10,12 @@
   "screens": 11,
   "components": 24,
   "sourceFiles": 27,
-  "sourceLines": 4634,
+  "sourceLines": 4655,
   "spacingTokens": 14,
   "tokenisedSpacings": 589,
   "a11y": {
     "pairsChecked": 8,
-    "passingAA": 7,
+    "passingAA": 8,
     "pairs": [
       {
         "label": "Body text",
@@ -41,9 +41,9 @@
         "label": "Secondary text",
         "fg": "sub",
         "bg": "bone",
-        "fgHex": "#6B665E",
+        "fgHex": "#514C45",
         "bgHex": "#ECE7DE",
-        "ratio": 4.62,
+        "ratio": 6.9,
         "aa": true,
         "aaLarge": true
       },
@@ -51,9 +51,9 @@
         "label": "Secondary on cards",
         "fg": "sub",
         "bg": "paper",
-        "fgHex": "#6B665E",
+        "fgHex": "#514C45",
         "bgHex": "#FFFFFF",
-        "ratio": 5.7,
+        "ratio": 8.5,
         "aa": true,
         "aaLarge": true
       },
@@ -61,19 +61,19 @@
         "label": "Metadata",
         "fg": "faint",
         "bg": "bone",
-        "fgHex": "#78736A",
+        "fgHex": "#67625B",
         "bgHex": "#ECE7DE",
-        "ratio": 3.82,
-        "aa": false,
+        "ratio": 4.91,
+        "aa": true,
         "aaLarge": true
       },
       {
         "label": "Metadata on cards",
         "fg": "faint",
         "bg": "paper",
-        "fgHex": "#78736A",
+        "fgHex": "#67625B",
         "bgHex": "#FFFFFF",
-        "ratio": 4.71,
+        "ratio": 6.04,
         "aa": true,
         "aaLarge": true
       },

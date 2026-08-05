@@ -96,7 +96,7 @@ function StatGrid({ items, light, min = 158 }) {
 function HeroPreview() {
   const noop = () => {};
   return (
-    <div aria-hidden="true" style={{ position: "relative", width: 336, flexShrink: 0 }}>
+    <div aria-hidden="true" className="cs-preview" style={{ position: "relative", width: 336, flexShrink: 0 }}>
       <div style={{
         width: 336, height: 684, borderRadius: 51, background: "#0B0C09",
         padding: 9, boxShadow: "0 46px 92px rgba(0,0,0,.58)", position: "relative",
@@ -482,7 +482,8 @@ export default function CaseStudy() {
             <div style={{ fontFamily: DISP, fontSize: 16, fontWeight: 800, color: C.ink, marginBottom: SPACE[6] }}>Metadata was too light</div>
             <p style={{ fontFamily: DISP, fontSize: 15, color: C.sub, lineHeight: 1.6, margin: 0 }}>
               Timestamps and hints sat at 2.16:1 — below even the relaxed threshold for large
-              text. Darkened to 3.82:1 on the canvas and 4.71:1 on cards.
+              text. Fixing it alone would have collided with secondary text, so the whole text
+              ramp moved down together: now 4.91:1, with secondary at 6.90:1 above it.
             </p>
           </div>
           <div style={{ padding: SPACE[16], background: C.paper, border: `1px solid ${C.line}`, borderRadius: RADIUS.lg }}>
@@ -495,9 +496,9 @@ export default function CaseStudy() {
         </div>
         <ContrastExhibit />
         <div style={{ marginTop: SPACE[16] }}>
-          <Notice type="warning" icon="alert"
-            title={`${STATS.a11y.passingAA} of ${STATS.a11y.pairsChecked} pairs meet AA for normal text — one deliberately does not`}
-            sub="Metadata on the canvas sits at 3.82:1. Reaching 4.5:1 would make it identical to secondary text and collapse the three-tier hierarchy, so it is capped there and reserved for supporting detail a user never has to read to act." />
+          <Notice type="success" icon="checkcirc"
+            title={`All ${STATS.a11y.pairsChecked} pairs meet WCAG AA for normal text`}
+            sub="The three text tiers stay visibly distinct while every one clears 4.5:1 on both the canvas and cards. Ratios are recomputed from the tokens on every build, so this claim can't go stale." />
         </div>
       </Section>
 

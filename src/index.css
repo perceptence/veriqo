@@ -110,3 +110,22 @@ body {
 
 /* Hide the frame's decorative island — the app draws its own functional one. */
 .pf-island { display: none !important; }
+
+/* ---------------------------------------------------------------------------
+   Case-study hero preview: a real product screen posed as a still image.
+   It renders outside .pf-screen, so it doesn't inherit the no-scroll fix
+   above — without this the wallet keeps its 92px scroll gutter and the
+   preview scrolls under the cursor. Freeze it: no scrolling, no animation.
+--------------------------------------------------------------------------- */
+.cs-preview [style*="overflow-y: auto"],
+.cs-preview [style*="overflow-x: auto"] {
+  overflow: hidden !important;
+}
+.cs-preview [style*="padding-bottom: 92px"] {
+  padding-bottom: 6px !important;
+}
+.cs-preview * {
+  animation: none !important;
+  scrollbar-width: none;
+}
+.cs-preview *::-webkit-scrollbar { display: none; }

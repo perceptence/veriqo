@@ -10,14 +10,16 @@ export const C = {
   paper: "#FFFFFF",
   ink: "#141210",
   ink2: "#29251F",
-  sub: "#6B665E",
-  /* Tertiary text. Darkened from #A49E94 after the 2026-08 contrast audit:
-     the old value was 2.16:1 on bone, failing even the 3:1 large-text floor.
-     4.5:1 would require ~#69655F, which is indistinguishable from `sub` and
-     collapses the three-tier hierarchy — so this sits at 3.82:1 on bone /
-     4.71:1 on paper and is reserved for supporting metadata (timestamps,
-     hints, unit labels), never for content a user must read to act. */
-  faint: "#78736A",
+  /* Text tiers are set so all three clear WCAG AA (4.5:1) on both surfaces
+     while staying visibly distinct from one another. Darkening `faint` alone
+     would have collided with `sub`, so the whole ramp moved down together:
+       ink   15.17:1 on bone / 18.69:1 on paper
+       sub    6.90:1        /  8.50:1
+       faint  4.91:1        /  6.04:1
+     (was sub #6B665E 4.62:1, faint #A49E94 2.16:1 — the latter failed even
+      the 3:1 large-text floor.) */
+  sub: "#514C45",
+  faint: "#67625B",
   line: "rgba(20,18,16,.1)",
   acc: "#15A06A",
   accDeep: "#0C6E48",

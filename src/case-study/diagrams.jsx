@@ -104,13 +104,12 @@ export function FrameDiagram() {
   const Phone = ({ w, h, label, stretched }) => (
     <div style={{ textAlign: "center" }}>
       <div style={{
-        width: w, height: h, margin: "0 auto", borderRadius: 14, background: C.ink,
-        border: `2px solid ${C.ink}`, position: "relative", overflow: "hidden",
-        display: "flex", alignItems: "center", justifyContent: "center",
+        width: w, height: h, margin: "0 auto", borderRadius: 15, background: C.ink,
+        position: "relative", overflow: "hidden",
       }}>
         <div style={{
-          position: "absolute", inset: 5, borderRadius: 10, background: C.bone,
-          display: "flex", flexDirection: "column", gap: 4, padding: 7,
+          position: "absolute", inset: 2.5, borderRadius: 13, background: C.bone,
+          display: "flex", flexDirection: "column", gap: 4, padding: 8,
         }}>
           {[100, 78, 90].map((pct, i) => (
             <div key={i} style={{
@@ -121,7 +120,9 @@ export function FrameDiagram() {
           ))}
         </div>
       </div>
-      <Label tone={stretched ? "#D93025" : C.accDeep}>{label}</Label>
+      <div style={{ marginTop: SPACE[16] }}>
+        <Label tone={stretched ? "#D93025" : C.accDeep}>{label}</Label>
+      </div>
     </div>
   );
   return (
