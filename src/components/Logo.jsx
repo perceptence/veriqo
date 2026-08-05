@@ -56,11 +56,13 @@ export function LogoMark({ size = 30, mark = LOGO }) {
   );
 }
 
-export function Wordmark({ size = 30 }) {
+/* `light` follows the same convention as Header / Back / StepDots: invert the
+   type colour for placement on a dark surface. */
+export function Wordmark({ size = 30, light = false }) {
   return (
     <div style={{ display: "flex", alignItems: "center", gap: size * 0.32 }}>
       <LogoMark size={size} />
-      <span style={{ fontFamily: DISP, fontSize: size * 0.64, fontWeight: 900, color: C.ink, letterSpacing: ".01em", lineHeight: 1 }}>VERIQO</span>
+      <span style={{ fontFamily: DISP, fontSize: size * 0.64, fontWeight: 900, color: light ? "#fff" : C.ink, letterSpacing: ".01em", lineHeight: 1 }}>VERIQO</span>
     </div>
   );
 }
