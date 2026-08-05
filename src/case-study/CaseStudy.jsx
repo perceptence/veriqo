@@ -4,7 +4,7 @@ import { Ic, Grain } from "../components/Icon.jsx";
 import { Notice, Group, Row } from "../components/primitives.jsx";
 import { Wordmark } from "../components/Logo.jsx";
 import { Wallet } from "../screens/wallet.jsx";
-import { DisclosureDiagram, StrokeDiagram, FrameDiagram } from "./diagrams.jsx";
+import { DisclosureDiagram, LeaseDiagram, AdvocacyDiagram, StrokeDiagram } from "./diagrams.jsx";
 import { STATS } from "./data.js";
 
 /* ============================================================================
@@ -443,41 +443,51 @@ export default function CaseStudy() {
       </Section>
 
       {/* DECISIONS */}
-      <Section eyebrow="DESIGN DECISIONS" title="Three choices that shaped the product.">
+      <Section eyebrow="DESIGN DECISIONS" title="Three positions the product takes.">
+        <Lede>
+          Each of these is a stance, not a feature. They're the answers to the questions that
+          decide whether an identity wallet is worth carrying.
+        </Lede>
+
         <DecisionTitle n="1">Disclosure is a screen, not a settings toggle.</DecisionTitle>
         <P>
           Presenting a credential and choosing what it reveals live on the same surface, one tap
           apart. The age proof carries its own explanation, so the safer option is also the
           obvious one — you can see the difference between “over 21” and “born on this date” at
-          the moment you decide.
+          the moment you decide, not in a policy page you'll never open.
         </P>
         <Takeaway>
           The wallet answers the question that was asked. Everything else stays sealed, and the
           interface says so in words while you're choosing.
         </Takeaway>
 
-        <DecisionTitle n="2">One rule for icon weight, not two dozen judgement calls.</DecisionTitle>
+        <DecisionTitle n="2">A share is a lease, not a transfer.</DecisionTitle>
         <P>
-          Icons were drawn at whatever stroke looked right in isolation, which read as
-          inconsistent once screens sat side by side. Weight is now derived from the size an
-          icon renders at, so nobody has to make the call twice.
+          Handing someone a document gives them a copy forever. Veriqo never hands over an
+          artifact — it produces a proof that dies on a timer. The countdown isn't decoration;
+          it's the whole mechanism, so it's the most prominent thing on the screen and it keeps
+          ticking in the Dynamic Island after you've put the phone down.
         </P>
-        <div style={{ margin: sp(20, 0, 0) }}><StrokeDiagram /></div>
+        <div style={{ margin: sp(20, 0, 0) }}><LeaseDiagram /></div>
         <Takeaway>
-          Every icon in the product now looks drawn with the same pen — and a new icon inherits
-          the right weight without anyone deciding.
+          Because a proof expires on its own, there's no revocation flow to design, no “delete my
+          data” request to file, and nothing sitting in a database waiting to be breached.
         </Takeaway>
 
-        <DecisionTitle n="3">The device bends to the design, not the reverse.</DecisionTitle>
+        <DecisionTitle n="3">The wallet argues on your side.</DecisionTitle>
         <P>
-          The interface was composed for a 360pt-wide canvas. Stretching that artwork to fill a
-          402pt phone screen broke how the browser drew the scrolling lists — corners leaked past
-          the rounded bezel and the bottom edge shimmered as you scrolled.
+          Most consent interfaces are neutral referees: here's what they want, approve or deny.
+          Veriqo isn't neutral. When a service asks for more than its stated purpose needs, the
+          wallet says so in plain language, pre-selects the smallest sufficient answer, and makes
+          declining a single tap. It also watches your own credentials for misuse — a flagged
+          reading of “age presented four times in an hour at an unknown location” is the wallet
+          noticing something you couldn't.
         </P>
-        <div style={{ margin: sp(20, 0, 0) }}><FrameDiagram /></div>
+        <div style={{ margin: sp(20, 0, 0) }}><AdvocacyDiagram /></div>
         <Takeaway>
-          Chasing the glitch with clipping fixes never worked. Removing the stretch entirely did
-          — the artwork is never resized, so there's nothing left to redraw incorrectly.
+          A neutral wallet makes over-sharing the path of least resistance. This one puts its
+          thumb on the scale — the minimum viable answer is the default, and the reasoning is
+          visible.
         </Takeaway>
       </Section>
 
@@ -513,6 +523,16 @@ export default function CaseStudy() {
           <Notice type="info" icon="sliders"
             title="The token names are the measurements"
             sub={`SPACE[12] is 12 pixels — no lookup table to memorise. ${STATS.tokenisedSpacings} spacing values across the app reference the scale by name, so changing the rhythm is one edit.`} />
+        </div>
+
+        <div style={{ marginTop: SPACE[40] }}>
+          <div style={{ fontFamily: MONO, fontSize: 11, fontWeight: 700, color: C.faint, letterSpacing: ".12em", marginBottom: SPACE[12] }}>ICONOGRAPHY</div>
+          <P>
+            Icons used to be drawn at whatever stroke looked right in isolation, which read as
+            inconsistent once screens sat side by side. Weight is now derived from the size an
+            icon renders at, so the judgement is made once and never repeated.
+          </P>
+          <StrokeDiagram />
         </div>
       </Section>
 

@@ -1,4 +1,4 @@
-import { C, DISP, MONO, RADIUS, SPACE, sp, strokeFor } from "../styles/tokens.js";
+import { C, DISP, MONO, NUM, RADIUS, SPACE, sp, strokeFor } from "../styles/tokens.js";
 import { Ic } from "../components/Icon.jsx";
 
 /* ============================================================================
@@ -99,49 +99,115 @@ export function StrokeDiagram() {
   );
 }
 
-/* ---- 3 · scale the artwork vs scale the device ----------------------- */
-export function FrameDiagram() {
-  const Phone = ({ w, h, label, stretched }) => (
-    <div style={{ textAlign: "center" }}>
-      <div style={{
-        width: w, height: h, margin: "0 auto", borderRadius: 15, background: C.ink,
-        position: "relative", overflow: "hidden",
-      }}>
-        <div style={{
-          position: "absolute", inset: 2.5, borderRadius: 13, background: C.bone,
-          display: "flex", flexDirection: "column", gap: 4, padding: 8,
-        }}>
-          {[100, 78, 90].map((pct, i) => (
-            <div key={i} style={{
-              height: stretched ? 11 : 8, width: `${pct}%`, borderRadius: 3,
-              background: i === 0 ? C.acc : "rgba(20,18,16,.16)",
-              transform: stretched ? "scaleX(1.06)" : "none", transformOrigin: "left",
-            }} />
-          ))}
-        </div>
-      </div>
-      <div style={{ marginTop: SPACE[16] }}>
-        <Label tone={stretched ? "#D93025" : C.accDeep}>{label}</Label>
-      </div>
-    </div>
-  );
+/* ---- 2 · a share is a lease, not a transfer -------------------------- */
+export function LeaseDiagram() {
+  const Ring = ({ pct, label }) => {
+    const r = 26, circ = 2 * Math.PI * r;
+    return (
+      <svg width="68" height="68" viewBox="0 0 68 68" style={{ transform: "rotate(-90deg)" }}>
+        <circle cx="34" cy="34" r={r} fill="none" stroke="rgba(20,18,16,.10)" strokeWidth="5" />
+        <circle cx="34" cy="34" r={r} fill="none" stroke={C.acc} strokeWidth="5" strokeLinecap="round"
+          strokeDasharray={circ} strokeDashoffset={circ * (1 - pct)} />
+      </svg>
+    );
+  };
   return (
     <div style={{ display: "flex", gap: SPACE[16], flexWrap: "wrap", alignItems: "stretch" }}>
       <Card tone="#E4C9C4" bg="#FDF6F5">
-        <div style={{ marginBottom: SPACE[16] }}><Phone w={104} h={150} label="STRETCH THE ARTWORK" stretched /></div>
-        <div style={{ fontFamily: DISP, fontSize: 14, fontWeight: 500, color: C.sub, lineHeight: 1.55 }}>
-          Scaling the interface up to fill a larger screen made the browser redraw scrolling
-          lists incorrectly — corners leaked past the bezel and the bottom edge shimmered.
+        <Label tone="#D93025">HANDING OVER A COPY</Label>
+        <div style={{ marginTop: SPACE[16], display: "flex", alignItems: "center", gap: SPACE[12] }}>
+          <Ic n="card" s={26} c="#D93025" />
+          <div style={{ fontFamily: DISP, fontSize: 15, fontWeight: 800, color: C.ink }}>Permanent</div>
+        </div>
+        <div style={{ marginTop: SPACE[12], display: "flex", flexDirection: "column", gap: SPACE[6] }}>
+          {["Lives on their server indefinitely", "Can be copied, sold or breached", "You cannot take it back"].map((t) => (
+            <div key={t} style={{ display: "flex", gap: SPACE[8], alignItems: "flex-start" }}>
+              <span style={{ marginTop: 6, width: 5, height: 5, borderRadius: RADIUS.round, background: "#D93025", flexShrink: 0 }} />
+              <span style={{ fontFamily: DISP, fontSize: 14, fontWeight: 500, color: C.sub, lineHeight: 1.5 }}>{t}</span>
+            </div>
+          ))}
         </div>
       </Card>
+
       <Arrow />
+
       <Card tone={C.acc} bg={C.accSoft}>
-        <div style={{ marginBottom: SPACE[16] }}><Phone w={92} h={150} label="RESIZE THE DEVICE" /></div>
-        <div style={{ fontFamily: DISP, fontSize: 14, fontWeight: 500, color: C.sub, lineHeight: 1.55 }}>
-          Instead the phone illustration is drawn at the size the interface was designed for,
-          and the whole assembly scales as one piece. Same result on screen, nothing stretched.
+        <Label tone={C.accDeep}>PRESENTING A PROOF</Label>
+        <div style={{ marginTop: SPACE[12], display: "flex", alignItems: "center", gap: SPACE[12] }}>
+          <div style={{ position: "relative", width: 68, height: 68, flexShrink: 0 }}>
+            <Ring pct={0.72} />
+            <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column" }}>
+              <span style={{ fontFamily: NUM, fontSize: 19, color: C.ink, lineHeight: 1 }}>0:21</span>
+            </div>
+          </div>
+          <div style={{ fontFamily: DISP, fontSize: 15, fontWeight: 800, color: C.ink }}>Expires as you watch</div>
+        </div>
+        <div style={{ marginTop: SPACE[12], display: "flex", flexDirection: "column", gap: SPACE[6] }}>
+          {["Valid for 30 seconds, then dead", "One-time PIN works once", "Nothing to store, so nothing to leak"].map((t) => (
+            <div key={t} style={{ display: "flex", gap: SPACE[8], alignItems: "flex-start" }}>
+              <span style={{ marginTop: 3, flexShrink: 0 }}><Ic n="check" s={13} c={C.accDeep} /></span>
+              <span style={{ fontFamily: DISP, fontSize: 14, fontWeight: 500, color: C.sub, lineHeight: 1.5 }}>{t}</span>
+            </div>
+          ))}
         </div>
       </Card>
+    </div>
+  );
+}
+
+/* ---- 3 · the wallet argues on the holder's behalf -------------------- */
+export function AdvocacyDiagram() {
+  const opts = [
+    { l: "Full address", d: "Street, city, state, ZIP", risk: "High exposure", tone: "#C07B00", bg: "#FEF4E6", on: false },
+    { l: "City only", d: "San Francisco", risk: "Recommended", tone: C.accDeep, bg: C.accSoft, on: true },
+    { l: "State only", d: "California", risk: "Minimal exposure", tone: "#C07B00", bg: "#FEF4E6", on: false },
+    { l: "Decline", d: "Revoke this request", risk: "", tone: C.faint, bg: C.bone, on: false },
+  ];
+  return (
+    <div>
+      <div style={{ display: "flex", gap: SPACE[12], flexWrap: "wrap", alignItems: "stretch" }}>
+        <Card tone="#E4C9C4" bg="#FDF6F5" style={{ flex: "1 1 210px" }}>
+          <Label tone="#D93025">WHAT WAS ASKED FOR</Label>
+          <div style={{ marginTop: SPACE[12], display: "flex", alignItems: "center", gap: SPACE[8] }}>
+            <Ic n="plug" s={18} c="#D93025" />
+            <span style={{ fontFamily: DISP, fontSize: 15, fontWeight: 800, color: C.ink }}>Coinbase</span>
+          </div>
+          <div style={{ fontFamily: DISP, fontSize: 14, color: C.sub, marginTop: SPACE[6], lineHeight: 1.5 }}>
+            Added an <strong style={{ color: C.ink }}>Address</strong> field to an existing request.
+          </div>
+        </Card>
+
+        <Arrow />
+
+        <Card tone={C.acc} bg={C.paper} style={{ flex: "1 1 320px" }}>
+          <Label tone={C.accDeep}>WHAT THE WALLET RECOMMENDS</Label>
+          <div style={{ display: "flex", gap: SPACE[8], marginTop: SPACE[12], marginBottom: SPACE[12], padding: sp(8, 12), background: C.accSoft, borderRadius: RADIUS.sm }}>
+            <span style={{ flexShrink: 0, marginTop: 2 }}><Ic n="pulse" s={14} c={C.accDeep} /></span>
+            <span style={{ fontFamily: DISP, fontSize: 13.5, fontWeight: 600, color: C.accDeep, lineHeight: 1.5 }}>
+              City is enough for tax residency. Sharing your full address gives Coinbase more than they need.
+            </span>
+          </div>
+          {opts.map((o) => (
+            <div key={o.l} style={{ display: "flex", alignItems: "center", gap: SPACE[8], padding: sp(6, 0) }}>
+              <span style={{
+                width: 15, height: 15, borderRadius: RADIUS.round, flexShrink: 0,
+                border: `2px solid ${o.on ? C.acc : C.line}`, background: o.on ? C.acc : "transparent",
+                display: "flex", alignItems: "center", justifyContent: "center",
+              }}>{o.on && <span style={{ width: 5, height: 5, borderRadius: RADIUS.round, background: "#fff" }} />}</span>
+              <span style={{ fontFamily: DISP, fontSize: 14, fontWeight: o.on ? 800 : 500, color: o.on ? C.ink : C.sub, flex: 1 }}>{o.l}</span>
+              {o.risk && (
+                <span style={{ fontFamily: MONO, fontSize: 9, fontWeight: 700, color: o.tone, background: o.bg, padding: sp(2, 6), borderRadius: RADIUS.xs, letterSpacing: ".04em", flexShrink: 0 }}>{o.risk}</span>
+              )}
+            </div>
+          ))}
+        </Card>
+      </div>
+      <div style={{ display: "flex", alignItems: "center", gap: SPACE[8], marginTop: SPACE[12], padding: sp(12, 16), background: C.bone, borderRadius: RADIUS.md }}>
+        <Ic n="shield" s={17} c={C.accDeep} />
+        <span style={{ fontFamily: DISP, fontSize: 14.5, fontWeight: 600, color: C.sub }}>
+          The safest option is the one already selected — declining costs one tap, not a menu dive.
+        </span>
+      </div>
     </div>
   );
 }
