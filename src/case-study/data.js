@@ -15,6 +15,39 @@ import G from "./stats.generated.json";
 
 const n = (v) => v.toLocaleString("en-US");
 
+/* ----------------------------------------------------------------------------
+   Who made this, and what it actually is.
+
+   Both are stated in the hero rather than left for the reader to infer. The
+   ownership line claims exactly what happened and no more: there was no team,
+   so it does not borrow a team's credibility. The status line is the first
+   thing a reviewer would otherwise have to go looking for.
+---------------------------------------------------------------------------- */
+export const OWNERSHIP = {
+  /* Prose, not a chip row. A phase pipeline across the hero would assert
+     seniority; a sentence states what happened and lets the page prove it. */
+  line: "Built solo — problem framing, product vision, interaction design, the design system and the shipping build — at the standard I'd want a team operating at.",
+  note: "AI-assisted implementation.",
+};
+
+export const PROJECT_STATUS = {
+  label: "Working concept",
+  line: "A working product concept, not a shipped service — no live users, no real credentials, no backend. Every screen here is real and running; the trust infrastructure underneath it is the part that isn't built.",
+};
+
+/* The end-to-end flows the self-driving demo walks, in the order it walks
+   them. Hand-listed rather than counted by the build — grouping steps into
+   journeys is an editorial call, not something a script can infer — but every
+   one is verifiable by watching the demo at /?showcase. */
+export const JOURNEYS = [
+  { name: "Onboarding and identity verification", detail: "Sign-up through document scan and Face ID" },
+  { name: "Presenting a proof", detail: "Wallet to credential to live share sheet" },
+  { name: "Choosing what to disclose", detail: "Scoped attributes and one-time PIN" },
+  { name: "Managing the account", detail: "Profile, connected services, privacy controls" },
+  { name: "Monitoring activity", detail: "Pulse feed and timeline of every past share" },
+  { name: "Renegotiating consent", detail: "A service asks for more; the wallet counters" },
+];
+
 export const STATS = {
   version: G.version,
   commit: G.commit,
@@ -24,10 +57,12 @@ export const STATS = {
   spacingTokens: n(G.spacingTokens),
   tokenisedSpacings: n(G.tokenisedSpacings),
 
+  /* Hero: the size of the product, not the size of the repository. A reader
+     deciding whether to keep scrolling wants to know what was built. */
   hero: [
-    { value: n(G.screens), label: "Product screens", how: "files in src/screens" },
-    { value: n(G.components), label: "Shared components", how: "exports from src/components" },
-    { value: n(G.tests), label: "Tests passing", how: "vitest run, at build time" },
+    { value: n(JOURNEYS.length), label: "End-to-end journeys", how: "flows the live demo walks" },
+    { value: n(G.screens), label: "Screens", how: "top-level modules in src/screens" },
+    { value: n(G.components), label: "Reusable components", how: "shared across every screen" },
   ],
 
   tests: [
@@ -37,11 +72,14 @@ export const STATS = {
     { value: "2/2", label: "Mutations caught", how: "deliberate regressions, each failed a test" },
   ],
 
+  /* Scope: what the work is verified against. Source-file, line and token
+     counts used to sit here — they measured the repository rather than the
+     product or its quality, so they're gone. */
   scope: [
-    { value: n(G.sourceFiles), label: "Source files", how: "jsx + js + css, product only" },
-    { value: n(G.spacingTokens), label: "Spacing tokens", how: "keys in the SPACE scale" },
-    { value: n(G.tokenisedSpacings), label: "Tokenised spacings", how: "SPACE[n] / sp() uses in app code" },
-    { value: n(G.testLines), label: "Lines of test", how: "src/test/*.test.*" },
+    { value: n(G.appStates), label: "App states", how: "distinct views the app routes between" },
+    { value: `${G.a11y.passingAA}/${G.a11y.pairsChecked}`, label: "Contrast pairs at AA", how: "computed from the live tokens" },
+    { value: n(G.tests), label: "Tests passing", how: "the suite is run before every build" },
+    { value: "2/2", label: "Mutations caught", how: "bugs reintroduced on purpose, both failed" },
   ],
 
   a11y: G.a11y,
@@ -49,44 +87,66 @@ export const STATS = {
   honest: [
     { ic: "checkcirc", tone: "yes", tag: "YES", title: "Automated test suite", sub: `${G.tests} tests across tokens, components and screens` },
     { ic: "checkcirc", tone: "yes", tag: "YES", title: "Design token system", sub: "Colour, type, spacing, radii, motion, elevation in one module" },
-    { ic: "checkcirc", tone: "yes", tag: "YES", title: "Contrast audit", sub: `${G.a11y.passingAA} of ${G.a11y.pairsChecked} pairs meet WCAG AA — two failures found and fixed` },
+    { ic: "checkcirc", tone: "yes", tag: "YES", title: "Contrast audit", sub: `${G.a11y.passingAA} of ${G.a11y.pairsChecked} pairs meet WCAG AA — five failures found and fixed` },
     { ic: "checkcirc", tone: "yes", tag: "YES", title: "Self-driving demo mode", sub: "Scripted tour of the full product at /?showcase" },
   ],
 };
 
-/* Where the product goes next: new surfaces to build, and how it pays for
-   itself. Each capability extends a mechanism the current design already
-   has, rather than bolting on something unrelated. */
+/* Where the product goes next.
+
+   The ordering rule matters more than the list, so it's stated on the page:
+   two tests decide the bucket — does the capability reuse a primitive the
+   product already has, and does someone already hold a budget for it. Both
+   pass, it's NOW. One passes, it's NEXT. Neither — or it depends on adoption
+   we don't control — it's LATER. Everything below is sorted by that. */
+export const ROADMAP_RULE = {
+  tests: [
+    { q: "Does it reuse a primitive we already have?", why: "Selective disclosure and expiring proofs are built. Anything that extends them ships in weeks; anything that needs a new mechanism ships in quarters." },
+    { q: "Does the payer already have a budget line?", why: "Nobody has a budget for a new category. Plenty of people already pay for age checks and KYC — that's a switch, not a sale." },
+  ],
+  buckets: {
+    NOW: "Both tests pass.",
+    NEXT: "One test passes — worth building, but it either needs a new mechanism or a payer we'd have to prove.",
+    LATER: "Neither, or it turns on adoption we don't control.",
+  },
+};
+
 export const NEXT = [
   {
-    tag: "COMMERCE", ic: "wine",
-    title: "Age-gated checkout on the web",
-    body: "Every alcohol, gaming and pharmacy checkout currently asks for a birth date and stores it. A browser extension that answers “over 21” with a scoped proof turns the wallet's core mechanic into an everyday habit — and puts it in front of merchants who already pay for age checks.",
-  },
-  {
-    tag: "TRAVEL", ic: "book",
-    title: "Border and boarding",
-    body: "The passport is already in the wallet. Pairing it with a boarding pass makes the airport the highest-stakes proving ground for expiring proofs — and the place where “I forgot my documents” has the highest cost to solve.",
-  },
-  {
-    tag: "FINANCE", ic: "card",
+    tag: "FINANCE", ic: "card", when: "NOW",
     title: "Verify once, reuse everywhere",
     body: "Opening a bank, brokerage or crypto account means re-uploading the same documents each time. A reusable, cryptographically-signed identity that any institution can request collapses days of onboarding into one approval — the clearest wedge into a market that already spends heavily on KYC.",
+    because: "Pure selective disclosure, and KYC budgets already exist.",
   },
   {
-    tag: "FAMILY", ic: "contacts",
-    title: "Credentials you hold for someone else",
-    body: "Parents carry their children's documents; adult children manage their parents'. Delegated custody with its own consent trail extends the wallet to the people least able to run one themselves, and turns a single-user app into a household account.",
+    tag: "COMMERCE", ic: "wine", when: "NOW",
+    title: "Age-gated checkout on the web",
+    body: "Every alcohol, gaming and pharmacy checkout currently asks for a birth date and stores it. A browser extension that answers “over 21” with a scoped proof turns the wallet's core mechanic into an everyday habit — and puts it in front of merchants who already pay for age checks.",
+    because: "It is the core mechanic, on a surface merchants already pay to solve.",
   },
   {
-    tag: "RESILIENCE", ic: "shield",
+    tag: "RESILIENCE", ic: "shield", when: "NEXT",
     title: "Breach response, not just breach alerts",
     body: "Pulse already spots misuse. The next step is acting on it: one screen that shows everything a compromised service ever received, revokes it, and reissues affected credentials — recovery being the half of trust the current design doesn't yet cover.",
+    because: "Pulse exists; the paying subscriber is the part still to prove.",
   },
   {
-    tag: "OFFLINE", ic: "phone",
+    tag: "FAMILY", ic: "contacts", when: "NEXT",
+    title: "Credentials you hold for someone else",
+    body: "Parents carry their children's documents; adult children manage their parents'. Delegated custody with its own consent trail extends the wallet to the people least able to run one themselves, and turns a single-user app into a household account.",
+    because: "Extends the credential model, but needs a consent model we haven't designed.",
+  },
+  {
+    tag: "OFFLINE", ic: "phone", when: "LATER",
     title: "Proofs without a network",
     body: "Bouncers in basements and border desks abroad don't have reliable signal. Presenting over NFC or Bluetooth with a pre-signed, short-lived proof removes the last dependency between the holder and the verifier.",
+    because: "New transport layer, and no payer of its own — it unblocks others rather than earning alone.",
+  },
+  {
+    tag: "TRAVEL", ic: "book", when: "LATER",
+    title: "Border and boarding",
+    body: "The passport is already in the wallet. Pairing it with a boarding pass makes the airport the highest-stakes proving ground for expiring proofs — and the place where “I forgot my documents” has the highest cost to solve.",
+    because: "The highest-stakes surface, and the one gated entirely on government and airline adoption.",
   },
 ];
 

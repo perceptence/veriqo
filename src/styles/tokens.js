@@ -28,12 +28,18 @@ export const C = {
 };
 
 /* Semantic status colors — used by Notice, expiry badges, alerts */
+/* `color` is the fill — icons, dots, rules — and only has to clear 3:1 as a
+   non-text graphic. `text` is the same hue darkened until it clears 4.5:1 on
+   this status's own `bg`, which is the only place it's used. success/info
+   already followed that rule; warning, error and danger were reusing `color`
+   as text and measured 3.18, 4.07 and 3.17:1. Every pair is now checked at
+   build time (see scripts/gen-stats.mjs) so they can't drift back. */
 export const STATUS = {
   success: { color: C.acc, bg: C.accSoft, text: C.accDeep },
-  warning: { color: "#C07B00", bg: "#FEF4E6", text: "#C07B00" },
-  error: { color: "#D93025", bg: "#FEE8E6", text: "#D93025" },
+  warning: { color: "#C07B00", bg: "#FEF4E6", text: "#8A5A00" },
+  error: { color: "#D93025", bg: "#FEE8E6", text: "#C92A20" },
   info: { color: C.faint, bg: C.bone, text: C.sub },
-  danger: { color: "#D9583F", bg: "#FBE3DF", text: "#D9583F" },
+  danger: { color: "#D9583F", bg: "#FBE3DF", text: "#A8341C" },
 };
 
 /* ---- Typography ---- */

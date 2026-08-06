@@ -129,3 +129,16 @@ body {
   scrollbar-width: none;
 }
 .cs-preview *::-webkit-scrollbar { display: none; }
+
+/* ---------------------------------------------------------------------------
+   Case-study sticky nav.
+
+   The five stops collapse below 900px rather than wrapping or scrolling — at
+   that width the wordmark and the "Open the app" CTA are what the bar is for,
+   and a cramped row of five links would crowd both off the line.
+--------------------------------------------------------------------------- */
+.cs-nav { display: flex; }
+@media (max-width: 900px) { .cs-nav { display: none; } }
+
+/* Jumped-to sections clear the sticky bar instead of hiding under it. */
+.cs-anchor { scroll-margin-top: 74px; }

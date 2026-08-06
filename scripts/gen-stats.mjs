@@ -40,31 +40,6 @@ const testFiles = srcFiles.filter((f) => /\.test\.jsx?$/.test(f));
 const lines = (files) => files.reduce((n, f) => n + fs.readFileSync(rel(f), "utf8").split("\n").length, 0);
 const readAll = (files) => files.map((f) => fs.readFileSync(rel(f), "utf8")).join("\n");
 
-/* ---- run the real suite ---------------------------------------------- */
-const outFile = rel("node_modules/.veriqo-test-results.json");
-let tests;
-try {
-  execSync(`npx vitest run --reporter=json --outputFile=${JSON.stringify(outFile)}`, {
-    cwd: root, stdio: ["ignore", "ignore", "pipe"],
-  });
-  const r = JSON.parse(fs.readFileSync(outFile, "utf8"));
-  tests = { total: r.numTotalTests, passed: r.numPassedTests, failed: r.numFailedTests, suites: r.numTotalTestSuites };
-} catch (err) {
-  // Try to report why, then stop the build.
-  let detail = "";
-  try {
-    const r = JSON.parse(fs.readFileSync(outFile, "utf8"));
-    detail = ` (${r.numFailedTests} failing of ${r.numTotalTests})`;
-  } catch { detail = ` (${String(err.stderr || err.message).split("\n")[0]})`; }
-  console.error(`\n[gen-stats] Test suite did not pass${detail}.`);
-  console.error("[gen-stats] Refusing to generate stats for a page that claims passing tests.\n");
-  process.exit(1);
-}
-if (tests.failed > 0) {
-  console.error(`\n[gen-stats] ${tests.failed} test(s) failing — not generating stats.\n`);
-  process.exit(1);
-}
-
 /* ---- design system --------------------------------------------------- */
 const tokensSrc = fs.readFileSync(rel("src/styles/tokens.js"), "utf8");
 const spaceBlock = tokensSrc.match(/export const SPACE = \{([\s\S]*?)\}/)[1];
@@ -76,6 +51,13 @@ const components = [...readAll(walk("src/components")).matchAll(/^export functio
 const screens = walk("src/screens").filter((f) => f.endsWith(".jsx")).length;
 const assertions = [...readAll(testFiles).matchAll(/\bexpect\(/g)].length;
 
+/* Distinct states the app routes between — every `view === "x"` branch in the
+   root component. A truer measure of product surface than a file count: one
+   screen file can serve several states (verify alone has five). */
+const appStates = new Set(
+  [...fs.readFileSync(rel("src/App.jsx"), "utf8").matchAll(/view === "([A-Za-z]+)"/g)].map((m) => m[1])
+).size;
+
 /* ---- accessibility: WCAG 2.1 contrast, computed from the live tokens --- */
 const hexToRgb = (h) => { h = h.replace("#", ""); return [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16)); };
 const relLum = (rgb) => { const [r, g, b] = rgb.map((v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }); return 0.2126 * r + 0.7152 * g + 0.0722 * b; };
@@ -84,14 +66,30 @@ const contrast = (a, b) => { const [l1, l2] = [relLum(hexToRgb(a)), relLum(hexTo
 const pick = (name) => tokensSrc.match(new RegExp(`${name}:\\s*"(#[0-9A-Fa-f]{6})"`))?.[1];
 const T = Object.fromEntries(["bone", "paper", "ink", "sub", "faint", "acc", "accDeep", "glow"].map((k) => [k, pick(k)]));
 
+/* Status colours live in a nested object, so lift their text/bg pairs out by
+   name. These used to go unaudited — three of them were failing. */
+const statusPair = (name) => {
+  const block = tokensSrc.match(new RegExp(`${name}:\\s*\\{([^}]*)\\}`))[1];
+  const grab = (k) => block.match(new RegExp(`${k}:\\s*"(#[0-9A-Fa-f]{6})"`))?.[1];
+  return { fg: grab("text"), bg: grab("bg") };
+};
+
 const contrastPairs = [
-  ["Body text", "ink", "bone"], ["Body text on cards", "ink", "paper"],
-  ["Secondary text", "sub", "bone"], ["Secondary on cards", "sub", "paper"],
-  ["Metadata", "faint", "bone"], ["Metadata on cards", "faint", "paper"],
-  ["Accent text", "accDeep", "bone"], ["Text on dark", "glow", "ink"],
-].map(([label, fg, bg]) => {
-  const r = +contrast(T[fg], T[bg]).toFixed(2);
-  return { label, fg, bg, fgHex: T[fg], bgHex: T[bg], ratio: r, aa: r >= 4.5, aaLarge: r >= 3 };
+  ["Body text", T.ink, T.bone, "ink", "bone"],
+  ["Body text on cards", T.ink, T.paper, "ink", "paper"],
+  ["Secondary text", T.sub, T.bone, "sub", "bone"],
+  ["Secondary on cards", T.sub, T.paper, "sub", "paper"],
+  ["Metadata", T.faint, T.bone, "faint", "bone"],
+  ["Metadata on cards", T.faint, T.paper, "faint", "paper"],
+  ["Accent text", T.accDeep, T.bone, "accDeep", "bone"],
+  ["Text on dark", T.glow, T.ink, "glow", "ink"],
+  ...["warning", "error", "danger"].map((s) => {
+    const { fg, bg } = statusPair(s);
+    return [`${s[0].toUpperCase()}${s.slice(1)} status`, fg, bg, `${s}.text`, `${s}.bg`];
+  }),
+].map(([label, fgHex, bgHex, fg, bg]) => {
+  const r = +contrast(fgHex, bgHex).toFixed(2);
+  return { label, fg, bg, fgHex, bgHex, ratio: r, aa: r >= 4.5, aaLarge: r >= 3 };
 });
 const a11y = {
   pairsChecked: contrastPairs.length,
@@ -107,8 +105,10 @@ try { if (!commit) commit = sh("git rev-parse HEAD"); } catch { /* not a git che
 const shortSha = commit ? commit.slice(0, 7) : null;
 
 const pkg = JSON.parse(fs.readFileSync(rel("package.json"), "utf8"));
+const statsPath = rel("src/case-study/stats.generated.json");
+const previous = fs.existsSync(statsPath) ? JSON.parse(fs.readFileSync(statsPath, "utf8")) : {};
 
-const stats = {
+const build = (tests) => ({
   generatedAt: new Date().toISOString().slice(0, 10),
   commit: shortSha,
   version: pkg.version,
@@ -119,14 +119,55 @@ const stats = {
   assertions,
   screens,
   components,
+  appStates,
   sourceFiles: appFiles.length,
   sourceLines: lines(appFiles),
   spacingTokens,
   tokenisedSpacings,
   a11y,
+});
+
+const write = (stats) => {
+  fs.mkdirSync(rel("src/case-study"), { recursive: true });
+  fs.writeFileSync(statsPath, JSON.stringify(stats, null, 2) + "\n");
 };
 
-fs.mkdirSync(rel("src/case-study"), { recursive: true });
-fs.writeFileSync(rel("src/case-study/stats.generated.json"), JSON.stringify(stats, null, 2) + "\n");
+/* Write everything measurable BEFORE running the suite.
 
-console.log(`[gen-stats] ${stats.tests} tests passing · ${stats.screens} screens · ${stats.components} components · ${stats.sourceLines} lines @ ${shortSha || "no-git"}`);
+   The suite imports this file. Without a provisional write, adding a new
+   generated figure deadlocks: the tests can't pass until the field exists,
+   and the field can't be written until the tests pass. Carrying the previous
+   test numbers forward for one run breaks that cycle.
+
+   It doesn't weaken the guarantee — the guarantee is the non-zero exit below,
+   which stops the build. A stats file on disk publishes nothing on its own. */
+write(build({ total: previous.tests ?? 0, suites: previous.testSuites ?? 0 }));
+
+/* ---- run the real suite ---------------------------------------------- */
+const outFile = rel("node_modules/.veriqo-test-results.json");
+let tests;
+try {
+  execSync(`npx vitest run --reporter=json --outputFile=${JSON.stringify(outFile)}`, {
+    cwd: root, stdio: ["ignore", "ignore", "pipe"],
+  });
+  const r = JSON.parse(fs.readFileSync(outFile, "utf8"));
+  tests = { total: r.numTotalTests, passed: r.numPassedTests, failed: r.numFailedTests, suites: r.numTotalTestSuites };
+} catch (err) {
+  let detail = "";
+  try {
+    const r = JSON.parse(fs.readFileSync(outFile, "utf8"));
+    detail = ` (${r.numFailedTests} failing of ${r.numTotalTests})`;
+  } catch { detail = ` (${String(err.stderr || err.message).split("\n")[0]})`; }
+  console.error(`\n[gen-stats] Test suite did not pass${detail}.`);
+  console.error("[gen-stats] Refusing to publish a page that claims passing tests.\n");
+  process.exit(1);
+}
+if (tests.failed > 0) {
+  console.error(`\n[gen-stats] ${tests.failed} test(s) failing — stopping the build.\n`);
+  process.exit(1);
+}
+
+const stats = build(tests);
+write(stats);
+
+console.log(`[gen-stats] ${stats.tests} tests passing · ${stats.screens} screens · ${stats.appStates} states · ${stats.components} components @ ${shortSha || "no-git"}`);

@@ -1,21 +1,22 @@
 {
   "generatedAt": "2026-08-06",
-  "commit": "531d287",
+  "commit": "31f8091",
   "version": "0.1.0",
-  "tests": 77,
+  "tests": 86,
   "testSuites": 28,
   "testFiles": 5,
-  "testLines": 630,
-  "assertions": 156,
+  "testLines": 718,
+  "assertions": 184,
   "screens": 11,
   "components": 24,
+  "appStates": 29,
   "sourceFiles": 27,
-  "sourceLines": 4660,
+  "sourceLines": 4679,
   "spacingTokens": 14,
   "tokenisedSpacings": 589,
   "a11y": {
-    "pairsChecked": 8,
-    "passingAA": 8,
+    "pairsChecked": 11,
+    "passingAA": 11,
     "pairs": [
       {
         "label": "Body text",
@@ -94,6 +95,36 @@
         "fgHex": "#22E08C",
         "bgHex": "#141210",
         "ratio": 10.78,
+        "aa": true,
+        "aaLarge": true
+      },
+      {
+        "label": "Warning status",
+        "fg": "warning.text",
+        "bg": "warning.bg",
+        "fgHex": "#8A5A00",
+        "bgHex": "#FEF4E6",
+        "ratio": 5.45,
+        "aa": true,
+        "aaLarge": true
+      },
+      {
+        "label": "Error status",
+        "fg": "error.text",
+        "bg": "error.bg",
+        "fgHex": "#C92A20",
+        "bgHex": "#FEE8E6",
+        "ratio": 4.67,
+        "aa": true,
+        "aaLarge": true
+      },
+      {
+        "label": "Danger status",
+        "fg": "danger.text",
+        "bg": "danger.bg",
+        "fgHex": "#A8341C",
+        "bgHex": "#FBE3DF",
+        "ratio": 5.41,
         "aa": true,
         "aaLarge": true
       }

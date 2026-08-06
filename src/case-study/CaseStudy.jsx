@@ -5,7 +5,7 @@ import { Notice, Group, Row } from "../components/primitives.jsx";
 import { Wordmark } from "../components/Logo.jsx";
 import { Wallet } from "../screens/wallet.jsx";
 import { DisclosureDiagram, LeaseDiagram, AdvocacyDiagram, StrokeDiagram } from "./diagrams.jsx";
-import { STATS, NEXT, REVENUE } from "./data.js";
+import { STATS, NEXT, REVENUE, OWNERSHIP, PROJECT_STATUS, JOURNEYS, ROADMAP_RULE } from "./data.js";
 
 /* ============================================================================
    Veriqo — design case study.
@@ -23,11 +23,27 @@ import { STATS, NEXT, REVENUE } from "./data.js";
    deliberate exception (full-bleed). */
 const W = 1060;
 
+/* Height of the sticky bar. Sections carry a matching scroll-margin so a jump
+   never parks a heading underneath it. */
+const NAV_H = 58;
+
+/* Five stops that trace the argument — problem, proof it exists, the thinking,
+   the system, where it goes. Deliberately not a table of contents: the
+   accessibility, scope and business sections are worth reading in sequence but
+   nobody navigates to them. */
+const NAV = [
+  { id: "problem", label: "Problem" },
+  { id: "product", label: "Product" },
+  { id: "decisions", label: "Decisions" },
+  { id: "system", label: "System" },
+  { id: "next", label: "What's next" },
+];
+
 /* ---------- primitives, all token-driven ---------- */
 
-function Section({ eyebrow, title, children, tint }) {
+function Section({ eyebrow, title, children, tint, id }) {
   return (
-    <section style={{ background: tint || "transparent", paddingTop: tint ? SPACE[40] * 1.4 : 0, paddingBottom: tint ? SPACE[40] * 1.4 : 0, marginBottom: tint ? SPACE[40] * 1.6 : SPACE[40] * 1.9 }}>
+    <section id={id} className={id ? "cs-anchor" : undefined} style={{ background: tint || "transparent", paddingTop: tint ? SPACE[40] * 1.4 : 0, paddingBottom: tint ? SPACE[40] * 1.4 : 0, marginBottom: tint ? SPACE[40] * 1.6 : SPACE[40] * 1.9 }}>
       <div style={{ maxWidth: W, margin: "0 auto", padding: sp(0, 24) }}>
         {eyebrow && (
           <div style={{ display: "flex", alignItems: "center", gap: SPACE[8], marginBottom: SPACE[12] }}>
@@ -61,7 +77,7 @@ function Lede({ children }) {
 function DecisionTitle({ n, children }) {
   return (
     <div style={{ display: "flex", alignItems: "baseline", gap: SPACE[12], margin: sp(40, 0, 12) }}>
-      <span style={{ fontFamily: NUM, fontSize: 34, color: C.acc, lineHeight: 1 }}>{n}</span>
+      <span style={{ fontFamily: NUM, fontSize: 34, color: C.accDeep, lineHeight: 1 }}>{n}</span>
       <h3 style={{ fontFamily: DISP, fontSize: "clamp(19px, 2.6vw, 23px)", fontWeight: 900, color: C.ink, letterSpacing: "-.02em", margin: 0, lineHeight: 1.25 }}>{children}</h3>
     </div>
   );
@@ -91,6 +107,62 @@ function StatGrid({ items, light, min = 158 }) {
           <div style={{ fontFamily: MONO, fontSize: 11, color: light ? "rgba(255,255,255,.55)" : C.faint, marginTop: SPACE[4], letterSpacing: ".03em", lineHeight: 1.5 }}>{s.how}</div>
         </div>
       ))}
+    </div>
+  );
+}
+
+/* ---------- sticky chrome ---------- */
+
+function StickyNav() {
+  const [active, setActive] = useState("");
+
+  /* Highlights whichever stop is currently nearest the top of the viewport.
+     rootMargin pulls the detection band just under the bar so a section counts
+     as active the moment its heading clears it. */
+  useEffect(() => {
+    const els = NAV.map((n) => document.getElementById(n.id)).filter(Boolean);
+    if (!els.length) return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        const visible = entries.filter((e) => e.isIntersecting)
+          .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+        if (visible.length) setActive(visible[0].target.id);
+      },
+      { rootMargin: `-${NAV_H + 8}px 0px -55% 0px`, threshold: 0 }
+    );
+    els.forEach((el) => io.observe(el));
+    return () => io.disconnect();
+  }, []);
+
+  return (
+    <div style={{
+      position: "sticky", top: 0, zIndex: 100, height: NAV_H,
+      background: C.ink, borderBottom: "1px solid rgba(255,255,255,.10)",
+    }}>
+      <div style={{ maxWidth: W, margin: "0 auto", padding: sp(0, 24), height: "100%", display: "flex", alignItems: "center", gap: SPACE[24] }}>
+        <a href="#top" style={{ textDecoration: "none", flexShrink: 0, display: "flex" }} aria-label="Back to top">
+          <Wordmark size={17} light />
+        </a>
+
+        <nav className="cs-nav" aria-label="Case study sections" style={{ gap: SPACE[20], marginLeft: SPACE[8], flex: 1 }}>
+          {NAV.map((n) => (
+            <a key={n.id} href={`#${n.id}`} style={{
+              fontFamily: DISP, fontSize: 14.5, fontWeight: 700, textDecoration: "none",
+              color: active === n.id ? "#fff" : "rgba(255,255,255,.72)",
+              borderBottom: `2px solid ${active === n.id ? C.glow : "transparent"}`,
+              paddingBottom: 2, whiteSpace: "nowrap",
+            }}>{n.label}</a>
+          ))}
+        </nav>
+
+        <a href="/" target="_blank" rel="noopener noreferrer" style={{
+          marginLeft: "auto", flexShrink: 0, display: "inline-flex", alignItems: "center", gap: SPACE[6],
+          textDecoration: "none", fontFamily: DISP, fontSize: 14, fontWeight: 700,
+          color: C.ink, background: C.glow, padding: sp(8, 14), borderRadius: RADIUS.sm,
+        }}>
+          Open the app <Ic n="arrow" s={15} c={C.ink} />
+        </a>
+      </div>
     </div>
   );
 }
@@ -364,27 +436,33 @@ function ContrastExhibit() {
 /* ---------- page ---------- */
 
 export default function CaseStudy() {
-  useEffect(() => { document.title = "Veriqo — Design Case Study"; }, []);
+  useEffect(() => {
+    document.title = "Veriqo — Design Case Study";
+    /* Anchor jumps from the nav should glide, but only on this route — the
+       product itself relies on instant scroll positioning. */
+    const prev = document.documentElement.style.scrollBehavior;
+    document.documentElement.style.scrollBehavior = "smooth";
+    return () => { document.documentElement.style.scrollBehavior = prev; };
+  }, []);
 
   return (
-    <div style={{ background: C.bone, minHeight: "100vh", paddingBottom: SPACE[40] }}>
-      {/* HERO — full-bleed and full-height, the one deliberate exception to the rail */}
+    <div id="top" style={{ background: C.bone, minHeight: "100vh", paddingBottom: SPACE[40] }}>
+      <StickyNav />
+
+      {/* HERO — full-bleed, the one deliberate exception to the rail. Height is
+          the viewport minus the sticky bar so the two together fill exactly one
+          screen and the scroll cue lands where it claims to. */}
       <header style={{
         position: "relative", background: C.ink, overflow: "hidden",
-        marginBottom: SPACE[40] * 1.9, minHeight: "100vh",
+        marginBottom: SPACE[40] * 1.9, minHeight: `calc(100vh - ${NAV_H}px)`,
         display: "flex", flexDirection: "column", justifyContent: "center",
       }}>
         <Grain o={0.10} />
         <div style={{ position: "absolute", top: "-18%", left: "12%", width: 820, height: 820, borderRadius: RADIUS.round, pointerEvents: "none", background: `radial-gradient(circle, ${C.acc}3D, transparent 65%)`, filter: "blur(80px)" }} />
         <div style={{ position: "absolute", bottom: "-30%", right: "-6%", width: 620, height: 620, borderRadius: RADIUS.round, pointerEvents: "none", background: `radial-gradient(circle, ${C.acc}22, transparent 68%)`, filter: "blur(90px)" }} />
 
-        {/* Wordmark sits in normal flow, not absolutely positioned — when the
-            hero content grows on narrow or short viewports it pushes the mark
-            instead of sliding underneath it. */}
-        <div style={{ position: "relative", flexShrink: 0, padding: sp(32, 24, 0) }}>
-          <div style={{ maxWidth: W, margin: "0 auto" }}><Wordmark size={21} light /></div>
-        </div>
-
+        {/* The wordmark lives in the sticky bar now — repeating it here would
+            be the same mark twice within 60px of vertical space. */}
         <div style={{ position: "relative", maxWidth: W, margin: "0 auto", width: "100%", padding: sp(40, 24), flex: "1 0 auto", display: "flex", alignItems: "center" }}>
           <div style={{ display: "flex", gap: SPACE[40] * 1.5, alignItems: "center", flexWrap: "wrap", width: "100%" }}>
             <div style={{ flex: "1 1 400px", minWidth: 0 }}>
@@ -397,11 +475,25 @@ export default function CaseStudy() {
               <h1 style={{ fontFamily: DISP, fontSize: "clamp(36px, 5.8vw, 58px)", fontWeight: 900, color: "#fff", letterSpacing: "-.04em", lineHeight: 1.02, margin: sp(0, 0, 28) }}>
                 Prove who you are without handing over<span style={{ color: C.glow }}> everything.</span>
               </h1>
-              <p style={{ fontFamily: DISP, fontSize: "clamp(17px, 2.1vw, 20px)", fontWeight: 500, color: "rgba(255,255,255,.78)", lineHeight: 1.7, margin: sp(0, 0, 40), maxWidth: 520 }}>
+              <p style={{ fontFamily: DISP, fontSize: "clamp(17px, 2.1vw, 20px)", fontWeight: 500, color: "rgba(255,255,255,.78)", lineHeight: 1.7, margin: sp(0, 0, 24), maxWidth: 520 }}>
                 A mobile identity wallet where every share is deliberate, scoped and expiring.
                 This page is a route inside that same app — and the product below is the real
                 thing, running live.
               </p>
+
+              {/* Who made it, and what it is. Both sit above the metrics on
+                  purpose: a reader scanning for scope of ownership, or for
+                  whether this ever shipped, shouldn't have to go looking. */}
+              <div style={{ maxWidth: 560, marginBottom: SPACE[32], paddingLeft: SPACE[16], borderLeft: `2px solid ${C.glow}` }}>
+                <p style={{ fontFamily: DISP, fontSize: 15.5, fontWeight: 600, color: "#fff", lineHeight: 1.6, margin: 0 }}>
+                  {OWNERSHIP.line}{" "}
+                  <span style={{ color: "rgba(255,255,255,.62)", fontWeight: 500 }}>{OWNERSHIP.note}</span>
+                </p>
+                <p style={{ fontFamily: DISP, fontSize: 15, fontWeight: 500, color: "rgba(255,255,255,.72)", lineHeight: 1.6, margin: sp(10, 0, 0) }}>
+                  {PROJECT_STATUS.line}
+                </p>
+              </div>
+
               <div style={{ maxWidth: 560 }}><StatGrid light items={STATS.hero} /></div>
             </div>
             <HeroPreview />
@@ -411,14 +503,14 @@ export default function CaseStudy() {
         {/* scroll cue */}
         <div aria-hidden="true" style={{ position: "absolute", bottom: SPACE[24], left: 0, right: 0, display: "flex", justifyContent: "center" }}>
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: SPACE[6] }}>
-            <span style={{ fontFamily: MONO, fontSize: 10, color: "rgba(255,255,255,.35)", letterSpacing: ".18em" }}>SCROLL</span>
+            <span style={{ fontFamily: MONO, fontSize: 10, color: "rgba(255,255,255,.6)", letterSpacing: ".18em" }}>SCROLL</span>
             <span style={{ width: 1, height: 26, background: "linear-gradient(to bottom, rgba(255,255,255,.35), transparent)" }} />
           </div>
         </div>
       </header>
 
       {/* PROBLEM */}
-      <Section eyebrow="THE PROBLEM" title="Identity is all-or-nothing, and that's the bug.">
+      <Section id="problem" eyebrow="THE PROBLEM" title="Identity is all-or-nothing, and that's the bug.">
         <Lede>
           To prove one fact about yourself — that you're over 21 — you hand over a document that
           also reveals your exact birth date, your address, your document number and your full
@@ -436,21 +528,30 @@ export default function CaseStudy() {
       </Section>
 
       {/* LIVE PRODUCT */}
-      <Section eyebrow="THE PRODUCT" title="Running, right here." tint={C.paper}>
+      <Section id="product" eyebrow="THE PRODUCT" title="Running, right here." tint={C.paper}>
         <P>
           Below is the actual application, embedded from the same deployment that serves this
-          page. It boots into a self-driving demo that walks its own interface: onboarding,
-          verification, presenting a proof, choosing what to disclose, and reviewing activity.
-          Touch it at any point and it hands control straight back to you.
+          page. It boots into a self-driving demo that walks {JOURNEYS.length} end-to-end
+          journeys — {JOURNEYS.map((j) => j.name.toLowerCase()).slice(0, -1).join(", ")} and{" "}
+          {JOURNEYS[JOURNEYS.length - 1].name.toLowerCase()}. Touch it at any point and it hands
+          control straight back to you.
         </P>
         <LiveEmbed />
       </Section>
 
       {/* DECISIONS */}
-      <Section eyebrow="DESIGN DECISIONS" title="Three positions the product takes.">
+      <Section id="decisions" eyebrow="DESIGN DECISIONS" title="Three positions the product takes.">
         <P>
           Each of these is a stance, not a feature. They're the answers to the questions that
           decide whether an identity wallet is worth carrying.
+        </P>
+        {/* The three decisions each argue a position; without this line the
+            reader has to assemble what they collectively argue. */}
+        <P>
+          Taken together they answer one question: <strong style={{ color: C.ink, fontWeight: 800 }}>who
+          does the interface work for when the party asking has more leverage than the party
+          answering?</strong> A bar, a bank and a landlord all hold the power to walk away. Every
+          decision below moves a piece of that leverage back to the person holding the phone.
         </P>
 
         <DecisionTitle n="1">Disclosure is a screen, not a settings toggle.</DecisionTitle>
@@ -496,11 +597,17 @@ export default function CaseStudy() {
       </Section>
 
       {/* DESIGN SYSTEM */}
-      <Section eyebrow="DESIGN SYSTEM" title="Every value on screen comes from one file." tint={C.paper}>
+      <Section id="system" eyebrow="DESIGN SYSTEM" title="Every value on screen comes from one file." tint={C.paper}>
         <P>
           Colour, type, spacing, radii, elevation and motion live in a single tokens module that
           the product and this case study both import. Nothing below is an illustration of the
           system — each swatch, scale and specimen is rendered directly from it.
+        </P>
+        <P>
+          The reason to build this isn't tidiness. A token system is how design intent survives
+          contact with people who weren't in the room when it was decided — it turns a judgement
+          made once into the default everywhere, so consistency stops depending on whether
+          anyone remembered to check.
         </P>
 
         <div style={{ marginTop: SPACE[32] }}><PaletteExhibit /></div>
@@ -543,8 +650,16 @@ export default function CaseStudy() {
       {/* ACCESSIBILITY */}
       <Section eyebrow="ACCESSIBILITY" title="What the contrast audit found — and changed.">
         <P>
-          Every text-and-background pair in the palette was measured against WCAG 2.1. The audit
-          found two real failures, and both were fixed in the product rather than noted and left.
+          Every text-and-background pair in the palette is measured against WCAG 2.1 — {STATS.a11y.pairsChecked} of
+          them. Five were failing. All five were fixed in the product rather than noted and left,
+          and the audit set was widened after the first pass, because the pairs that were failing
+          worst were the ones nobody had thought to check.
+        </P>
+        <P>
+          The ratios below are recomputed from the live tokens on every build, and the build
+          refuses to publish if the suite fails. That's the point worth making: a quality bar
+          enforced by the pipeline holds whether or not anyone is watching, which is the only
+          kind that survives a deadline.
         </P>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: SPACE[16], marginBottom: SPACE[24] }}>
           <div style={{ padding: SPACE[16], background: C.paper, border: `1px solid ${C.line}`, borderRadius: RADIUS.lg }}>
@@ -560,6 +675,15 @@ export default function CaseStudy() {
             <p style={{ fontFamily: DISP, fontSize: 15, color: C.sub, lineHeight: 1.6, margin: 0 }}>
               The bright accent was used as small text in 42 places at 2.72:1. All of them now
               use the deep accent, which measures 5.11:1.
+            </p>
+          </div>
+          <div style={{ padding: SPACE[16], background: C.paper, border: `1px solid ${C.line}`, borderRadius: RADIUS.lg }}>
+            <div style={{ fontFamily: DISP, fontSize: 16, fontWeight: 800, color: C.ink, marginBottom: SPACE[6] }}>Status colours were never audited</div>
+            <p style={{ fontFamily: DISP, fontSize: 15, color: C.sub, lineHeight: 1.6, margin: 0 }}>
+              Warning, error and danger reused their fill colour as text on their own tinted
+              background — 3.18, 4.07 and 3.17:1. Each now has a darkened text variant, the
+              pattern the success and info tokens already followed. The real fix was widening
+              the audit: the set that gets checked is the set that stays correct.
             </p>
           </div>
         </div>
@@ -588,13 +712,41 @@ export default function CaseStudy() {
       </Section>
 
       {/* WHERE IT GOES NEXT */}
-      <Section eyebrow="WHERE IT GOES NEXT" title="From a wallet to an identity layer.">
+      <Section id="next" eyebrow="WHERE IT GOES NEXT" title="From a wallet to an identity layer.">
         <P>
           Everything below extends a mechanism the product already has rather than bolting on
           something unrelated. Selective disclosure and expiring proofs are the primitives; the
           opportunity is in how many places they're worth carrying.
         </P>
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: SPACE[16], marginTop: SPACE[24] }}>
+        <P>
+          Which is the easy part. The ordering is the real decision, so here is the rule it's
+          ordered by — two questions, asked of everything:
+        </P>
+
+        {/* The criterion, stated before the list. What puts an item in a bucket
+            is the part worth arguing with; the list is just its output. */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: SPACE[16], margin: sp(24, 0, 20) }}>
+          {ROADMAP_RULE.tests.map((t, i) => (
+            <div key={t.q} style={{ display: "flex", gap: SPACE[12], padding: SPACE[16], background: C.paper, border: `1px solid ${C.line}`, borderRadius: RADIUS.lg }}>
+              <span style={{ fontFamily: NUM, fontSize: 26, color: C.accDeep, lineHeight: 1, flexShrink: 0 }}>{i + 1}</span>
+              <div>
+                <div style={{ fontFamily: DISP, fontSize: 16, fontWeight: 800, color: C.ink, lineHeight: 1.35, marginBottom: SPACE[6] }}>{t.q}</div>
+                <p style={{ fontFamily: DISP, fontSize: 14.5, fontWeight: 500, color: C.sub, lineHeight: 1.55, margin: 0 }}>{t.why}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div style={{ display: "flex", flexWrap: "wrap", gap: SPACE[8], marginBottom: SPACE[32] }}>
+          {Object.entries(ROADMAP_RULE.buckets).map(([k, v]) => (
+            <span key={k} style={{ display: "inline-flex", alignItems: "baseline", gap: SPACE[6], padding: sp(6, 12), background: C.bone, border: `1px solid ${C.line}`, borderRadius: RADIUS.pill }}>
+              <span style={{ fontFamily: MONO, fontSize: 10, fontWeight: 700, letterSpacing: ".1em", color: C.accDeep }}>{k}</span>
+              <span style={{ fontFamily: DISP, fontSize: 13.5, fontWeight: 500, color: C.sub }}>{v}</span>
+            </span>
+          ))}
+        </div>
+
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: SPACE[16] }}>
           {NEXT.map((n) => (
             <div key={n.title} style={{ padding: SPACE[20], background: C.paper, border: `1px solid ${C.line}`, borderRadius: RADIUS.lg, display: "flex", flexDirection: "column" }}>
               <div style={{ display: "flex", alignItems: "center", gap: SPACE[8], marginBottom: SPACE[12] }}>
@@ -602,9 +754,20 @@ export default function CaseStudy() {
                   <Ic n={n.ic} s={17} c={C.accDeep} />
                 </span>
                 <span style={{ fontFamily: MONO, fontSize: 10, fontWeight: 700, letterSpacing: ".08em", color: C.accDeep }}>{n.tag}</span>
+                <span style={{
+                  marginLeft: "auto", fontFamily: MONO, fontSize: 10, fontWeight: 700, letterSpacing: ".08em",
+                  padding: sp(4, 8), borderRadius: RADIUS.xs,
+                  color: n.when === "NOW" ? "#fff" : C.sub,
+                  background: n.when === "NOW" ? C.accDeep : C.bone,
+                  border: `1px solid ${n.when === "NOW" ? C.accDeep : C.line}`,
+                }}>{n.when}</span>
               </div>
               <div style={{ fontFamily: DISP, fontSize: 17.5, fontWeight: 800, color: C.ink, letterSpacing: "-.015em", marginBottom: SPACE[8], lineHeight: 1.3 }}>{n.title}</div>
-              <p style={{ fontFamily: DISP, fontSize: 15, fontWeight: 500, color: C.sub, lineHeight: 1.6, margin: 0 }}>{n.body}</p>
+              <p style={{ fontFamily: DISP, fontSize: 15, fontWeight: 500, color: C.sub, lineHeight: 1.6, margin: 0, flex: 1 }}>{n.body}</p>
+              <div style={{ marginTop: SPACE[16], paddingTop: SPACE[12], borderTop: `1px solid ${C.line}`, display: "flex", gap: SPACE[8] }}>
+                <span style={{ flexShrink: 0, marginTop: 1 }}><Ic n="arrow" s={14} c={C.faint} /></span>
+                <span style={{ fontFamily: DISP, fontSize: 13.5, fontWeight: 600, color: C.faint, lineHeight: 1.5 }}>{n.because}</span>
+              </div>
             </div>
           ))}
         </div>
@@ -671,7 +834,7 @@ export default function CaseStudy() {
               FIGURES MEASURED AT BUILD · {STATS.generatedAt}{STATS.commit ? ` · ${STATS.commit}` : ""}
             </div>
           </div>
-          <a href="/" target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: SPACE[8], textDecoration: "none", fontFamily: DISP, fontSize: 15, fontWeight: 700, color: "#fff", background: C.acc, padding: sp(12, 20), borderRadius: RADIUS.md }}>
+          <a href="/" target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: SPACE[8], textDecoration: "none", fontFamily: DISP, fontSize: 15, fontWeight: 700, color: "#fff", background: C.accDeep, padding: sp(12, 20), borderRadius: RADIUS.md }}>
             Open the app <Ic n="arrow" s={16} c="#fff" />
           </a>
         </div>

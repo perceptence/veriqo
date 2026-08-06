@@ -1,4 +1,4 @@
-import { C, DISP, MONO, NUM, RADIUS, SPACE, sp, strokeFor } from "../styles/tokens.js";
+import { C, DISP, MONO, NUM, RADIUS, SPACE, sp, strokeFor, STATUS } from "../styles/tokens.js";
 import { Ic } from "../components/Icon.jsx";
 
 /* ============================================================================
@@ -34,7 +34,7 @@ export function DisclosureDiagram() {
       <Card tone="#E4C9C4" bg="#FDF6F5">
         <div style={{ display: "flex", alignItems: "center", gap: SPACE[8], marginBottom: SPACE[12] }}>
           <Ic n="card" s={18} c="#D93025" />
-          <Label tone="#D93025">SHOWING A PHYSICAL ID</Label>
+          <Label tone={STATUS.error.text}>SHOWING A PHYSICAL ID</Label>
         </div>
         {fields.map(([f]) => (
           <div key={f} style={{ display: "flex", alignItems: "center", gap: SPACE[8], padding: sp(4, 0) }}>
@@ -42,7 +42,7 @@ export function DisclosureDiagram() {
             <span style={{ fontFamily: DISP, fontSize: 14, fontWeight: 600, color: C.ink }}>{f}</span>
           </div>
         ))}
-        <div style={{ fontFamily: MONO, fontSize: 11, color: "#D93025", marginTop: SPACE[12], letterSpacing: ".05em" }}>6 OF 6 REVEALED</div>
+        <div style={{ fontFamily: MONO, fontSize: 11, color: STATUS.error.text, marginTop: SPACE[12], letterSpacing: ".05em" }}>6 OF 6 REVEALED</div>
       </Card>
 
       <Arrow />
@@ -114,7 +114,7 @@ export function LeaseDiagram() {
   return (
     <div style={{ display: "flex", gap: SPACE[16], flexWrap: "wrap", alignItems: "stretch" }}>
       <Card tone="#E4C9C4" bg="#FDF6F5">
-        <Label tone="#D93025">HANDING OVER A COPY</Label>
+        <Label tone={STATUS.error.text}>HANDING OVER A COPY</Label>
         <div style={{ marginTop: SPACE[16], display: "flex", alignItems: "center", gap: SPACE[12] }}>
           <Ic n="card" s={26} c="#D93025" />
           <div style={{ fontFamily: DISP, fontSize: 15, fontWeight: 800, color: C.ink }}>Permanent</div>
@@ -158,16 +158,16 @@ export function LeaseDiagram() {
 /* ---- 3 · the wallet argues on the holder's behalf -------------------- */
 export function AdvocacyDiagram() {
   const opts = [
-    { l: "Full address", d: "Street, city, state, ZIP", risk: "High exposure", tone: "#C07B00", bg: "#FEF4E6", on: false },
+    { l: "Full address", d: "Street, city, state, ZIP", risk: "High exposure", tone: STATUS.warning.text, bg: STATUS.warning.bg, on: false },
     { l: "City only", d: "San Francisco", risk: "Recommended", tone: C.accDeep, bg: C.accSoft, on: true },
-    { l: "State only", d: "California", risk: "Minimal exposure", tone: "#C07B00", bg: "#FEF4E6", on: false },
+    { l: "State only", d: "California", risk: "Minimal exposure", tone: STATUS.warning.text, bg: STATUS.warning.bg, on: false },
     { l: "Decline", d: "Revoke this request", risk: "", tone: C.faint, bg: C.bone, on: false },
   ];
   return (
     <div>
       <div style={{ display: "flex", gap: SPACE[16], flexWrap: "wrap", alignItems: "stretch" }}>
         <Card tone="#E4C9C4" bg="#FDF6F5">
-          <Label tone="#D93025">WHAT WAS ASKED FOR</Label>
+          <Label tone={STATUS.error.text}>WHAT WAS ASKED FOR</Label>
           <div style={{ marginTop: SPACE[12], display: "flex", alignItems: "center", gap: SPACE[8] }}>
             <Ic n="plug" s={18} c="#D93025" />
             <span style={{ fontFamily: DISP, fontSize: 15, fontWeight: 800, color: C.ink }}>Coinbase</span>
@@ -194,7 +194,10 @@ export function AdvocacyDiagram() {
                 border: `2px solid ${o.on ? C.acc : C.line}`, background: o.on ? C.acc : "transparent",
                 display: "flex", alignItems: "center", justifyContent: "center",
               }}>{o.on && <span style={{ width: 5, height: 5, borderRadius: RADIUS.round, background: "#fff" }} />}</span>
-              <span style={{ fontFamily: DISP, fontSize: 14, fontWeight: o.on ? 800 : 500, color: o.on ? C.ink : C.sub, flex: 1 }}>{o.l}</span>
+              {/* minWidth:0 lets this shrink below its content so the label
+                  wraps instead of shoving the risk chip past the viewport —
+                  it overflowed by 30px at 375px without it. */}
+              <span style={{ fontFamily: DISP, fontSize: 14, fontWeight: o.on ? 800 : 500, color: o.on ? C.ink : C.sub, flex: 1, minWidth: 0 }}>{o.l}</span>
               {o.risk && (
                 <span style={{ fontFamily: MONO, fontSize: 9, fontWeight: 700, color: o.tone, background: o.bg, padding: sp(2, 6), borderRadius: RADIUS.xs, letterSpacing: ".04em", flexShrink: 0 }}>{o.risk}</span>
               )}

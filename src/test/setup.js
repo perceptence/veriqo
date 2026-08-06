@@ -21,6 +21,19 @@ if (!window.requestAnimationFrame) {
   window.requestAnimationFrame = (cb) => setTimeout(() => cb(performance.now()), 0);
   window.cancelAnimationFrame = (id) => clearTimeout(id);
 }
+// The case study's sticky nav observes each section to highlight the current
+// stop. Records what was observed so a test can assert the nav is wired to
+// real elements rather than silently observing nothing.
+if (!window.IntersectionObserver) {
+  window.IntersectionObserver = class {
+    static observed = [];
+    constructor(cb) { this.cb = cb; }
+    observe(el) { window.IntersectionObserver.observed.push(el); }
+    unobserve() {}
+    disconnect() {}
+    takeRecords() { return []; }
+  };
+}
 // Pulse's "Ask Pulse" calls the network; never hit it from tests.
 if (!globalThis.fetch) globalThis.fetch = vi.fn(() => Promise.resolve({ json: () => Promise.resolve({}) }));
 
