@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" width="32" height="32">
+  <!--
+    Veriqo favicon — the `prism` mark cut for small sizes.
+
+    The product mark (src/components/Logo.jsx) has six facets radiating from
+    the centre. At 16px those facets are ~2px wide and the two darkest
+    neighbours (#0A5E3E / #084E34) are indistinguishable, so the hexagon
+    collapses into a green blob. Here the six facets are merged in the pairs
+    they already imply — top, right, left — which is the volumetric read the
+    mark is built on. Same logo, fewer planes, legible at 16px.
+
+    The mark is also set larger in its container than LogoMark's 0.7: small
+    icons need proportionally less padding to hold their weight.
+  -->
+  <style>
+    /* Ink container, as everywhere else in the product. Chrome's dark tab
+       strip is #202124 — lighter than our #141210 — so on dark chrome the
+       square would lose its edge and the mark would appear to float. It
+       steps up to ink2, which reads as a container against both. */
+    .bg { fill: #141210 }
+    @media (prefers-color-scheme: dark) { .bg { fill: #29251F } }
+  </style>
+
+  <rect class="bg" width="32" height="32" rx="9.6"/>
+
+  <!-- Flat hexagon underneath: the three planes share edges, and this stops
+       antialiasing seams showing the ink through them. -->
+  <polygon points="16,5.8 24.84,10.9 24.84,21.1 16,26.2 7.16,21.1 7.16,10.9" fill="#15A06A"/>
+
+  <polygon points="7.16,10.9 16,5.8 24.84,10.9 16,16" fill="#35DFA0"/>
+  <polygon points="24.84,10.9 24.84,21.1 16,26.2 16,16" fill="#15A06A"/>
+  <polygon points="7.16,10.9 16,16 16,26.2 7.16,21.1" fill="#0A5E3E"/>
+</svg>
