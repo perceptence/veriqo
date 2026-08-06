@@ -1,6 +1,6 @@
 import {
   ShieldCheck, Camera, CreditCard, BookOpen, User, Lightbulb, Glasses,
-  Smartphone, Lock, Trash2, ArrowRight, Check, Eye, RotateCcw, Wallet as WalletIcon, QrCode,
+  Smartphone, Lock, Trash2, ArrowRight, ArrowUpRight, Check, Eye, RotateCcw, Wallet as WalletIcon, QrCode,
   Share2, Plus, ChevronRight, Bell, Key, Clock, SlidersHorizontal, Globe,
   Fingerprint, X, MoreHorizontal, LogOut, Pencil, Copy, AlertTriangle,
   Mail, Flag, FileText, Search, Star, Calendar, Hash, MapPin,
@@ -62,7 +62,7 @@ export function Ic({ n, s = 22, c = "currentColor", sw = strokeFor(s) }) {
   const LM = {
     shield: ShieldCheck, camera: Camera, card: CreditCard, book: BookOpen,
     face: User, bulb: Lightbulb, glasses: Glasses, phone: Smartphone, lock: Lock,
-    trash: Trash2, arrow: ArrowRight, check: Check, eye: Eye, rotate: RotateCcw,
+    trash: Trash2, arrow: ArrowRight, upright: ArrowUpRight, check: Check, eye: Eye, rotate: RotateCcw,
     wallet: WalletIcon, qr: QrCode, share: Share2, plus: Plus, chev: ChevronRight,
     bell: Bell, key: Key, clock: Clock, sliders: SlidersHorizontal, globe: Globe,
     finger: Fingerprint, x: X, more: MoreHorizontal, logout: LogOut, user: User,

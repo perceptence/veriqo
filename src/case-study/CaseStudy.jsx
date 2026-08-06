@@ -113,7 +113,7 @@ function StatGrid({ items, light, min = 158 }) {
 
 /* ---------- sticky chrome ---------- */
 
-function StickyNav() {
+function StickyNav({ overHero }) {
   const [active, setActive] = useState("");
 
   /* Highlights whichever stop is currently nearest the top of the viewport.
@@ -134,10 +134,17 @@ function StickyNav() {
     return () => io.disconnect();
   }, []);
 
+  /* Fixed, not sticky — sticky reserves its own height in the flow, which
+     would push the hero down and leave a bone-coloured strip above it the
+     instant the bar turns transparent. Fixed removes it from flow entirely,
+     so the hero can run the full viewport height and the bar floats over
+     its own dark background until the hero scrolls out from under it. */
   return (
-    <div style={{
-      position: "sticky", top: 0, zIndex: 100, height: NAV_H,
-      background: C.ink, borderBottom: "1px solid rgba(255,255,255,.10)",
+    <div data-testid="site-nav" style={{
+      position: "fixed", top: 0, left: 0, right: 0, zIndex: 100, height: NAV_H,
+      background: overHero ? "transparent" : C.ink,
+      borderBottom: `1px solid ${overHero ? "transparent" : "rgba(255,255,255,.10)"}`,
+      transition: "background-color .25s ease, border-color .25s ease",
     }}>
       <div style={{ maxWidth: W, margin: "0 auto", padding: sp(0, 24), height: "100%", display: "flex", alignItems: "center", gap: SPACE[24] }}>
         <a href="#top" style={{ textDecoration: "none", flexShrink: 0, display: "flex" }} aria-label="Back to top">
@@ -155,15 +162,19 @@ function StickyNav() {
           ))}
         </nav>
 
-        {/* Same treatment as the footer CTA — solid accDeep, not the glow
-            tint the nav links use — so it reads as the one action on the
-            bar rather than a fourth nav item. */}
+        {/* Solid accDeep, not the glow tint the nav links use, so it reads
+            as the one action on the bar rather than a fourth nav item. This
+            is now the only persistent way to reach the live product — the
+            footer's copy of it was redundant once the header became
+            permanent. Named for what it opens, not a metaphor for the
+            in-page demo; the up-right arrow is the same convention as
+            "Open it full screen" below, since both leave the page. */}
         <a href="/" target="_blank" rel="noopener noreferrer" style={{
           marginLeft: "auto", flexShrink: 0, display: "inline-flex", alignItems: "center", gap: SPACE[8],
           textDecoration: "none", fontFamily: DISP, fontSize: 15, fontWeight: 700,
           color: "#fff", background: C.accDeep, padding: sp(12, 20), borderRadius: RADIUS.md,
         }}>
-          Take the wheel <Ic n="arrow" s={16} c="#fff" />
+          Open the wallet <Ic n="upright" s={16} c="#fff" />
         </a>
       </div>
     </div>
@@ -295,7 +306,7 @@ function LiveEmbed() {
           <Ic n={driving ? "rotate" : "pulse"} s={16} c={driving ? C.acc : "#fff"} />
         </button>
         <a href="/" target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: SPACE[8], textDecoration: "none", fontFamily: DISP, fontSize: 15, fontWeight: 700, color: "#fff", background: C.ink, padding: sp(12, 20), borderRadius: RADIUS.md }}>
-          Open it full screen <Ic n="arrow" s={16} c="#fff" />
+          Open it full screen <Ic n="upright" s={16} c="#fff" />
         </a>
       </div>
       <div style={{ fontFamily: MONO, fontSize: 11, color: C.faint, marginTop: SPACE[8], letterSpacing: ".04em" }}>
@@ -439,6 +450,8 @@ function ContrastExhibit() {
 /* ---------- page ---------- */
 
 export default function CaseStudy() {
+  const [overHero, setOverHero] = useState(true);
+
   useEffect(() => {
     document.title = "Veriqo — Design Case Study";
     /* Anchor jumps from the nav should glide, but only on this route — the
@@ -448,25 +461,47 @@ export default function CaseStudy() {
     return () => { document.documentElement.style.scrollBehavior = prev; };
   }, []);
 
+  /* Drives the nav's transparent-over-hero state. rootMargin shrinks the
+     observed viewport by the bar's own height, so the bar switches to solid
+     the moment the hero's visible remainder would otherwise duck under it —
+     not a moment before, which would show the page background through a
+     still-transparent bar. */
+  useEffect(() => {
+    const hero = document.getElementById("hero");
+    if (!hero) return;
+    const io = new IntersectionObserver(
+      ([entry]) => setOverHero(entry.isIntersecting),
+      { rootMargin: `-${NAV_H}px 0px 0px 0px`, threshold: 0 }
+    );
+    io.observe(hero);
+    return () => io.disconnect();
+  }, []);
+
   return (
     <div id="top" style={{ background: C.bone, minHeight: "100vh", paddingBottom: SPACE[40] }}>
-      <StickyNav />
+      <StickyNav overHero={overHero} />
 
-      {/* HERO — full-bleed, the one deliberate exception to the rail. Height is
-          the viewport minus the sticky bar so the two together fill exactly one
-          screen and the scroll cue lands where it claims to. */}
-      <header style={{
+      {/* HERO — full-bleed, the one deliberate exception to the rail, and
+          full viewport height: the nav is fixed and out of the document
+          flow, so nothing reserves space for it above the hero. */}
+      <header id="hero" style={{
         position: "relative", background: C.ink, overflow: "hidden",
-        marginBottom: SPACE[40] * 1.9, minHeight: `calc(100vh - ${NAV_H}px)`,
+        marginBottom: SPACE[40] * 1.9, minHeight: "100vh",
         display: "flex", flexDirection: "column", justifyContent: "center",
       }}>
         <Grain o={0.10} />
         <div style={{ position: "absolute", top: "-18%", left: "12%", width: 820, height: 820, borderRadius: RADIUS.round, pointerEvents: "none", background: `radial-gradient(circle, ${C.acc}3D, transparent 65%)`, filter: "blur(80px)" }} />
         <div style={{ position: "absolute", bottom: "-30%", right: "-6%", width: 620, height: 620, borderRadius: RADIUS.round, pointerEvents: "none", background: `radial-gradient(circle, ${C.acc}22, transparent 68%)`, filter: "blur(90px)" }} />
 
-        {/* The wordmark lives in the sticky bar now — repeating it here would
-            be the same mark twice within 60px of vertical space. */}
-        <div style={{ position: "relative", maxWidth: W, margin: "0 auto", width: "100%", padding: sp(40, 24), flex: "1 0 auto", display: "flex", alignItems: "center" }}>
+        {/* The wordmark lives in the fixed bar now — repeating it here would
+            be the same mark twice within 60px of vertical space.
+
+            paddingTop carries the bar's own height on top of the usual 40 —
+            the bar overlays the hero rather than sitting above it, so
+            without this the eyebrow row collides with "Open the wallet"
+            the moment wrapped content on a narrow viewport pushes it up
+            against the padding edge instead of floating in centered slack. */}
+        <div style={{ position: "relative", maxWidth: W, margin: "0 auto", width: "100%", paddingTop: NAV_H + SPACE[40], paddingBottom: SPACE[40], paddingLeft: SPACE[24], paddingRight: SPACE[24], flex: "1 0 auto", display: "flex", alignItems: "center" }}>
           <div style={{ display: "flex", gap: SPACE[40] * 1.5, alignItems: "center", flexWrap: "wrap", width: "100%" }}>
             <div style={{ flex: "1 1 400px", minWidth: 0 }}>
               <div style={{ display: "flex", alignItems: "center", gap: SPACE[8], marginBottom: SPACE[24] }}>
@@ -480,8 +515,6 @@ export default function CaseStudy() {
               </h1>
               <p style={{ fontFamily: DISP, fontSize: "clamp(17px, 2.1vw, 20px)", fontWeight: 500, color: "rgba(255,255,255,.78)", lineHeight: 1.7, margin: sp(0, 0, 24), maxWidth: 520 }}>
                 A mobile identity wallet where every share is deliberate, scoped and expiring.
-                This page is a route inside that same app — and the product below is the real
-                thing, running live.
               </p>
 
               {/* Who made it, and what it is. Both sit above the metrics on
@@ -825,21 +858,18 @@ export default function CaseStudy() {
         </div>
       </Section>
 
-      {/* CLOSE */}
+      {/* CLOSE — provenance only. The CTA that used to sit here is gone: the
+          header is fixed and present on every scroll position now, so a
+          second copy of the same link was dead weight this far down. */}
       <footer style={{ maxWidth: W, margin: "0 auto", padding: sp(0, 24) }}>
-        <div style={{ borderTop: `1px solid ${C.line}`, paddingTop: SPACE[32], display: "flex", justifyContent: "space-between", alignItems: "flex-end", gap: SPACE[24], flexWrap: "wrap" }}>
-          <div>
-            <div style={{ fontFamily: DISP, fontSize: 24, fontWeight: 900, color: C.ink, letterSpacing: "-.02em", marginBottom: SPACE[6] }}>Veriqo</div>
-            <div style={{ fontFamily: MONO, fontSize: 11, color: C.sub, letterSpacing: ".1em" }}>
-              DIGITAL IDENTITY WALLET · v{STATS.version}
-            </div>
-            <div style={{ fontFamily: MONO, fontSize: 10.5, color: C.faint, letterSpacing: ".06em", marginTop: SPACE[6] }}>
-              FIGURES MEASURED AT BUILD · {STATS.generatedAt}{STATS.commit ? ` · ${STATS.commit}` : ""}
-            </div>
+        <div style={{ borderTop: `1px solid ${C.line}`, paddingTop: SPACE[32] }}>
+          <div style={{ fontFamily: DISP, fontSize: 24, fontWeight: 900, color: C.ink, letterSpacing: "-.02em", marginBottom: SPACE[6] }}>Veriqo</div>
+          <div style={{ fontFamily: MONO, fontSize: 11, color: C.sub, letterSpacing: ".1em" }}>
+            DIGITAL IDENTITY WALLET · v{STATS.version}
           </div>
-          <a href="/" target="_blank" rel="noopener noreferrer" style={{ display: "inline-flex", alignItems: "center", gap: SPACE[8], textDecoration: "none", fontFamily: DISP, fontSize: 15, fontWeight: 700, color: "#fff", background: C.accDeep, padding: sp(12, 20), borderRadius: RADIUS.md }}>
-            Open the app <Ic n="arrow" s={16} c="#fff" />
-          </a>
+          <div style={{ fontFamily: MONO, fontSize: 10.5, color: C.faint, letterSpacing: ".06em", marginTop: SPACE[6] }}>
+            FIGURES MEASURED AT BUILD · {STATS.generatedAt}{STATS.commit ? ` · ${STATS.commit}` : ""}
+          </div>
         </div>
       </footer>
     </div>

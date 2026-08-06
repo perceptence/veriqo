@@ -203,11 +203,42 @@ describe("the rendered page", () => {
     expect(container.textContent).toMatch(/who\s+does the interface work for/i);
   });
 
-  it("hands over the live product from the sticky header", () => {
+  it("hands over the live product from the fixed header", () => {
     const { container } = render(<CaseStudy />);
-    const cta = container.querySelector('div[style*="sticky"] a[href="/"]');
-    expect(cta, "the sticky header has no link to the product").toBeTruthy();
+    const cta = container.querySelector('[data-testid="site-nav"] a[href="/"]');
+    expect(cta, "the header has no link to the product").toBeTruthy();
     expect(cta.getAttribute("target")).toBe("_blank");
     expect(cta.getAttribute("rel")).toContain("noopener");
+    // named for what it opens, not a metaphor unrelated to the product
+    expect(cta.textContent).toMatch(/wallet/i);
+  });
+
+  /* The header used to be the only place "Open the app" appeared; now the
+     footer repeats the same link. Once a CTA is reachable from a header
+     that's always on screen, a second copy further down is dead weight —
+     and having only one also means there's only one place a stale link
+     text or href could go wrong. */
+  it("gives the live product exactly one persistent entry point", () => {
+    const { container } = render(<CaseStudy />);
+    const external = [...container.querySelectorAll('a[href="/"]')];
+    expect(external.length, "expected header CTA + the embed's full-screen link, no more").toBe(2);
+    const footer = container.querySelector("footer");
+    expect(footer.querySelector('a[href="/"]'), "footer should not repeat the header's CTA").toBeNull();
+  });
+
+  it("doesn't claim the page is a route inside the app it's describing", () => {
+    const { container } = render(<CaseStudy />);
+    expect(container.textContent).not.toMatch(/route inside/i);
+  });
+
+  it("goes transparent over the hero and observes it to know when to stop", () => {
+    window.IntersectionObserver.observed = [];
+    const { container } = render(<CaseStudy />);
+    const nav = container.querySelector('[data-testid="site-nav"]');
+    // starts transparent — the page opens on the hero, which is dark, so a
+    // solid bar here would show as a mismatched strip above it
+    expect(nav.style.background).toBe("transparent");
+    const hero = document.getElementById("hero");
+    expect(window.IntersectionObserver.observed).toContain(hero);
   });
 });
