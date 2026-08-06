@@ -1,6 +1,6 @@
 {
   "generatedAt": "2026-08-06",
-  "commit": "298e48e",
+  "commit": "5ea1b44",
   "version": "0.1.0",
   "tests": 89,
   "testSuites": 28,
@@ -11,7 +11,7 @@
   "components": 24,
   "appStates": 29,
   "sourceFiles": 27,
-  "sourceLines": 4679,
+  "sourceLines": 4696,
   "spacingTokens": 14,
   "tokenisedSpacings": 589,
   "a11y": {

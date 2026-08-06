@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { C, DISP, MONO, NUM, SPACE, sp } from "../../styles/tokens.js";
+import { C, DISP, MONO, NUM, SPACE, sp, STATUS } from "../../styles/tokens.js";
 import { Grain, Ic } from "../../components/Icon.jsx";
 import { Header, Row, Group, Notice } from "../../components/primitives.jsx";
 
@@ -39,12 +39,12 @@ export function AcctRecoveryKey({ back }) {
         </div>
         <div className="fu3" style={{ marginTop: SPACE[20], paddingTop: SPACE[16], borderTop: `1px solid ${C.line}` }}>
           {!genConfirm
-            ? <button onClick={() => setGenConfirm(true)} style={{ background: "none", border: "none", cursor: "pointer", padding: 0, fontFamily: DISP, fontSize: 13, fontWeight: 700, color: "#D9583F" }}>Generate new key</button>
+            ? <button onClick={() => setGenConfirm(true)} style={{ background: "none", border: "none", cursor: "pointer", padding: 0, fontFamily: DISP, fontSize: 13, fontWeight: 700, color: STATUS.danger.text }}>Generate new key</button>
             : <div style={{ animation: "chipIn .25s ease both" }}>
                 <Notice type="error" icon="alert" title="Generating a new key retires this one" sub="Any backups of the old key will stop working immediately." style={{ marginBottom: SPACE[12] }} />
                 <div style={{ display: "flex", gap: SPACE[8] }}>
                   <button onClick={() => setGenConfirm(false)} style={{ flex: 1, padding: SPACE[12], background: "transparent", border: `1.5px solid ${C.line}`, borderRadius: 11, cursor: "pointer", fontFamily: DISP, fontSize: 12.5, fontWeight: 700, color: C.ink }}>Cancel</button>
-                  <button style={{ flex: 1, padding: SPACE[12], background: "#D9583F", border: "none", borderRadius: 11, cursor: "pointer", fontFamily: DISP, fontSize: 12.5, fontWeight: 700, color: "#fff" }}>Generate new key</button>
+                  <button style={{ flex: 1, padding: SPACE[12], background: STATUS.danger.text, border: "none", borderRadius: 11, cursor: "pointer", fontFamily: DISP, fontSize: 12.5, fontWeight: 700, color: "#fff" }}>Generate new key</button>
                 </div>
               </div>}
         </div>
@@ -103,7 +103,7 @@ export function AcctDevices({ back }) {
                 ? <span style={{ fontFamily: MONO, fontSize: 9, color: C.accDeep, fontWeight: 700, letterSpacing: ".05em", background: C.accSoft, padding: sp(3, 8), borderRadius: 6 }}>THIS DEVICE</span>
                 : revoked.includes(d.name)
                   ? <span style={{ fontFamily: MONO, fontSize: 9, color: C.faint, fontWeight: 700, letterSpacing: ".05em" }}>REMOVED</span>
-                  : <button onClick={() => setRevoked((r) => [...r, d.name])} style={{ background: "none", border: "none", cursor: "pointer", padding: sp(4, 2), fontFamily: DISP, fontSize: 12.5, fontWeight: 700, color: "#D9583F" }}>Remove</button>} />
+                  : <button onClick={() => setRevoked((r) => [...r, d.name])} style={{ background: "none", border: "none", cursor: "pointer", padding: sp(4, 2), fontFamily: DISP, fontSize: 12.5, fontWeight: 700, color: STATUS.danger.text }}>Remove</button>} />
           ))}
         </Group></div>
         <Notice className="fu3" type="info" icon="lock" title="Removing a device revokes its access" sub="It will need your recovery key to reconnect." style={{ marginTop: SPACE[12] }} />

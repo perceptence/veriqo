@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { C, DISP, MONO, SPACE, sp, LAYOUT } from "../styles/tokens.js";
+import { C, DISP, MONO, SPACE, sp, LAYOUT, STATUS } from "../styles/tokens.js";
 import { CREDS } from "../data/credentials.js";
 import { Ic } from "../components/Icon.jsx";
 import { Notice } from "../components/primitives.jsx";
@@ -53,14 +53,21 @@ export function Pulse({ onViewCred, onClose }) {
       body: "Your identity was confirmed in 1.2 seconds. No document photos or raw data were transmitted — Robinhood received only a cryptographic confirmation.", time: "1w ago" },
   ];
 
+  /* `col` doubles as an icon fill (3:1 needed) and as text / a solid button
+     background under white text (4.5:1 needed) further down this file —
+     STATUS.*.text clears both, since a colour dark enough for 4.5:1 text
+     trivially clears the weaker 3:1 icon rule too. That's what let this be
+     a two-line fix instead of touching every call site: critical/warning
+     used to be .color-equivalent values and failed at 4.07:1 and 3.18:1
+     wherever they landed as text. */
   const SECTIONS = [
-    { k: "critical", label: "Security", col: "#D93025", bg: "#FEE8E6" },
-    { k: "warning", label: "Attention", col: "#C07B00", bg: "#FEF4E6" },
+    { k: "critical", label: "Security", col: STATUS.error.text, bg: STATUS.error.bg },
+    { k: "warning", label: "Attention", col: STATUS.warning.text, bg: STATUS.warning.bg },
     { k: "neutral", label: "Insights", col: C.sub, bg: C.bone },
   ];
   const kindMeta = {
-    critical: { col: "#D93025", bg: "#FEE8E6" },
-    warning: { col: "#C07B00", bg: "#FEF4E6" },
+    critical: { col: STATUS.error.text, bg: STATUS.error.bg },
+    warning: { col: STATUS.warning.text, bg: STATUS.warning.bg },
     neutral: { col: C.sub, bg: C.bone },
   };
   const active = ITEMS.filter((i) => !dismissed.includes(i.id));
@@ -162,15 +169,15 @@ User identity state:
               </div>
               {opt.risk && (
                 <span style={{ fontFamily: MONO, fontSize: 8, fontWeight: 700, flexShrink: 0, padding: sp(2, 6), borderRadius: 5, letterSpacing: ".04em",
-                  color: opt.k === "city" ? C.acc : opt.k === "decline" ? C.faint : "#C07B00",
-                  background: opt.k === "city" ? C.accSoft : opt.k === "decline" ? C.bone : "#FEF4E6" }}>{opt.risk}</span>
+                  color: opt.k === "city" ? C.acc : opt.k === "decline" ? C.faint : STATUS.warning.text,
+                  background: opt.k === "city" ? C.accSoft : opt.k === "decline" ? C.bone : STATUS.warning.bg }}>{opt.risk}</span>
               )}
             </div>
           ))}
         </div>
         <div style={{ display: "flex", gap: SPACE[8] }}>
           <button onClick={() => { setDismissed((d) => [...d, 4]); setExpanded(null); }} style={{ flex: 1, padding: SPACE[12], background: "transparent", border: `1.5px solid ${C.line}`, borderRadius: 11, cursor: "pointer", fontFamily: DISP, fontSize: 13, fontWeight: 700, color: C.faint }}>Later</button>
-          <button onClick={() => setConsentStep("biometric")} style={{ flex: 1, padding: SPACE[12], background: fieldChoice === "decline" ? "#D93025" : C.acc, border: "none", borderRadius: 11, cursor: "pointer", fontFamily: DISP, fontSize: 13, fontWeight: 700, color: "#fff" }}>
+          <button onClick={() => setConsentStep("biometric")} style={{ flex: 1, padding: SPACE[12], background: fieldChoice === "decline" ? STATUS.error.text : C.acc, border: "none", borderRadius: 11, cursor: "pointer", fontFamily: DISP, fontSize: 13, fontWeight: 700, color: "#fff" }}>
             {fieldChoice === "decline" ? "Decline request" : "Approve"}
           </button>
         </div>
@@ -186,8 +193,8 @@ User identity state:
           <div style={{ background: C.paper, borderRadius: 16, overflow: "hidden", border: `1px solid ${C.line}`, marginBottom: SPACE[12] }}>
             {g.items.map((it, ii) => {
               const cr = CREDS.find((c) => c.key === it.cred) || { ic: "shield", type: it.cred };
-              const tone = it.kind === "alert" ? "#D93025" : it.kind === "verified" ? C.acc : C.ink;
-              const bg = it.kind === "alert" ? "#FEE8E6" : it.kind === "verified" ? C.accSoft : C.bone;
+              const tone = it.kind === "alert" ? STATUS.error.color : it.kind === "verified" ? C.acc : C.ink;
+              const bg = it.kind === "alert" ? STATUS.error.bg : it.kind === "verified" ? C.accSoft : C.bone;
               return (
                 <div key={ii} style={{ display: "flex", alignItems: "flex-start", gap: SPACE[12], padding: sp(12, 12), borderTop: ii ? `1px solid ${C.line}` : "none" }}>
                   <div style={{ width: 28, height: 28, borderRadius: 8, background: bg, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center" }}>

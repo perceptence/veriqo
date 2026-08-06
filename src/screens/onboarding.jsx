@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { C, DISP, MONO, NUM, SPACE, sp } from "../styles/tokens.js";
+import { C, DISP, MONO, NUM, SPACE, sp, STATUS } from "../styles/tokens.js";
 import { Grain, Ic } from "../components/Icon.jsx";
 import { BitAvatar } from "../components/BitAvatar.jsx";
 import { Wordmark, LogoMark, markSvg, LOGO } from "../components/Logo.jsx";
@@ -282,7 +282,7 @@ export function Auth({ back, onDone, email, phone }) {
         <div className="fu2" style={{ display: "flex", justifyContent: "center", marginBottom: SPACE[16] }}>
           <div style={{ width: 90, height: 90, borderRadius: 24, background: C.ink, position: "relative", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 14px 30px rgba(20,18,16,.25)" }}>
             <Grain o={0.07} />
-            <Ic n="faceid" s={40} c={faceIdState === "failed" ? "#D93025" : faceIdState === "trying" ? C.acc : C.glow} />
+            <Ic n="faceid" s={40} c={faceIdState === "failed" ? STATUS.error.color : faceIdState === "trying" ? C.acc : C.glow} />
           </div>
         </div>
         {faceIdState === "failed" && !showOTP && (

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { C, DISP, MONO, SPACE, sp, LAYOUT } from "../styles/tokens.js";
+import { C, DISP, MONO, SPACE, sp, LAYOUT, STATUS } from "../styles/tokens.js";
 import { CREDS, PROOFS, expiryOf, EXP } from "../data/credentials.js";
 import { Grain, Ic } from "../components/Icon.jsx";
 import { BitAvatar } from "../components/BitAvatar.jsx";
@@ -83,7 +83,11 @@ export function Wallet({ openDetail, addNew, onProof, name, ownedDocs, setOwnedD
       <div onPointerDown={(e) => { onPullStart && onPullStart(e.clientY, false); }} onClick={onOpenPulse}
         style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: SPACE[4], padding: sp(8, 0, 6), cursor: "pointer", flexShrink: 0, touchAction: "none" }}>
         <div style={{ width: 36, height: 4, borderRadius: 2, background: "rgba(20,18,16,.2)" }} />
-        <span style={{ fontFamily: MONO, fontSize: 8.5, fontWeight: 600, letterSpacing: ".07em", color: "rgba(20,18,16,.3)" }}>
+        {/* Was rgba(20,18,16,.3) — composites to ~1.95:1 on bone, and this
+            text is 8.5px, well under the size where "large text" 3:1 would
+            apply. C.faint is the token built for exactly this tier and
+            already clears 4.5:1 on bone. */}
+        <span style={{ fontFamily: MONO, fontSize: 8.5, fontWeight: 600, letterSpacing: ".07em", color: C.faint }}>
           {topAlert ? "PULL FOR UPDATES" : "PULL FOR PULSE"}
         </span>
       </div>
@@ -159,7 +163,7 @@ export function Wallet({ openDetail, addNew, onProof, name, ownedDocs, setOwnedD
                     const expiring = exp?.status === "expiring";
                     if (expired || expiring) return (
                       <span style={{ fontFamily: MONO, fontSize: 9, fontWeight: 700, letterSpacing: ".05em", whiteSpace: "nowrap",
-                        color: expired ? "#D93025" : "#C07B00", background: expired ? "#FEE8E6" : "#FEF4E6", padding: sp(3, 6), borderRadius: 6 }}>
+                        color: expired ? STATUS.error.text : STATUS.warning.text, background: expired ? STATUS.error.bg : STATUS.warning.bg, padding: sp(3, 6), borderRadius: 6 }}>
                         {expired ? "EXPIRED" : "EXP SOON"}
                       </span>
                     );
@@ -342,7 +346,7 @@ export function Detail({ c, back, onShare, walletAdded = false, onWalletAdd, onU
       </div>
       <div style={{ flexShrink: 0, marginTop: SPACE[12] }}>
         {isExpired
-          ? <button onClick={() => setShowUpdateInfo(true)} style={{ width: "100%", padding: SPACE[16], background: "#D93025", border: "none", borderRadius: 16, fontFamily: DISP, fontSize: 16, fontWeight: 800, color: "#fff", cursor: "pointer", letterSpacing: "-.01em" }}>Update credential</button>
+          ? <button onClick={() => setShowUpdateInfo(true)} style={{ width: "100%", padding: SPACE[16], background: STATUS.error.text, border: "none", borderRadius: 16, fontFamily: DISP, fontSize: 16, fontWeight: 800, color: "#fff", cursor: "pointer", letterSpacing: "-.01em" }}>Update credential</button>
           : <Btn label="Present proof" onClick={onShare} />}
       </div>
     </div>

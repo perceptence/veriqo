@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { C, DISP, MONO, SPACE, sp } from "../../styles/tokens.js";
+import { C, DISP, MONO, SPACE, sp, STATUS } from "../../styles/tokens.js";
 import { Ic } from "../../components/Icon.jsx";
 import { Header, Btn, Row, Group, Toggle, Notice } from "../../components/primitives.jsx";
 
@@ -45,7 +45,7 @@ export function PendingRow({ p, onReview, onDismiss }) {
   }, [secs]);
   const expired = secs === 0;
   const urgent = !expired && secs < 30;
-  const col = expired ? "#D93025" : urgent ? "#C07B00" : C.accDeep;
+  const col = expired ? STATUS.error.text : urgent ? STATUS.warning.text : C.accDeep;
   return (
     <Row ic={p.ic} title={p.name}
       sub={<span style={{ color: col, fontWeight: 600 }}>{expired ? "Request expired" : `Expires in ${secs}s`}</span>}

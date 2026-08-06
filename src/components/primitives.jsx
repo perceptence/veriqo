@@ -1,5 +1,5 @@
 import React from "react";
-import { C, DISP, MONO, SPACE, sp } from "../styles/tokens.js";
+import { C, DISP, MONO, SPACE, sp, STATUS } from "../styles/tokens.js";
 import { Ic } from "./Icon.jsx";
 
 /* ---- Back button ---- */
@@ -35,10 +35,14 @@ export function Header({ back, eyebrow, title, light = false, action }) {
 
 /* ---- Primary/ghost button ---- */
 export function Btn({ label, onClick, ghost = false, disabled = false, variant = "ink" }) {
+  /* danger's fill is STATUS.danger.text, not .color — white text on the raw
+     .color (#D9583F) measures 3.88:1 and fails AA. The darker `text` variant
+     was tuned to clear 4.5:1 as text on a light bg, which is symmetric with
+     white text on it as a solid fill: 6.62:1. */
   const styles = {
     ink: { bg: C.ink, fg: "#fff", sh: "0 10px 20px rgba(20,18,16,.22)" },
     light: { bg: "#fff", fg: C.ink, sh: "0 10px 20px rgba(0,0,0,.2)" },
-    danger: { bg: "#D9583F", fg: "#fff", sh: "0 10px 20px rgba(217,88,63,.28)" },
+    danger: { bg: STATUS.danger.text, fg: "#fff", sh: "0 10px 20px rgba(168,52,28,.28)" },
   };
   const v = ghost ? { bg: "transparent", fg: C.ink, sh: "none" }
     : disabled ? { bg: "#C5C0B7", fg: "#fff", sh: "none" } : styles[variant];
@@ -76,12 +80,15 @@ export function Row({ ic, title, sub, right, onClick, danger, last }) {
     <div onClick={onClick} style={{ display: "flex", alignItems: "center", gap: SPACE[12],
       padding: sp(12, 16), cursor: onClick ? "pointer" : "default",
       borderTop: last ? "none" : "none" }}>
+      {/* Icon fill stays STATUS.danger.color (a graphic, needs 3:1 — 3.17:1
+          on this tint). The title is real text, so it takes .text instead:
+          .color measured 3.88:1 there and failed AA. */}
       <div style={{ width: 36, height: 36, borderRadius: 10, flexShrink: 0,
-        background: danger ? "#FBE3DF" : C.bone, display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <Ic n={ic} s={17} c={danger ? "#D9583F" : C.ink} />
+        background: danger ? STATUS.danger.bg : C.bone, display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <Ic n={ic} s={17} c={danger ? STATUS.danger.color : C.ink} />
       </div>
       <div style={{ flex: 1 }}>
-        <div style={{ fontFamily: DISP, fontSize: 14.5, fontWeight: 700, color: danger ? "#D9583F" : C.ink, letterSpacing: "-.01em" }}>{title}</div>
+        <div style={{ fontFamily: DISP, fontSize: 14.5, fontWeight: 700, color: danger ? STATUS.danger.text : C.ink, letterSpacing: "-.01em" }}>{title}</div>
         {sub && <div style={{ fontFamily: DISP, fontSize: 12, fontWeight: 500, color: C.faint, marginTop: SPACE[1] }}>{sub}</div>}
       </div>
       {right}
@@ -103,16 +110,15 @@ export function Group({ children }) {
 
 /* ---- Inline status notice ---- */
 export function Notice({ icon = "shield", title, sub, type = "info", className, style = {}, onClick }) {
-  const T = {
-    success: { col: C.acc, bg: C.accSoft, text: C.accDeep },
-    warning: { col: "#C07B00", bg: "#FEF4E6", text: "#C07B00" },
-    error: { col: "#D93025", bg: "#FEE8E6", text: "#D93025" },
-    info: { col: C.faint, bg: C.bone, text: C.sub },
-  }[type] || { col: C.faint, bg: C.bone, text: C.sub };
+  /* This used to carry its own copy of STATUS with the same three failing
+     text colours the case study's audit found (warning 3.18:1, error
+     4.07:1) — reading from the shared token means this can't drift out of
+     sync with it again. */
+  const T = STATUS[type] || STATUS.info;
   return (
     <div className={className} onClick={onClick} style={{ background: T.bg, borderRadius: 13, padding: sp(12, 12), ...style }}>
       <div style={{ display: "flex", alignItems: "center", gap: SPACE[8], marginBottom: sub ? 5 : 0 }}>
-        <Ic n={icon} s={13} c={T.col} />
+        <Ic n={icon} s={13} c={T.color} />
         <span style={{ fontFamily: DISP, fontSize: 13, fontWeight: 700, color: T.text, lineHeight: 1.3 }}>{title}</span>
       </div>
       {sub && <p style={{ fontFamily: DISP, fontSize: 12, fontWeight: 500, color: T.text, lineHeight: 1.5, margin: sp(4, 0, 0, 0) }}>{sub}</p>}

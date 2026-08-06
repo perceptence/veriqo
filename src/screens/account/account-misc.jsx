@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { C, DISP, MONO, SPACE, sp } from "../../styles/tokens.js";
+import { C, DISP, MONO, SPACE, sp, STATUS } from "../../styles/tokens.js";
 import { Grain, Ic } from "../../components/Icon.jsx";
 import { Header, Btn, Row, Group, Toggle } from "../../components/primitives.jsx";
 
@@ -75,7 +75,7 @@ export function AcctDeleteAccount({ back, onDelete }) {
           {items.map((t) => (<Row key={t} ic="x" title={t} danger />))}
         </Group></div>
         <button onClick={() => setOk((o) => !o)} className="fu3" style={{ display: "flex", alignItems: "center", gap: SPACE[12], marginTop: SPACE[16], background: "none", border: "none", cursor: "pointer", padding: 0, width: "100%", textAlign: "left" }}>
-          <div style={{ width: 22, height: 22, borderRadius: 7, flexShrink: 0, border: `1.5px solid ${ok ? "#D9583F" : C.line}`, background: ok ? "#D9583F" : "transparent", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <div style={{ width: 22, height: 22, borderRadius: 7, flexShrink: 0, border: `1.5px solid ${ok ? STATUS.danger.color : C.line}`, background: ok ? STATUS.danger.color : "transparent", display: "flex", alignItems: "center", justifyContent: "center" }}>
             {ok && <Ic n="check" s={13} c="#fff" />}
           </div>
           <span style={{ fontFamily: DISP, fontSize: 13, fontWeight: 600, color: C.ink }}>I understand this action is permanent</span>

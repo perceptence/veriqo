@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { C, DISP, MONO, SPACE, sp, LAYOUT } from "../../styles/tokens.js";
+import { C, DISP, MONO, SPACE, sp, LAYOUT, STATUS } from "../../styles/tokens.js";
 import { USER } from "../../data/credentials.js";
 import { Ic } from "../../components/Icon.jsx";
 import { BadgedAvatar } from "../../components/Avatar.jsx";
@@ -46,7 +46,7 @@ export function Account({ onSignOut, profile, go, services, pending, back, emerg
             {confirmOff && (
               <div style={{ marginTop: SPACE[12], paddingTop: SPACE[12], borderTop: `1px solid ${C.line}`, animation: "chipIn .25s ease both" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: SPACE[8], marginBottom: SPACE[6] }}>
-                  <Ic n="alert" s={15} c="#D9583F" />
+                  <Ic n="alert" s={15} c={STATUS.danger.color} />
                   <span style={{ fontFamily: DISP, fontSize: 13, fontWeight: 700, color: C.ink }}>Turn off Face ID?</span>
                 </div>
                 <p style={{ fontFamily: DISP, fontSize: 13, fontWeight: 500, color: C.sub, lineHeight: 1.5, marginBottom: SPACE[12] }}>
@@ -54,7 +54,7 @@ export function Account({ onSignOut, profile, go, services, pending, back, emerg
                 </p>
                 <div style={{ display: "flex", gap: SPACE[8] }}>
                   <button onClick={() => setConfirmOff(false)} style={{ flex: 1, padding: SPACE[12], background: "transparent", border: `1.5px solid ${C.line}`, borderRadius: 11, cursor: "pointer", fontFamily: DISP, fontSize: 12.5, fontWeight: 700, color: C.ink }}>Keep Face ID</button>
-                  <button onClick={() => { setFaceId(false); setConfirmOff(false); }} style={{ flex: 1, padding: SPACE[12], background: "#D9583F", border: "none", borderRadius: 11, cursor: "pointer", fontFamily: DISP, fontSize: 12.5, fontWeight: 700, color: "#fff" }}>Turn off</button>
+                  <button onClick={() => { setFaceId(false); setConfirmOff(false); }} style={{ flex: 1, padding: SPACE[12], background: STATUS.danger.text, border: "none", borderRadius: 11, cursor: "pointer", fontFamily: DISP, fontSize: 12.5, fontWeight: 700, color: "#fff" }}>Turn off</button>
                 </div>
               </div>
             )}
@@ -68,7 +68,7 @@ export function Account({ onSignOut, profile, go, services, pending, back, emerg
           <p className="fu3" style={{ fontFamily: MONO, fontSize: 10, color: C.faint, fontWeight: 700, letterSpacing: ".12em", margin: sp(16, 0, 8, 2) }}>EMERGENCY</p>
           <div className="fu3"><Group>
             <Row ic="alert" title="Emergency ID" sub={emergencyData ? "Medical info · lock screen accessible" : "Not set up"}
-              right={!emergencyData ? <span style={{ fontFamily: MONO, fontSize: 9, fontWeight: 700, color: "#C07B00", background: "#FEF4E6", padding: sp(3, 6), borderRadius: 6, letterSpacing: ".05em" }}>SET UP</span> : undefined}
+              right={!emergencyData ? <span style={{ fontFamily: MONO, fontSize: 9, fontWeight: 700, color: STATUS.warning.text, background: STATUS.warning.bg, padding: sp(3, 6), borderRadius: 6, letterSpacing: ".05em" }}>SET UP</span> : undefined}
               onClick={() => go("emergencyId")} />
             <Row ic="contacts" title="Trusted contacts" sub="People who can vouch for you" onClick={() => go("acctTrusted")} />
           </Group></div>
@@ -83,7 +83,7 @@ export function Account({ onSignOut, profile, go, services, pending, back, emerg
                 const minSecs = Math.min(...pending.map((p) => Math.round((p.expiresAt - Date.now()) / 1000)));
                 const allExpired = minSecs <= 0;
                 const urgent = !allExpired && minSecs < 30;
-                const col = allExpired ? "#D93025" : urgent ? "#C07B00" : C.accDeep;
+                const col = allExpired ? STATUS.error.text : urgent ? STATUS.warning.text : C.accDeep;
                 return (
                   <span>{act} active{" · "}<span style={{ color: col, fontWeight: 600 }}>{pending.length} {allExpired ? "expired" : "pending"}</span></span>
                 );

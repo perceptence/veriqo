@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { C, DISP, MONO, SPACE, sp } from "../../styles/tokens.js";
+import { C, DISP, MONO, SPACE, sp, STATUS } from "../../styles/tokens.js";
 import { Ic } from "../../components/Icon.jsx";
 import { Header, Back, Btn, Group, ProgressDots } from "../../components/primitives.jsx";
 
@@ -29,7 +29,7 @@ export function EmergencyID({ back, data, onSave }) {
 
   const ActiveCard = ({ d }) => (
     <div className="si" style={{ height: "100%", display: "flex", flexDirection: "column", background: C.bone }}>
-      <div style={{ background: "#D93025", padding: sp(20, 20, 24), flexShrink: 0 }}>
+      <div style={{ background: STATUS.error.text, padding: sp(20, 20, 24), flexShrink: 0 }}>
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: SPACE[8] }}>
           <Back onClick={back} light />
           <button onClick={() => setStep("medical")} style={{ background: "rgba(255,255,255,.15)", border: "none", borderRadius: 8, padding: sp(4, 8), cursor: "pointer", flexShrink: 0, fontFamily: MONO, fontSize: 9.5, fontWeight: 700, color: "#fff", letterSpacing: ".05em" }}>EDIT</button>
@@ -158,7 +158,7 @@ export function EmergencyID({ back, data, onSave }) {
       </div>
       <div style={{ flex: 1, minHeight: 0, overflowY: "auto", marginTop: SPACE[20] }}>
         <div style={{ background: "#1A1A1F", borderRadius: 18, overflow: "hidden", boxShadow: "0 8px 32px rgba(20,18,16,.2)" }}>
-          <div style={{ background: "#D93025", padding: sp(12, 16), display: "flex", alignItems: "center", gap: SPACE[8] }}>
+          <div style={{ background: STATUS.error.text, padding: sp(12, 16), display: "flex", alignItems: "center", gap: SPACE[8] }}>
             <Ic n="alert" s={14} c="#fff" />
             <span style={{ fontFamily: MONO, fontSize: 10, fontWeight: 700, color: "#fff", letterSpacing: ".06em" }}>EMERGENCY MEDICAL ID</span>
           </div>
