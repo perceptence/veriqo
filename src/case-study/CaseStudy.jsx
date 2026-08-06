@@ -155,12 +155,15 @@ function StickyNav() {
           ))}
         </nav>
 
+        {/* Same treatment as the footer CTA — solid accDeep, not the glow
+            tint the nav links use — so it reads as the one action on the
+            bar rather than a fourth nav item. */}
         <a href="/" target="_blank" rel="noopener noreferrer" style={{
-          marginLeft: "auto", flexShrink: 0, display: "inline-flex", alignItems: "center", gap: SPACE[6],
-          textDecoration: "none", fontFamily: DISP, fontSize: 14, fontWeight: 700,
-          color: C.ink, background: C.glow, padding: sp(8, 14), borderRadius: RADIUS.sm,
+          marginLeft: "auto", flexShrink: 0, display: "inline-flex", alignItems: "center", gap: SPACE[8],
+          textDecoration: "none", fontFamily: DISP, fontSize: 15, fontWeight: 700,
+          color: "#fff", background: C.accDeep, padding: sp(12, 20), borderRadius: RADIUS.md,
         }}>
-          Open the app <Ic n="arrow" s={15} c={C.ink} />
+          Take the wheel <Ic n="arrow" s={16} c="#fff" />
         </a>
       </div>
     </div>
