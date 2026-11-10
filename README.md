@@ -1,13 +1,24 @@
 # Veriqo — Digital Identity Wallet
 
-A mobile-first identity-wallet prototype (React + Vite), imported from a Claude chat artifact
-and reorganized around a proper design system.
+**Prove one fact about yourself, and nothing else.**
+
+A mobile-first identity wallet: hold your credentials, then present a proof by
+QR or PIN that discloses a single attribute rather than handing over a whole
+document — with every past share on a timeline you can read back.
+
+It got here by being taken apart. The original was one large file, and
+rebuilding it onto a token-driven design system is what surfaced three
+references that would crash it on contact: `AcctDevices` and
+`AcctTrustedContacts` were called but never defined, and `AcctSharingDefaults`
+threw on toggle. All three are fixed, and written up at the bottom rather than
+quietly patched.
 
 ## Run
 
 ```bash
 npm install
 npm run dev      # http://localhost:5173
+npm test         # 89 tests across 5 files
 npm run build    # production build to dist/
 ```
 
